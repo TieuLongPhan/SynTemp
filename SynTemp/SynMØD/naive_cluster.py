@@ -2,6 +2,7 @@ import networkx as nx
 from typing import List, Set, Dict, Any, Callable
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from operator import eq
+from SynTemp.SynUtils.graph_utils import check_graph_type, get_cycle_member_rings
 
 class NaiveCluster:
     def __init__(self, node_label_names: List[str] = ["element", "aromatic", "hcount", "charge", "typesGH"],
@@ -91,5 +92,7 @@ class NaiveCluster:
         # Update the reaction dictionaries with cluster information
         for i, reaction_dict in enumerate(reaction_dicts):
             reaction_dict['naive_cluster'] = cluster_indices[i]
+            reaction_dict['Reaction Type'] = check_graph_type(reaction_dict['GraphRules'][2])
+            reaction_dict['Rings'] = get_cycle_member_rings(reaction_dict['GraphRules'][2])
 
         return reaction_dicts

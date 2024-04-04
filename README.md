@@ -4,7 +4,7 @@ Graph based Reaction Template Extraction
 ## Overview
 This repository is dedicated to the systematic extraction of reaction rules from chemical processes. The primary focus lies in the computational analysis and transformation of molecular reactions into a structured set of rules, facilitating a deeper understanding of reaction mechanisms and pathways.
 
-![screenshot](./Image/repo_fig.webp)
+![screenshot](./Docs/Image/repo_fig.webp)
 
 ### Step 1: Reaction Representation
 The initial step involves the representation of chemical reactions, as illustrated below:

@@ -8,7 +8,7 @@ import transformers
 from rxnmapper import RXNMapper
 from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
-from SynTemp.utils import save_database
+from SynTemp.SynUtils.utils import save_database
 root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 

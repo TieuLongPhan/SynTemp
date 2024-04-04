@@ -4,7 +4,7 @@ import logging
 import time
 root_dir = pathlib.Path(__file__).parents[1]
 sys.path.append(str(root_dir))
-from SynTemp.utils import load_database, save_database
+from SynTemp.SynUtils.utils import load_database, save_database
 from SynTemp.SynProcessor.reaction_processor import ReactionProcessor
 from SynTemp.SynProcessor.unbalanced_charge import UnbalancedCharge
 from SynTemp.SynProcessor.uncharge_reaction import UnchargeReaction

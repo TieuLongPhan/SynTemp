@@ -6,7 +6,7 @@ from joblib import Parallel, delayed
 from typing import Tuple, Optional, Union
 from typing import List
 
-from SynITSG.SynProcessor.standardizer_wrapper import normalize_molecule, canonicalize_tautomer, salts_remover, reionize_charges, uncharge_molecule, assign_stereochemistry, fragments_remover, remove_hydrogens_and_sanitize
+from SynTemp.SynUtils.chemutils import normalize_molecule, canonicalize_tautomer, salts_remover, reionize_charges, uncharge_molecule, assign_stereochemistry, fragments_remover, remove_hydrogens_and_sanitize
 
 class SMILESStandardizer:
     """
