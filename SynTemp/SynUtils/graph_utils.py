@@ -83,7 +83,7 @@ def check_graph_type(G: nx.Graph) -> str:
     
 def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     """
-    Identifies all cycles in the given graph and returns a list of the sizes of these cycles (member rings),
+    Identifies all cycles in the given graph using cycle bases to ensure no overlap and returns a list of the sizes of these cycles (member rings),
     sorted in ascending order.
 
     Parameters:
@@ -95,8 +95,8 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     if not isinstance(G, nx.Graph):
         raise TypeError("Input must be a networkx Graph object.")
 
-    # Find all simple cycles in the graph
-    cycles = list(simple_cycles(G))
+    # Find cycle basis for the graph which gives non-overlapping cycles
+    cycles = nx.cycle_basis(G)
 
     # Determine the size of each cycle (member ring)
     member_rings = [len(cycle) for cycle in cycles]
