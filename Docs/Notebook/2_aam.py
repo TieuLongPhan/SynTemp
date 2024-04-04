@@ -7,7 +7,7 @@ root_dir = pathlib.Path(__file__).parents[1]
 sys.path.append(str(root_dir))
 from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
-from SynTemp.utils import load_database, save_database
+from SynTemp.SynUtils.utils import load_database, save_database
 import warnings
 warnings.filterwarnings("ignore")
 import transformers

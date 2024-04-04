@@ -6,7 +6,6 @@ from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
 from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
 import itertools
-import math
 
 class ITSHAdjuster:
     

@@ -9,7 +9,7 @@ import tempfile
 root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 import pandas as pd
-from SynTemp.utils import load_database, save_database, save_to_pickle, load_from_pickle
+from SynTemp.SynUtils.utils import load_database, save_database, save_to_pickle, load_from_pickle
 from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster

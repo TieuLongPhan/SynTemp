@@ -5,7 +5,7 @@ import pathlib
 import pandas as pd
 from typing import List, Dict, Optional
 from SynTemp.SynAAM.atom_mappers import map_with_rxn_mapper, map_with_graphormer, map_with_local_mapper, map_with_rdt
-from SynTemp.utils import load_database, save_database
+from SynTemp.SynUtils.utils import load_database, save_database
 from rxnmapper import RXNMapper
 from localmapper import localmapper
 from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck

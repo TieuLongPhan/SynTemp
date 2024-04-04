@@ -1,7 +1,6 @@
 import networkx as nx
 from typing import Dict, List, Tuple
 from copy import deepcopy
-import copy
 from rdkit import Chem
 from joblib import Parallel, delayed
 from operator import eq

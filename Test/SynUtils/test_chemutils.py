@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.standardizer_wrapper import (  
+from SynTemp.SynUtils.chemutils import (  
     normalize_molecule, canonicalize_tautomer, salts_remover, reionize_charges, 
     uncharge_molecule, assign_stereochemistry, fragments_remover, remove_hydrogens_and_sanitize
 )
@@ -40,10 +40,10 @@ class TestMoleculeProcessing(unittest.TestCase):
         uncharged_mol = uncharge_molecule(charged_mol)
         self.assertEqual(Chem.rdmolops.GetFormalCharge(uncharged_mol), 0)
 
-    def test_assign_stereochemistry(self): # add test case
+    def test_assign_stereochemistry(self):
         mol_with_stereo = Chem.MolFromSmiles("C[C@H](O)[C@@H](O)C")
         assign_stereochemistry(mol_with_stereo)
-        self.assertTrue(mol_with_stereo.HasProp('_ChiralityPossible'))
+        self.assertEqual(len(Chem.FindMolChiralCenters(mol_with_stereo, includeUnassigned=True)), 2)
 
     def test_fragments_remover(self):
         mol_with_fragments = Chem.MolFromSmiles("CCO.OCC")
@@ -57,5 +57,3 @@ class TestMoleculeProcessing(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    # from rdkit import Chem
-    # Chem.MolFromSmiles("CC(=O)O[Na]")
