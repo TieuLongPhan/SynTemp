@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-import time
 import networkx as nx
 from SynTemp.SynUtils.graph_utils import is_acyclic_graph, is_single_cyclic_graph, is_complex_cyclic_graph, check_graph_type, get_cycle_member_rings
 
@@ -79,7 +78,7 @@ class TestUncertainRefinement(unittest.TestCase):
 
 
         G2 = nx.Graph()
-        G2.add_edges_from([(5, 6), (6, 7), (7, 8), (8, 5), (5, 7)])  # Cycle of size 3 and 3 => raise bug
+        G2.add_edges_from([(5, 6), (6, 7), (7, 8), (8, 5), (5, 7)]) 
         member_rings = get_cycle_member_rings(G2)
         self.assertEqual(member_rings, [3,3])
 

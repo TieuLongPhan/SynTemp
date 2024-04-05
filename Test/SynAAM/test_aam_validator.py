@@ -9,7 +9,7 @@ import pandas as pd
 class TestAMMValidator(unittest.TestCase):
 
     def setUp(self):
-        self.valid_data = pd.read_csv(f'{root_dir}/Data/benchmark.csv')
+        self.valid_data = pd.read_csv(f'{root_dir}/Data/aam_benchmark/benchmark.csv')
 
     def test_smiles_check(self):
         
