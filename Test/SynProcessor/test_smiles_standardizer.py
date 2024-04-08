@@ -6,12 +6,12 @@ import pandas as pd
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.smiles_standardizer import SMILESStandardizer
+from SynTemp.SynProcessor.smiles_standardizer import SMILESStandardizer
 
 class TestSMILESStandardizer(unittest.TestCase): ## add Test case
     def setUp(self):
         self.standardizer = SMILESStandardizer()
-        self.test_smiles = 'C[NH+](C)(C)C.[Cl-]'  # Example molecule: Tetramethylammonium chloride
+        self.test_smiles = 'C[N+](C)(C)C.[Cl-]'  # Example molecule: Tetramethylammonium chloride
 
     def test_standardize_mol(self):
         mol = Chem.MolFromSmiles(self.test_smiles)

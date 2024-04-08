@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.reaction_processor import ReactionProcessor
+from SynTemp.SynProcessor.reaction_processor import ReactionProcessor
 
 class TestReactionProcessor(unittest.TestCase):
     def test_label_reactions(self):
@@ -33,7 +33,7 @@ class TestReactionProcessor(unittest.TestCase):
     def test_process_reactions_parallel(self): # add new test case
         reaction_list = [
             {'R-id': 'R1', 'new_reaction': 'CCO.[O]>>CCO[O]'},
-            {'R-id': 'R2', 'new_reaction': 'CC.[H]>>CCH'}
+            {'R-id': 'R2', 'new_reaction': 'C=C.[H]>>CC'}
         ]
         processed_reactions = ReactionProcessor.process_reactions_parallel(reaction_list, n_jobs=2)
         self.assertEqual(len(processed_reactions), len(reaction_list))
@@ -42,7 +42,7 @@ class TestReactionProcessor(unittest.TestCase):
     def test_sum_of_charge_in_products(self):
         reaction_list = [
             {'R-id': 'R1', 'new_reaction': 'CCO>>CCO[O]', 'products': 'CCO[O]'},
-            {'R-id': 'R2', 'new_reaction': 'CC.[H]>>CCH', 'products': 'CCH'}
+            {'R-id': 'R2', 'new_reaction': 'C=C.[H]>>CC', 'products': 'CC'}
         ]
         processed_reactions = ReactionProcessor.sum_of_charge_in_products(reaction_list, n_jobs=2)
         self.assertTrue(all('total_charge_in_products' in reaction for reaction in processed_reactions))

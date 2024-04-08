@@ -6,7 +6,7 @@ from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 import time
-from SynITSG.SynMØD.MØD_rules import MØDRules
+from SynTemp.SynMØD.MØD_rules import MØDRules
 \
 class TestMODRules(unittest.TestCase):
 

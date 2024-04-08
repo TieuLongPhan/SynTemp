@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.uncharge_reaction import UnchargeReaction  # Replace 'your_module' with the actual module name
+from SynTemp.SynProcessor.uncharge_reaction import UnchargeReaction  # Replace 'your_module' with the actual module name
 from rdkit import Chem
 
 class TestUnchargeReaction(unittest.TestCase):

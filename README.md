@@ -8,13 +8,13 @@ This repository is dedicated to the systematic extraction of reaction rules from
 
 ### Step 1: Reaction Representation
 The initial step involves the representation of chemical reactions, as illustrated below:
-![Chemical Reactions](./Image/reactions.png)
+![Chemical Reactions](./Docs/Image/reactions.png)
 
 In this stage, we detail the reactants, products, and the overall reaction scheme, laying the foundation for subsequent computational analysis.
 
 ### Step 2: Atom-Atom Mapping (AAM) and ITS Graph Generation
 Utilizing the Atom-Atom Mapping (AAM) technique, we identify and map corresponding atoms across reactants and products. This mapping is crucial for accurately delineating the Imaginary Transitional State (ITS) of the reaction. The ITS graph, derived from AAM, represents the transitional phase of the reaction, highlighting key changes and interactions at the atomic level.
-![Imaginary Transitional State Graph](./Image/graph_its.png)
+![Imaginary Transitional State Graph](./Docs/Image/graph_its.png)
 
 ### Step 3: Rules Extraction
 In the final step, we focus on extracting the underlying rules from the ITS graph. This involves identifying significant nodes and edges that represent the core transformation mechanisms within the reaction. The extracted rules provide a concise and quantifiable description of the reaction process, instrumental for further analysis and application in computational chemistry.

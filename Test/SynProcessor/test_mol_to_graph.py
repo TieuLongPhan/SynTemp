@@ -6,7 +6,7 @@ import networkx as nx
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.mol_to_graph import MolToGraph
+from SynTemp.SynProcessor.mol_to_graph import MolToGraph
 
 class TestMolToGraph(unittest.TestCase):
     def setUp(self):
@@ -22,9 +22,9 @@ class TestMolToGraph(unittest.TestCase):
 
     def test_get_stereochemistry(self):
         # Test with chiral molecule
-        chiral_smiles = 'C[C@H](O)[H]'
+        chiral_smiles = 'CC[C@@H](C)O'
         chiral_mol = Chem.MolFromSmiles(chiral_smiles)
-        chiral_atom = chiral_mol.GetAtomWithIdx(1)  # The chiral carbon
+        chiral_atom = chiral_mol.GetAtomWithIdx(2)  # The chiral carbon
         stereo = MolToGraph.get_stereochemistry(chiral_atom)
         self.assertIn(stereo, ['R', 'S'])
 

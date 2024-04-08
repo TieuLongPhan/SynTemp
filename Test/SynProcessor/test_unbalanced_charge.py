@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynITSG.SynProcessor.unbalanced_charge import UnbalancedCharge
+from SynTemp.SynProcessor.unbalanced_charge import UnbalancedCharge
 
 class TestUnbalancedCharge(unittest.TestCase):
     def test_fix_negative_charge(self):
