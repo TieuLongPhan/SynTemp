@@ -3,6 +3,7 @@ import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
 import seaborn as sns
+from collections import deque
 from copy import deepcopy
 class GrapRuleDecompose:
     @staticmethod
@@ -55,7 +56,6 @@ class GrapRuleDecompose:
         
         return graph_copy
 
-
     @staticmethod
     def node_match(node1_attrs: Dict[str, Any], node2_attrs: Dict[str, Any]) -> bool:
         """
@@ -89,40 +89,98 @@ class GrapRuleDecompose:
         order1 = edge1_attrs.get('standard_order', 0)
         order2 = edge2_attrs.get('standard_order', 0)
         return (np.sign(order1) == np.sign(order2)) if (order1 != 0 and order2 != 0) else True
-
+   
     @staticmethod
     def find_maximum_common_subgraph(
         parent_graph: nx.Graph, 
         child_graph: nx.Graph, 
-        node_match: callable, 
-        edge_match: callable
+        node_match: callable = None, 
+        edge_match: callable = None
     ) -> Optional[Dict]:
         """
         Finds the largest common subgraph between a parent and a child graph based on specified node and edge matching criteria.
+        The function uses the VF2 algorithm for graph isomorphism testing and subgraph search to find the largest common subgraph.
 
         Parameters:
         - parent_graph (nx.Graph): The parent graph in which to find the subgraph.
         - child_graph (nx.Graph): The child graph representing the potential subgraph.
-        - node_match (callable): A function used to determine whether nodes in the two graphs match.
-        - edge_match (callable): A function used to determine whether edges in the two graphs match.
+        - node_match (callable, optional): A function used to determine whether nodes in the two graphs match. Defaults to None, which considers all nodes as matching.
+        - edge_match (callable, optional): A function used to determine whether edges in the two graphs match. Defaults to None, which considers all edges as matching.
 
         Returns:
-        - Optional[Dict]: A dictionary representing the mapping of nodes in the parent graph to nodes in the child graph for the largest common subgraph, or None if no common subgraph is found.
+        - Optional[Dict]: A dictionary representing the mapping of nodes in the parent graph to nodes in the child graph for the largest common subgraph. Returns None if no common subgraph is found.
+
+        Example:
+        - node_match could be a function that checks if nodes have the same label.
+        - edge_match could be a function that checks if edges have the same weight.
         """
+        # Initialize the graph matcher with the provided node and edge match functions
         matcher = nx.algorithms.isomorphism.GraphMatcher(parent_graph, child_graph, node_match=node_match, edge_match=edge_match)
         
+        # Initialize variables to keep track of the largest common subgraph found
         max_common_subgraph = None
         max_size = 0
 
+        # Iterate over all subgraph isomorphisms
         for isomorphism in matcher.subgraph_isomorphisms_iter():
-            if len(isomorphism) > max_size:
-                max_size = len(isomorphism)
+            current_size = len(isomorphism)
+            # Update the maximum common subgraph if a larger one is found
+            if current_size > max_size:
+                max_size = current_size
                 max_common_subgraph = isomorphism
 
+        # Return the largest common subgraph mapping or None if no common subgraph is found
         return max_common_subgraph
+    
+    @staticmethod
+    def remove_maximum_common_subgraph_edges(parent_graph: nx.Graph, child_graph: nx.Graph, 
+                                             subgraph_isomorphism: dict, edge_order: str = 'standard_order') -> nx.Graph:
+        """
+        Creates a modified copy of the parent graph by adjusting edges based on the maximum common subgraph shared with a child graph.
+        For each edge in the common subgraph, the method checks a specified edge attribute (defaulting to 'standard_order'):
+        - If the attribute value in the parent graph is greater or equal and their signs are the same, the edge is removed.
+        - If the attribute value in the parent graph is greater, it's decreased by the value in the child graph.
+
+        Parameters:
+        - parent_graph (nx.Graph): The original graph from which edges will be modified.
+        - child_graph (nx.Graph): The graph containing the subgraph shared with the parent.
+        - subgraph_isomorphism (dict): Node mapping from the parent graph to the child graph for the maximum common subgraph.
+        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
+
+        Returns:
+        - nx.Graph: A new graph, modified based on the criteria described above.
+        """
+        # Create a copy of the parent graph to modify
+        parent_graph_copy = parent_graph.copy()
+
+        # Iterate over each edge in the child graph that is part of the common subgraph
+        for u, v, data in child_graph.edges(data=True):
+            # Find corresponding parent nodes for child nodes u and v
+            parent_u = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, u)
+            parent_v = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
+
+            if parent_u is not None and parent_v is not None and parent_graph_copy.has_edge(parent_u, parent_v):
+                parent_edge_data = parent_graph_copy.get_edge_data(parent_u, parent_v)
+
+                # Check if the specified edge attribute exists in both child and parent edges
+                if edge_order in data and edge_order in parent_edge_data:
+                    # Compare attribute values and their signs
+                    if np.sign(data[edge_order]) == np.sign(parent_edge_data[edge_order]) and parent_edge_data[edge_order] >= data[edge_order]:
+                        parent_graph_copy.remove_edge(parent_u, parent_v)
+
+                        if abs(parent_edge_data[edge_order]) > abs(data[edge_order]):
+                            # If the attribute value in the parent is greater, decrease it instead of removing the edge
+                            parent_graph_copy.add_edge(parent_u, parent_v, **{edge_order: parent_edge_data[edge_order] - data[edge_order]})
+
+        # Optionally, remove disconnected components, keeping only the largest connected component
+        parent_graph_copy = GrapRuleDecompose.remove_disconnected_part(parent_graph_copy)
+
+        return parent_graph_copy
+
 
     @staticmethod
-    def dfs_remove_isomorphic_subgraphs(complex_graph: nx.Graph, single_cyclic_graphs: List[nx.Graph], explained_graphs: List[nx.Graph] = []) -> Optional[List[nx.Graph]]:
+    def dfs_remove_isomorphic_subgraphs(complex_graph: nx.Graph, single_cyclic_graphs: List[nx.Graph], 
+                                        explained_graphs: List[nx.Graph] = [], edge_order: str = 'standard_order') -> Optional[List[nx.Graph]]:
         """
         Recursively remove isomorphic subgraphs from a complex graph using depth-first search.
 
@@ -130,11 +188,12 @@ class GrapRuleDecompose:
         - complex_graph (nx.Graph): The complex graph to decompose.
         - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and remove.
         - explained_graphs (List[nx.Graph]): Accumulator for single cyclic graphs that explain parts of the complex graph.
+        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
 
         Returns:
         - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex graph, or None if no solution is found.
         """
-        # Implementation remains the same
+        
         if not complex_graph.edges():
             return explained_graphs
 
@@ -143,54 +202,36 @@ class GrapRuleDecompose:
                                                              edge_match=GrapRuleDecompose.edge_match)
             if isomorph:
                 complex_graph_copy = nx.Graph(complex_graph)
-                for u, v, data in single_graph.edges(data=True):
-                    complex_u, complex_v = GrapRuleDecompose.get_key_by_value(isomorph, u), GrapRuleDecompose.get_key_by_value(isomorph, v)
-                    if complex_graph_copy.has_edge(complex_u, complex_v):
-                        edge_data = complex_graph_copy.get_edge_data(complex_u, complex_v)
-                        if 'standard_order' in data and 'standard_order' in edge_data:
-                            if np.sign(data['standard_order']) == np.sign(edge_data['standard_order']) and abs(edge_data['standard_order']) >= abs(data['standard_order']):
-                                complex_graph_copy.remove_edge(complex_u, complex_v)
-                                if abs(edge_data['standard_order']) > abs(data['standard_order']):
-                                    complex_graph_copy.add_edge(complex_u, complex_v, standard_order=edge_data['standard_order'] - data['standard_order'])
-                complex_graph_copy= GrapRuleDecompose.remove_disconnected_part(complex_graph_copy)
-                result = GrapRuleDecompose.dfs_remove_isomorphic_subgraphs(complex_graph_copy, single_cyclic_graphs, explained_graphs + [single_graph])
+                complex_graph_copy = GrapRuleDecompose.remove_maximum_common_subgraph_edges(complex_graph_copy, single_graph, isomorph, edge_order)
+                result = GrapRuleDecompose.dfs_remove_isomorphic_subgraphs(complex_graph_copy, single_cyclic_graphs, explained_graphs + [single_graph], edge_order)
                 if result is not None:
                     return result
 
         return None
 
     @staticmethod
-    def bfs_remove_isomorphic_subgraphs(complex_graph: nx.Graph, single_cyclic_graphs: List[nx.Graph]) -> Optional[List[nx.Graph]]:
+    def bfs_remove_isomorphic_subgraphs(complex_graph: nx.Graph, single_cyclic_graphs: List[nx.Graph], edge_order: str = 'standard_order') -> Optional[List[nx.Graph]]:
         """
         Iteratively remove isomorphic subgraphs from a complex graph using breadth-first search.
 
         Parameters:
         - complex_graph (nx.Graph): The complex graph to decompose.
         - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and remove.
+        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
 
         Returns:
         - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex graph, or None if no solution is found.
         """
-        queue = [(complex_graph, [])]
+        queue = deque([(complex_graph, [])])
         while queue:
-            current_graph, explained_graphs = queue.pop(0)  # Dequeue
+            current_graph, explained_graphs = queue.popleft()  # Dequeue
             if not current_graph.edges():
                 return explained_graphs
 
             for single_graph in single_cyclic_graphs:
-                isomorph = GrapRuleDecompose.find_maximum_common_subgraph(complex_graph, single_graph, node_match=GrapRuleDecompose.node_match, 
-                                                             edge_match=GrapRuleDecompose.edge_match)
+                isomorph = GrapRuleDecompose.find_maximum_common_subgraph(current_graph, single_graph, node_match=GrapRuleDecompose.node_match, edge_match=GrapRuleDecompose.edge_match)
                 if isomorph:
-                    complex_graph_copy = nx.Graph(current_graph)
-                    for u, v, data in single_graph.edges(data=True):
-                        complex_u, complex_v = GrapRuleDecompose.get_key_by_value(isomorph, u), GrapRuleDecompose.get_key_by_value(isomorph, v)
-                        if complex_graph_copy.has_edge(complex_u, complex_v):
-                            edge_data = complex_graph_copy.get_edge_data(complex_u, complex_v)
-                            if 'standard_order' in data and 'standard_order' in edge_data and np.sign(data['standard_order']) == np.sign(edge_data['standard_order']) and abs(edge_data['standard_order']) >= abs(data['standard_order']):
-                                complex_graph_copy.remove_edge(complex_u, complex_v)
-                                if abs(edge_data['standard_order']) > abs(data['standard_order']):
-                                    complex_graph_copy.add_edge(complex_u, complex_v, standard_order=edge_data['standard_order'] - data['standard_order'])
-                    complex_graph_copy = GrapRuleDecompose.remove_disconnected_part(complex_graph_copy)
+                    complex_graph_copy = GrapRuleDecompose.remove_maximum_common_subgraph_edges(current_graph.copy(), single_graph, isomorph, edge_order)
                     queue.append((complex_graph_copy, explained_graphs + [single_graph]))  # Enqueue
 
         return None
@@ -214,12 +255,12 @@ class GrapRuleDecompose:
             print("This function requires exactly two child graphs.")
             return
         highlighted_edges = [] 
+        sns.set()
         plt.figure(figsize=(15, 5))
         node_color = '#1f78b4'  # Blue for nodes
         parent_edge_color = '#999999'  # Grey for parent edges not in common subgraphs
         common_colors = ['#e31a1c', '#33a02c']  # Red for common subgraph with child 1, Green for child 2
         overlap_color = '#ff8c00'  # Orange for overlapping common subgraphs
-
 
         for i, child_graph in enumerate(child_graphs, 1):
             plt.subplot(1, 3, i)
@@ -262,8 +303,9 @@ class GrapRuleDecompose:
                 common_edges = []
                 for u, v in child_graph.edges():
                     complex_u, complex_v = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, u), GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
-                    if parent_graph.has_edge(complex_u, complex_v):
-                        common_edges.append((complex_u, complex_v))
+                    edge = tuple(sorted([complex_u, complex_v]))
+                    if parent_graph.has_edge(*edge):
+                        common_edges.append(edge)
                 for edge in common_edges:
                     if edge in highlighted_edges:
                         # Edge is an overlap, color it orange
@@ -272,44 +314,9 @@ class GrapRuleDecompose:
                         # Color edge with child-specific color and add it to the tracking list
                         nx.draw_networkx_edges(parent_graph, pos, edgelist=[edge], edge_color=common_colors[i], width=2)
                         highlighted_edges.append(edge)
-                current_graph = GrapRuleDecompose.remove_maximum_common_subgraph_edges(current_graph,child_graph,subgraph_isomorphism)
                 print(current_graph)
+                current_graph = GrapRuleDecompose.remove_maximum_common_subgraph_edges(current_graph,child_graph,subgraph_isomorphism)
+                #print(current_graph)
             print('***')
         plt.title("Complex Rules")
         plt.show()
-
-    @staticmethod
-    def remove_maximum_common_subgraph_edges(parent_graph: nx.Graph, child_graph: nx.Graph, subgraph_isomorphism: dict) -> nx.Graph:
-            """
-            Modifies the parent graph by removing or adjusting edges based on the maximum common subgraph shared with a child graph.
-            Edges are removed if they correspond to the maximum common subgraph, and if the 'standard_order' attribute of the edge in the child graph is less than or equal to that in the parent graph.
-            If the 'standard_order' in the parent graph is greater, the edge is not removed but its 'standard_order' is decreased by the amount specified in the child graph.
-
-            Parameters:
-            - parent_graph (nx.Graph): The parent graph from which edges will be modified.
-            - child_graph (nx.Graph): The child graph containing the subgraph shared with the parent.
-            - subgraph_isomorphism (dict): A dictionary representing the node mapping from the parent graph to the child graph for the maximum common subgraph.
-
-            Returns:
-            - nx.Graph: A modified copy of the parent graph with certain edges removed or their 'standard_order' adjusted.
-            """
-            parent_graph_copy = nx.Graph(parent_graph)
-
-            for u, v, data in child_graph.edges(data=True):
-                if u in subgraph_isomorphism.values() and v in subgraph_isomorphism.values():
-                    complex_u, complex_v = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, u), GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
-
-                    if parent_graph_copy.has_edge(complex_u, complex_v):
-                        edge_data = parent_graph_copy.get_edge_data(complex_u, complex_v)
-
-                        if 'standard_order' in data and 'standard_order' in edge_data:
-                            if np.sign(data['standard_order']) == np.sign(edge_data['standard_order']) and edge_data['standard_order'] >= data['standard_order']:
-                                parent_graph_copy.remove_edge(complex_u, complex_v)
-                                if abs(edge_data['standard_order']) > abs(data['standard_order']):
-                                    # If the 'standard_order' in the parent is greater, adjust it instead of removing the edge
-                                    parent_graph_copy.add_edge(complex_u, complex_v, standard_order=edge_data['standard_order'] - data['standard_order'])
-
-            # Optionally, remove disconnected parts of the graph
-            parent_graph_copy = GrapRuleDecompose.remove_disconnected_part(parent_graph_copy)
-
-            return parent_graph_copy
