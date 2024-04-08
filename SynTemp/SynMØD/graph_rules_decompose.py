@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import deque
 from copy import deepcopy
-class GrapRuleDecompose:
+class GraphRuleDecompose:
     @staticmethod
     def get_key_by_value(dictionary: Dict[Any, Any], value: Any) -> Optional[Any]:
         """
@@ -156,8 +156,8 @@ class GrapRuleDecompose:
         # Iterate over each edge in the child graph that is part of the common subgraph
         for u, v, data in child_graph.edges(data=True):
             # Find corresponding parent nodes for child nodes u and v
-            parent_u = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, u)
-            parent_v = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
+            parent_u = GraphRuleDecompose.get_key_by_value(subgraph_isomorphism, u)
+            parent_v = GraphRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
 
             if parent_u is not None and parent_v is not None and parent_graph_copy.has_edge(parent_u, parent_v):
                 parent_edge_data = parent_graph_copy.get_edge_data(parent_u, parent_v)
@@ -173,7 +173,7 @@ class GrapRuleDecompose:
                             parent_graph_copy.add_edge(parent_u, parent_v, **{edge_order: parent_edge_data[edge_order] - data[edge_order]})
 
         # Optionally, remove disconnected components, keeping only the largest connected component
-        parent_graph_copy = GrapRuleDecompose.remove_disconnected_part(parent_graph_copy)
+        parent_graph_copy = GraphRuleDecompose.remove_disconnected_part(parent_graph_copy)
 
         return parent_graph_copy
 
@@ -198,12 +198,12 @@ class GrapRuleDecompose:
             return explained_graphs
 
         for single_graph in single_cyclic_graphs:
-            isomorph = GrapRuleDecompose.find_maximum_common_subgraph(complex_graph, single_graph, node_match=GrapRuleDecompose.node_match, 
-                                                             edge_match=GrapRuleDecompose.edge_match)
+            isomorph = GraphRuleDecompose.find_maximum_common_subgraph(complex_graph, single_graph, node_match=GraphRuleDecompose.node_match, 
+                                                             edge_match=GraphRuleDecompose.edge_match)
             if isomorph:
                 complex_graph_copy = nx.Graph(complex_graph)
-                complex_graph_copy = GrapRuleDecompose.remove_maximum_common_subgraph_edges(complex_graph_copy, single_graph, isomorph, edge_order)
-                result = GrapRuleDecompose.dfs_remove_isomorphic_subgraphs(complex_graph_copy, single_cyclic_graphs, explained_graphs + [single_graph], edge_order)
+                complex_graph_copy = GraphRuleDecompose.remove_maximum_common_subgraph_edges(complex_graph_copy, single_graph, isomorph, edge_order)
+                result = GraphRuleDecompose.dfs_remove_isomorphic_subgraphs(complex_graph_copy, single_cyclic_graphs, explained_graphs + [single_graph], edge_order)
                 if result is not None:
                     return result
 
@@ -229,9 +229,10 @@ class GrapRuleDecompose:
                 return explained_graphs
 
             for single_graph in single_cyclic_graphs:
-                isomorph = GrapRuleDecompose.find_maximum_common_subgraph(current_graph, single_graph, node_match=GrapRuleDecompose.node_match, edge_match=GrapRuleDecompose.edge_match)
+                isomorph = GraphRuleDecompose.find_maximum_common_subgraph(current_graph, single_graph, node_match=GraphRuleDecompose.node_match, 
+                                                                           edge_match=GraphRuleDecompose.edge_match)
                 if isomorph:
-                    complex_graph_copy = GrapRuleDecompose.remove_maximum_common_subgraph_edges(current_graph.copy(), single_graph, isomorph, edge_order)
+                    complex_graph_copy = GraphRuleDecompose.remove_maximum_common_subgraph_edges(current_graph.copy(), single_graph, isomorph, edge_order)
                     queue.append((complex_graph_copy, explained_graphs + [single_graph]))  # Enqueue
 
         return None
@@ -275,8 +276,8 @@ class GrapRuleDecompose:
             node_labels = {node: data.get('element', node) for node, data in child_graph.nodes(data=True)}
             nx.draw_networkx_labels(child_graph, pos, labels=node_labels)
             #matcher = nx.algorithms.isomorphism.GraphMatcher(parent_graph, child_graph, node_match=node_match, edge_match=edge_match)
-            subgraph_isomorphism = GrapRuleDecompose.find_maximum_common_subgraph(parent_graph, child_graph, node_match=GrapRuleDecompose.node_match, 
-                                                                                  edge_match=GrapRuleDecompose.edge_match)
+            subgraph_isomorphism = GraphRuleDecompose.find_maximum_common_subgraph(parent_graph, child_graph, node_match=GraphRuleDecompose.node_match, 
+                                                                                  edge_match=GraphRuleDecompose.edge_match)
             if subgraph_isomorphism:
                 inverse_isomorphism = {v: u for u, v in subgraph_isomorphism.items()}  # Invert mapping for child to parent
                 common_edges = [(u, v) for u, v in child_graph.edges() if u in inverse_isomorphism and v in inverse_isomorphism]
@@ -296,13 +297,13 @@ class GrapRuleDecompose:
 
         current_graph = deepcopy(parent_graph)
         for i, child_graph in enumerate(child_graphs):
-            subgraph_isomorphism = GrapRuleDecompose.find_maximum_common_subgraph(current_graph, child_graph, node_match=GrapRuleDecompose.node_match, 
-                                                                                  edge_match=GrapRuleDecompose.edge_match)
+            subgraph_isomorphism = GraphRuleDecompose.find_maximum_common_subgraph(current_graph, child_graph, node_match=GraphRuleDecompose.node_match, 
+                                                                                  edge_match=GraphRuleDecompose.edge_match)
             print(subgraph_isomorphism)
             if subgraph_isomorphism:
                 common_edges = []
                 for u, v in child_graph.edges():
-                    complex_u, complex_v = GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, u), GrapRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
+                    complex_u, complex_v = GraphRuleDecompose.get_key_by_value(subgraph_isomorphism, u), GraphRuleDecompose.get_key_by_value(subgraph_isomorphism, v)
                     edge = tuple(sorted([complex_u, complex_v]))
                     if parent_graph.has_edge(*edge):
                         common_edges.append(edge)
@@ -315,7 +316,7 @@ class GrapRuleDecompose:
                         nx.draw_networkx_edges(parent_graph, pos, edgelist=[edge], edge_color=common_colors[i], width=2)
                         highlighted_edges.append(edge)
                 print(current_graph)
-                current_graph = GrapRuleDecompose.remove_maximum_common_subgraph_edges(current_graph,child_graph,subgraph_isomorphism)
+                current_graph = GraphRuleDecompose.remove_maximum_common_subgraph_edges(current_graph,child_graph,subgraph_isomorphism)
                 #print(current_graph)
             print('***')
         plt.title("Complex Rules")

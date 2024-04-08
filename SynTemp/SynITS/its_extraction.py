@@ -114,7 +114,7 @@ class ITSExtraction:
 
         is_empty_graph_present = any(len(graph.nodes()) == 0 for graph in rules_graphs)
         # Determine the target dictionary based on conditions
-        target_dict = graphs_by_map_incorrect if is_empty_graph_present or equivariant != threshold else graphs_by_map_correct
+        target_dict = graphs_by_map_incorrect if is_empty_graph_present or equivariant >= threshold else graphs_by_map_correct
 
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:

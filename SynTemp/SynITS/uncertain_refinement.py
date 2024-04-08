@@ -49,7 +49,8 @@ class UncertainRefinement:
         return None
 
     @staticmethod
-    def process_graphs_in_parallel(graph_dicts: List[Dict], n_jobs: int = 4, verbose: int = 1) -> List[Optional[Dict]]:
+    def process_graphs_in_parallel(graph_dicts: List[Dict], mapper_types: List[str] = ['rxn_mapper', 'graphormer', 'local_mapper'],
+                                   n_jobs: int = 4, verbose: int = 1) -> List[Optional[Dict]]:
         """
         Process multiple graph dictionaries in parallel to find 'Single Cyclic' graphs.
 
@@ -61,5 +62,5 @@ class UncertainRefinement:
         Returns:
         - List[Optional[Dict]]: A list of processed graph data.
         """
-        results = Parallel(n_jobs=n_jobs, verbose=verbose)(delayed(UncertainRefinement.process_dict)(graph_dict) for graph_dict in graph_dicts)
+        results = Parallel(n_jobs=n_jobs, verbose=verbose)(delayed(UncertainRefinement.process_dict)(graph_dict, 'ITSGraph', mapper_types) for graph_dict in graph_dicts)
         return results

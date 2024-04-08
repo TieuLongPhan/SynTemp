@@ -3,7 +3,7 @@ import sys
 import logging
 import torch
 import time
-root_dir = pathlib.Path(__file__).parents[1]
+root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
@@ -26,9 +26,9 @@ def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=Tru
         balanced_reactions = data
     
     consensus_aam = ConsensusAAM(balanced_reactions, rsmi_column='reactions', save_dir=f'{root_dir}/Data', 
-                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper'])
+                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper', 'rdt'])
        
-    mapped_reactions = consensus_aam.run(batch_size, rxn_mapper)
+    mapped_reactions = consensus_aam.fit(batch_size, rxn_mapper, rdt_jar_path=f'{root_dir}/Data/RDT_2.4.1.jar', working_dir=f'{root_dir}/Docs/Notebook')
     if save_dir:
         save_database(mapped_reactions, f'{save_dir}/{data_name}_aam_reactions.json.gz')
   
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=logging.INFO)
     #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'jaworski'
+    folder_name = 'golden'
     start_time = time.time()  
     save_dir = f'{root_dir}/Data/{folder_name}'
     data = load_database(f'{save_dir}/{folder_name}_reactions.json.gz')

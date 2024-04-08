@@ -25,12 +25,10 @@ class TestAMMValidator(unittest.TestCase):
     def test_validate_smiles_dataframe(self):
         
 
-        results = AMMValidator.validate_smiles(data=self.valid_data, ground_truth_col='ground_truth', mapped_cols=['rxn_mapper', 'graphormer', 'local_mapper'], check_method='RC', 
-                                               ignore_aromaticity=False, n_jobs=4, verbose=0)
+        results, _ = AMMValidator.validate_smiles(data=self.valid_data, ground_truth_col='ground_truth', mapped_cols=['rxn_mapper', 'graphormer', 'local_mapper'], check_method='RC', 
+                                               ignore_aromaticity=False, n_jobs=4, verbose=0, ensemble=True)
         
-        print('rxn_mapper:',results[0]['accuracy'])
-        print('graphormer:',results[1]['accuracy'])
-        print('local_mapper:',results[2]['accuracy'])
+        print(pd.DataFrame(results)[['mapper', 'accuracy', 'success_rate']])
         
 
 if __name__ == '__main__':
