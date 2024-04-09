@@ -126,3 +126,25 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     member_rings.sort()
 
     return member_rings
+
+
+def load_gml_as_text(gml_file_path):
+    """
+    Load the contents of a GML file as a text string.
+    
+    Parameters:
+    - gml_file_path (str): The file path to the GML file.
+    
+    Returns:
+    - str: The text content of the GML file.
+    """
+    try:
+        with open(gml_file_path, 'r') as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"File not found: {gml_file_path}")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+  

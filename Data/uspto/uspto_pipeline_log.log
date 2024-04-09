@@ -1,27 +1,55 @@
-2024-04-04 16:11:07,106 - INFO - Processing data uspto with 4 cpus
-2024-04-04 16:11:12,021 - INFO - Fixing hydrogen for batch 1/30.
-2024-04-04 16:11:18,246 - INFO - Fixing hydrogen for batch 2/30.
-2024-04-04 16:11:24,961 - INFO - Fixing hydrogen for batch 3/30.
-2024-04-04 16:11:31,774 - INFO - Fixing hydrogen for batch 4/30.
-2024-04-04 16:11:38,765 - INFO - Fixing hydrogen for batch 5/30.
-2024-04-04 16:11:45,543 - INFO - Fixing hydrogen for batch 6/30.
-2024-04-04 16:11:52,496 - INFO - Fixing hydrogen for batch 7/30.
-2024-04-04 16:11:59,236 - INFO - Fixing hydrogen for batch 8/30.
-2024-04-04 16:12:06,261 - INFO - Fixing hydrogen for batch 9/30.
-2024-04-04 16:12:13,280 - INFO - Fixing hydrogen for batch 10/30.
-2024-04-04 16:12:20,009 - INFO - Fixing hydrogen for batch 11/30.
-2024-04-04 16:12:27,247 - INFO - Fixing hydrogen for batch 12/30.
-2024-04-04 16:12:34,375 - INFO - Fixing hydrogen for batch 13/30.
-2024-04-04 16:12:42,227 - INFO - Fixing hydrogen for batch 14/30.
-2024-04-04 16:12:51,813 - INFO - Fixing hydrogen for batch 15/30.
-2024-04-04 16:12:58,825 - INFO - Fixing hydrogen for batch 16/30.
-2024-04-04 16:13:05,119 - INFO - Fixing hydrogen for batch 17/30.
-2024-04-04 16:13:11,921 - INFO - Fixing hydrogen for batch 18/30.
-2024-04-04 16:13:18,627 - INFO - Fixing hydrogen for batch 19/30.
-2024-04-04 16:13:25,262 - INFO - Fixing hydrogen for batch 20/30.
-2024-04-04 16:13:32,367 - INFO - Fixing hydrogen for batch 21/30.
-2024-04-04 16:13:39,051 - INFO - Fixing hydrogen for batch 22/30.
-2024-04-04 16:13:46,223 - INFO - Fixing hydrogen for batch 23/30.
-2024-04-04 16:13:53,884 - INFO - Fixing hydrogen for batch 24/30.
-2024-04-04 16:14:01,041 - INFO - Fixing hydrogen for batch 25/30.
-2024-04-04 16:14:08,350 - INFO - Fixing hydrogen for batch 26/30.
+2024-04-09 11:09:34,267 - INFO - Processing data uspto with 4 cpus
+2024-04-09 11:09:39,124 - INFO - Fixing hydrogen for batch 1/30.
+2024-04-09 11:09:45,686 - INFO - Fixing hydrogen for batch 2/30.
+2024-04-09 11:09:52,287 - INFO - Fixing hydrogen for batch 3/30.
+2024-04-09 11:09:59,773 - INFO - Fixing hydrogen for batch 4/30.
+2024-04-09 11:10:06,774 - INFO - Fixing hydrogen for batch 5/30.
+2024-04-09 11:10:13,560 - INFO - Fixing hydrogen for batch 6/30.
+2024-04-09 11:10:20,455 - INFO - Fixing hydrogen for batch 7/30.
+2024-04-09 11:10:27,074 - INFO - Fixing hydrogen for batch 8/30.
+2024-04-09 11:10:34,097 - INFO - Fixing hydrogen for batch 9/30.
+2024-04-09 11:10:40,838 - INFO - Fixing hydrogen for batch 10/30.
+2024-04-09 11:10:47,787 - INFO - Fixing hydrogen for batch 11/30.
+2024-04-09 11:10:54,834 - INFO - Fixing hydrogen for batch 12/30.
+2024-04-09 11:11:01,367 - INFO - Fixing hydrogen for batch 13/30.
+2024-04-09 11:11:08,498 - INFO - Fixing hydrogen for batch 14/30.
+2024-04-09 11:11:16,072 - INFO - Fixing hydrogen for batch 15/30.
+2024-04-09 11:11:23,972 - INFO - Fixing hydrogen for batch 16/30.
+2024-04-09 11:11:32,148 - INFO - Fixing hydrogen for batch 17/30.
+2024-04-09 11:11:39,968 - INFO - Fixing hydrogen for batch 18/30.
+2024-04-09 11:11:46,934 - INFO - Fixing hydrogen for batch 19/30.
+2024-04-09 11:11:54,011 - INFO - Fixing hydrogen for batch 20/30.
+2024-04-09 11:12:01,036 - INFO - Fixing hydrogen for batch 21/30.
+2024-04-09 11:12:07,902 - INFO - Fixing hydrogen for batch 22/30.
+2024-04-09 11:12:15,196 - INFO - Fixing hydrogen for batch 23/30.
+2024-04-09 11:12:21,834 - INFO - Fixing hydrogen for batch 24/30.
+2024-04-09 11:12:29,092 - INFO - Fixing hydrogen for batch 25/30.
+2024-04-09 11:12:36,106 - INFO - Fixing hydrogen for batch 26/30.
+2024-04-09 11:12:43,414 - INFO - Fixing hydrogen for batch 27/30.
+2024-04-09 11:12:50,352 - INFO - Fixing hydrogen for batch 28/30.
+2024-04-09 11:12:57,511 - INFO - Fixing hydrogen for batch 29/30.
+2024-04-09 11:13:00,452 - INFO - Fixing hydrogen for batch 30/30.
+2024-04-09 11:13:16,091 - INFO - Combining and save data
+2024-04-09 11:13:16,091 - INFO - Number of correct mappers:28078
+2024-04-09 11:13:16,091 - INFO - Number of incorrect mappers:966
+2024-04-09 11:13:16,091 - INFO - Number of uncertain hydrogen:142
+2024-04-09 11:13:32,681 - INFO - Curating incorrect mappings.
+2024-04-09 11:13:32,682 - INFO - Processing batch 1/2
+2024-04-09 11:13:36,330 - INFO - Processing batch 2/2
+2024-04-09 11:13:39,473 - INFO - incorrect mappings fixed: 829
+2024-04-09 11:13:39,476 - INFO - Data all for alignment: 28907
+2024-04-09 11:13:39,476 - INFO - Clustering ITS graphs.
+2024-04-09 11:14:39,190 - INFO - Number of clusters: naive_cluster
+16     6026
+15     5732
+23     2568
+27     1533
+18     1277
+       ... 
+159       1
+160       1
+161       1
+128       1
+194       1
+Name: count, Length: 195, dtype: int64
+2024-04-09 11:14:39,191 - INFO - Execution time: 304.92 seconds

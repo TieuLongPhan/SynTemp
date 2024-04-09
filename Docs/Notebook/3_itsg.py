@@ -189,7 +189,7 @@ def run_synitsg_pipeline(data, mapper_name=None, batch_size=1000, verbose=1, n_j
 if __name__ == "__main__":
     mapper_name = ['rxn_mapper', 'graphormer', 'local_mapper']
     #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'uspto_sample'
+    folder_name = 'uspto'
     save_dir = f'{root_dir}/Data/{folder_name}'
 
     data = load_database(f'{root_dir}/Data/{folder_name}/{folder_name}_aam_reactions.json.gz')[:]

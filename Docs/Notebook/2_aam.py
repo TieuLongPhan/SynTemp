@@ -17,7 +17,6 @@ transformers.logging.set_verbosity_error()
 
 def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=True):
     rxn_mapper = RXNMapper()
-    #local_mapper = AtomMapper(device=torch.device('cpu') , dataset='USPTO_FULL', root_dir=f'{root_dir}/SynITSG/LocalMapper')
     
     if check_balance:
         checker = BalanceReactionCheck(data, rsmi_column='reactions', n_jobs=5, verbose=2)
@@ -26,7 +25,7 @@ def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=Tru
         balanced_reactions = data
     
     consensus_aam = ConsensusAAM(balanced_reactions, rsmi_column='reactions', save_dir=f'{root_dir}/Data', 
-                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper', 'rdt'])
+                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper'])
        
     mapped_reactions = consensus_aam.fit(batch_size, rxn_mapper, rdt_jar_path=f'{root_dir}/Data/RDT_2.4.1.jar', working_dir=f'{root_dir}/Docs/Notebook')
     if save_dir:
@@ -35,13 +34,17 @@ def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=Tru
     return mapped_reactions
 
 if __name__ == '__main__':
-
+    import pandas as pd
     logging.basicConfig(level=logging.INFO)
     #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'golden'
+    folder_name = 'USPTO_50K'
     start_time = time.time()  
     save_dir = f'{root_dir}/Data/{folder_name}'
     data = load_database(f'{save_dir}/{folder_name}_reactions.json.gz')
+    data = pd.DataFrame(data)
+    #data['reactions'] = data['ground_truth']
+    #data['ground_truth'] = data['reactions']
+    data = data.to_dict('records')
     print(len(data))
     mapped_reactions = main(data, save_dir=save_dir, data_name = folder_name, batch_size=50, check_balance=False)
     end_time = time.time() 

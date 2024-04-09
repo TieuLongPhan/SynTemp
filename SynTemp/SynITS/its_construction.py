@@ -1,10 +1,10 @@
 import networkx as nx
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, List, Any
 from copy import deepcopy
 
 class ITSConstruction:
     @staticmethod
-    def ITSGraph(G: nx.Graph, H: nx.Graph, ignore_aromaticity: bool = False) -> nx.Graph:
+    def ITSGraph(G: nx.Graph, H: nx.Graph, ignore_aromaticity: bool = False, attributes_defaults: Dict[str, Any] = None) -> nx.Graph:
         """
         Creates a Combined Graph Representation (CGR) from two input graphs G and H.
 
@@ -14,6 +14,8 @@ class ITSConstruction:
         Parameters:
         - G (nx.Graph): The first input graph.
         - H (nx.Graph): The second input graph.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs. Defaults to False.
+        - attributes_defaults (Dict[str, Any]): A dictionary of default attributes to use for nodes that are not present in either G or H.
 
         Returns:
         - nx.Graph: The Combined Graph Representation as a new graph instance.
@@ -34,8 +36,8 @@ class ITSConstruction:
             if v not in G.nodes() or v not in H.nodes():
                 continue
             else:
-                typesG = ITSConstruction.get_node_attributes_with_defaults(G, v)  # node attribute in reactant graph
-                typesH = ITSConstruction.get_node_attributes_with_defaults(H, v)  # node attribute in product graph
+                typesG = ITSConstruction.get_node_attributes_with_defaults(G, v, attributes_defaults)  # node attribute in reactant graph
+                typesH = ITSConstruction.get_node_attributes_with_defaults(H, v, attributes_defaults)  # node attribute in product graph
                 typesDict[v] = (typesG, typesH)
 
         nx.set_node_attributes(ITS, typesDict, "typesGH")
@@ -44,6 +46,38 @@ class ITSConstruction:
         ITS = ITSConstruction.add_edges_to_ITS(ITS, G, H, ignore_aromaticity)
 
         return ITS
+    
+    # @staticmethod
+    # def ITSGraph(G: nx.Graph, H: nx.Graph, ignore_aromaticity: bool = False, attributes_defaults: Dict[str, Any] = None) -> nx.Graph:
+    #     """
+    #     Creates a Combined Graph Representation (CGR) from two input graphs G and H by merging their nodes and edges.
+    #     Nodes preserve their attributes, and edges are labeled based on their presence in G and/or H. 
+
+    #     Parameters:
+    #     - G (nx.Graph): The first input graph.
+    #     - H (nx.Graph): The second input graph.
+    #     - ignore_aromaticity (bool, optional): If True, aromaticity in the graphs is ignored. Defaults to False.
+    #     - attributes_defaults (Dict[str, Any], optional): Default attributes for nodes not present in either G or H.
+
+    #     Returns:
+    #     - nx.Graph: The Combined Graph Representation as a new graph instance.
+    #     """
+    #     # Use the smaller graph as the base for ITS 
+    #     ITS = deepcopy(H if len(G.nodes()) > len(H.nodes()) else G)
+    #     ITS.clear_edges()  # Remove all edges while retaining nodes and their attributes
+
+    #     # Iterate over nodes in ITS and get attributes from G and H, or set defaults
+    #     for node in ITS:
+    #         attributes_in_G = ITSConstruction.get_node_attributes_with_defaults(G, node, attributes_defaults) if node in G else None
+    #         attributes_in_H = ITSConstruction.get_node_attributes_with_defaults(H, node, attributes_defaults) if node in H else None
+            
+    #         # Combine attributes from G and H or use defaults
+    #         ITS.nodes[node]['typesGH'] = (attributes_in_G, attributes_in_H)
+
+    #     # Add edges from G and H with special labeling for unique edges
+    #     ITS = ITSConstruction.add_edges_to_ITS(ITS, G, H, ignore_aromaticity)
+
+    #     return ITS
 
     @staticmethod
     def get_node_attribute(graph: nx.Graph, node: int, attribute: str, default):
@@ -65,23 +99,26 @@ class ITSConstruction:
             return default
         
     @staticmethod
-    def get_node_attributes_with_defaults(graph: nx.Graph, node: int) -> Tuple[str, bool, int, int]:
+    def get_node_attributes_with_defaults(graph: nx.Graph, node: int, attributes_defaults: Dict[str, Any] = None) -> Tuple:
         """
-        Retrieves node attributes from a graph, assigning default values if they are missing.
+        Retrieves node attributes from a graph, assigning default values if they are missing. Allows
+        for an optional dictionary of attribute-default value pairs to specify custom attributes and defaults.
 
         Parameters:
         - graph (nx.Graph): The graph from which to retrieve node attributes.
         - node (int): The node identifier.
+        - attributes_defaults (Dict[str, Any], optional): A dictionary specifying attributes and their default values.
 
         Returns:
-        - Tuple[str, bool, int, int]: A tuple containing the node attributes.
+        - Tuple: A tuple containing the node attributes in the order specified by attributes_defaults.
         """
-        attributes_defaults = {
-            'element': '*', 
-            'aromatic': False, 
-            'hcount': 0, 
-            'charge': 0
-        }
+        if attributes_defaults is None:
+            attributes_defaults = {
+                'element': '*', 
+                'aromatic': False, 
+                'hcount': 0, 
+                'charge': 0
+            }
 
         return tuple(ITSConstruction.get_node_attribute(graph, node, attr, default) for attr, default in attributes_defaults.items())
 
@@ -96,6 +133,7 @@ class ITSConstruction:
         - ITS (nx.Graph): The initial combined graph representation.
         - G (nx.Graph): The first input graph.
         - H (nx.Graph): The second input graph.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs. Defaults to False.
 
         Returns:
         - nx.Graph: The updated graph with added edges.
@@ -107,11 +145,11 @@ class ITSConstruction:
             for (u, v) in graph_from.edges():
                 if not new_ITS.has_edge(u, v):
                     if graph_to.has_edge(u, v) or graph_to.has_edge(v, u):
-                        someLabel = (graph_from[u][v]["order"], graph_to[u][v]["order"]) if graph_to.has_edge(u, v) else (graph_from[v][u]["order"], graph_to[v][u]["order"]) if reverse else (graph_from[u][v]["order"], graph_to[v][u]["order"])
-                        new_ITS.add_edge(u, v, order=someLabel)
+                        edge_label = (graph_from[u][v]["order"], graph_to[u][v]["order"]) if graph_to.has_edge(u, v) else (graph_from[v][u]["order"], graph_to[v][u]["order"]) if reverse else (graph_from[u][v]["order"], graph_to[v][u]["order"])
+                        new_ITS.add_edge(u, v, order=edge_label)
                     else:
-                        someLabel = (graph_from[u][v]["order"], 0) if not reverse else (0, graph_from[u][v]["order"])
-                        new_ITS.add_edge(u, v, order=someLabel)
+                        edge_label = (graph_from[u][v]["order"], 0) if not reverse else (0, graph_from[u][v]["order"])
+                        new_ITS.add_edge(u, v, order=edge_label)
         nodes_to_remove = [node for node in new_ITS.nodes() if not new_ITS.nodes[node]]
         new_ITS.remove_nodes_from(nodes_to_remove)
         new_ITS = ITSConstruction.add_standard_order_attribute(new_ITS, ignore_aromaticity)
