@@ -189,11 +189,11 @@ def run_synitsg_pipeline(data, mapper_name=None, batch_size=1000, verbose=1, n_j
 if __name__ == "__main__":
     mapper_name = ['rxn_mapper', 'graphormer', 'local_mapper']
     #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'uspto'
+    folder_name = 'USPTO_50K'
     save_dir = f'{root_dir}/Data/{folder_name}'
 
     data = load_database(f'{root_dir}/Data/{folder_name}/{folder_name}_aam_reactions.json.gz')[:]
-    run_synitsg_pipeline(data, mapper_name, batch_size=1000, verbose=1, n_jobs=4, check_valid=False, 
+    run_synitsg_pipeline(data, mapper_name, batch_size=500, verbose=1, n_jobs=4, check_valid=False, 
                          curate_uncertain_mapping=True, fix_hydrogen=True, 
                          alignment=True, save_dir=save_dir, data_name=folder_name)
   
