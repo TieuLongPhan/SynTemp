@@ -1,11 +1,5 @@
 import unittest
-from rdkit import Chem
-import unittest
-import sys
 import networkx as nx
-from pathlib import Path
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 from SynTemp.SynITS.its_construction import ITSConstruction
 
 

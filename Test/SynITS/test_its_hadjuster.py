@@ -1,9 +1,4 @@
 import unittest
-import sys
-from pathlib import Path
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
-import time
 import networkx as nx
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster  
 

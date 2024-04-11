@@ -2,8 +2,6 @@ import unittest
 import sys
 from pathlib import Path
 import time
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 
 class TestAMMPostprocessor(unittest.TestCase):

@@ -1,8 +1,6 @@
 import unittest
-import sys
 from pathlib import Path
 root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 from SynTemp.SynAAM.aam_validator import AMMValidator  
 import pandas as pd
 
