@@ -4,23 +4,38 @@ from networkx.algorithms.isomorphism import generic_node_match, generic_edge_mat
 from operator import eq
 from SynTemp.SynUtils.graph_utils import check_graph_type, get_cycle_member_rings
 
-class NaiveCluster:
-    def __init__(self, node_label_names: List[str] = ["element", "aromatic", "hcount", "charge", "typesGH"],
-                 node_label_default: List[Any] = ["*", False, 0, 0, ()], edge_attribute: str = "order"):
+
+class RuleCluster:
+    def __init__(
+        self,
+        node_label_names: List[str] = [
+            "element",
+            "aromatic",
+            "hcount",
+            "charge",
+            "typesGH",
+        ],
+        node_label_default: List[Any] = ["*", False, 0, 0, ()],
+        edge_attribute: str = "order",
+    ):
         """
         Initializes the NaiveClusterer with customization options for node and edge matching functions.
-        
+
         Parameters:
             node_label_names (List[str]): A list of node attribute names to be considered for matching.
             node_label_default (List[Any]): Default values for node attributes, aligned with `node_label_names`.
             edge_attribute (str): The name of the edge attribute to be considered for matching.
         """
-    
+
         self.nodeLabelNames: List[str] = node_label_names
         self.edgeAttribute: str = edge_attribute
         self.nodeLabelDefault: List[Any] = node_label_default
-        self.nodeLabelOperator: List[Callable[[Any, Any], bool]] = [eq for _ in node_label_names]
-        self.nodeMatch: Callable = generic_node_match(self.nodeLabelNames, self.nodeLabelDefault, self.nodeLabelOperator)
+        self.nodeLabelOperator: List[Callable[[Any, Any], bool]] = [
+            eq for _ in node_label_names
+        ]
+        self.nodeMatch: Callable = generic_node_match(
+            self.nodeLabelNames, self.nodeLabelDefault, self.nodeLabelOperator
+        )
         self.edgeMatch: Callable = generic_edge_match(self.edgeAttribute, 1, eq)
         self.clusters: List[Set[int]] = []
         self.graph_to_cluster: Dict[int, int] = {}
@@ -28,10 +43,10 @@ class NaiveCluster:
     def cluster_graphs(self, graphs: List[nx.Graph]) -> List[Set[int]]:
         """
         Clusters the graphs based on isomorphism, using the predefined node and edge match functions.
-        
+
         Parameters:
             graphs (List[nx.Graph]): A list of NetworkX graph objects to be clustered.
-            
+
         Returns:
             List[Set[int]]: A list of sets, where each set contains the indices of graphs in the same cluster.
         """
@@ -47,38 +62,47 @@ class NaiveCluster:
             visited.add(i)
             self.graph_to_cluster[i] = len(self.clusters)
 
-            for j, graph_j in enumerate(graphs[i+1:], start=i+1):
-                if j not in visited and nx.is_isomorphic(graph_i, graph_j, node_match=self.nodeMatch, edge_match=self.edgeMatch):
+            for j, graph_j in enumerate(graphs[i + 1 :], start=i + 1):
+                if j not in visited and nx.is_isomorphic(
+                    graph_i,
+                    graph_j,
+                    node_match=self.nodeMatch,
+                    edge_match=self.edgeMatch,
+                ):
                     cluster.add(j)
                     visited.add(j)
                     self.graph_to_cluster[j] = len(self.clusters)
-            
+
             self.clusters.append(cluster)
-        
+
         return self.clusters
 
     def get_cluster_indices(self, graphs: List[nx.Graph]) -> List[int]:
         """
         Returns a list where each element is the cluster index for the corresponding graph in the input list.
         This method automatically clusters the graphs before determining their indices.
-        
+
         Parameters:
             graphs (List[nx.Graph]): A list of NetworkX graph objects to determine cluster indices for.
-            
+
         Returns:
             List[int]: The list of cluster indices for each graph, aligned with the order of the input list.
         """
-        self.cluster_graphs(graphs)  # Ensure clusters are updated based on the current graphs list
+        self.cluster_graphs(
+            graphs
+        )  # Ensure clusters are updated based on the current graphs list
         return [self.graph_to_cluster[i] for i in range(len(graphs))]
 
-    def process_rules_clustering(self, reaction_dicts: List[Dict[str, Any]], rule_column: str = 'rules') -> List[Dict[str, Any]]:
+    def process_rules_clustering(
+        self, reaction_dicts: List[Dict[str, Any]], rule_column: str = "rules"
+    ) -> List[Dict[str, Any]]:
         """
         Processes clustering based on rules extracted from reaction dictionaries, specifically clustering ITS graphs.
-        
+
         Parameters:
             reaction_dicts (List[Dict[str, Any]]): A list of dictionaries, each representing a reaction.
             rule_column (str): The key in the dictionaries where the ITS graph is stored.
-            
+
         Returns:
             List[Dict[str, Any]]: The updated list of reaction dictionaries, each augmented with a 'cluster' key indicating its cluster index.
         """
@@ -91,8 +115,12 @@ class NaiveCluster:
 
         # Update the reaction dictionaries with cluster information
         for i, reaction_dict in enumerate(reaction_dicts):
-            reaction_dict['naive_cluster'] = cluster_indices[i]
-            reaction_dict['Reaction Type'] = check_graph_type(reaction_dict['GraphRules'][2])
-            reaction_dict['Rings'] = get_cycle_member_rings(reaction_dict['GraphRules'][2])
+            reaction_dict["naive_cluster"] = cluster_indices[i]
+            reaction_dict["Reaction Type"] = check_graph_type(
+                reaction_dict["GraphRules"][2]
+            )
+            reaction_dict["Rings"] = get_cycle_member_rings(
+                reaction_dict["GraphRules"][2]
+            )
 
         return reaction_dicts

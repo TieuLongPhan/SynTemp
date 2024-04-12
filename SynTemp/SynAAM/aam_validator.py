@@ -10,6 +10,8 @@ from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynProcessor.mol_to_graph import MolToGraph
 from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
 from itertools import combinations
+
+
 class AMMValidator:
     def __init__(self):
         """Initializes the AMMValidator class."""
@@ -31,7 +33,9 @@ class AMMValidator:
         return graph
 
     @staticmethod
-    def check_equivariant_graph(its_graphs: List[nx.Graph]) -> Tuple[List[Tuple[int, int]], int]:
+    def check_equivariant_graph(
+        its_graphs: List[nx.Graph],
+    ) -> Tuple[List[Tuple[int, int]], int]:
         """
         Checks for isomorphism among a list of ITS graphs and identifies all pairs of isomorphic graphs.
 
@@ -45,23 +49,29 @@ class AMMValidator:
         nodeLabelNames = ["typesGH"]
         nodeLabelDefault = ["*", False, 0, 0, ()]
         nodeLabelOperator = [eq, eq, eq, eq, eq]
-        nodeMatch = generic_node_match(nodeLabelNames, nodeLabelDefault, nodeLabelOperator)
+        nodeMatch = generic_node_match(
+            nodeLabelNames, nodeLabelDefault, nodeLabelOperator
+        )
         edgeMatch = generic_edge_match("order", 1, eq)
 
         classified = []
 
         # Use combinations to check each unique pair of graphs without repetition
         for i, j in combinations(range(len(its_graphs)), 2):
-            if nx.is_isomorphic(its_graphs[i], its_graphs[j], node_match=nodeMatch, edge_match=edgeMatch):
+            if nx.is_isomorphic(
+                its_graphs[i], its_graphs[j], node_match=nodeMatch, edge_match=edgeMatch
+            ):
                 classified.append((i, j))
 
         return classified, len(classified)
 
     @staticmethod
-    def smiles_check(mapped_smile: str, 
-                     ground_truth: str, 
-                     check_method: str = 'RC', # or 'ITS'
-                     ignore_aromaticity: bool = False) -> bool:
+    def smiles_check(
+        mapped_smile: str,
+        ground_truth: str,
+        check_method: str = "RC",  # or 'ITS'
+        ignore_aromaticity: bool = False,
+    ) -> bool:
         """
         Checks the equivalence of mapped SMILES against ground truth using reaction center (RC) or ITS graph method.
 
@@ -84,19 +94,29 @@ class AMMValidator:
 
                 ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
                 its_graphs.append(ITS)
-                
-                rules = GraphRuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
+
+                rules = GraphRuleExtraction.extract_reaction_rules(
+                    G, H, ITS, extend=False
+                )
                 rules_graphs.append(rules[2])
-    
-            _, equivariant = AMMValidator.check_equivariant_graph(rules_graphs if check_method == 'RC' else its_graphs)
-            
+
+            _, equivariant = AMMValidator.check_equivariant_graph(
+                rules_graphs if check_method == "RC" else its_graphs
+            )
+
             return equivariant == 1
 
         except:
             return False
+
     @staticmethod
-    def check_pair(mapping: Dict[str, str], mapped_col: str, ground_truth_col: str,
-                   check_method: str = 'RC', ignore_aromaticity: bool = False) -> bool:
+    def check_pair(
+        mapping: Dict[str, str],
+        mapped_col: str,
+        ground_truth_col: str,
+        check_method: str = "RC",
+        ignore_aromaticity: bool = False,
+    ) -> bool:
         """
         Checks the equivalence between the mapped and ground truth values within a given mapping dictionary,
         using a specified check method. The check can optionally ignore aromaticity.
@@ -112,18 +132,23 @@ class AMMValidator:
         - bool: The result of the check, indicating whether the mapped value is equivalent to the ground truth according to the specified method and considerations regarding aromaticity.
         """
         return AMMValidator.smiles_check(
-            mapping[mapped_col], mapping[ground_truth_col], check_method, ignore_aromaticity
+            mapping[mapped_col],
+            mapping[ground_truth_col],
+            check_method,
+            ignore_aromaticity,
         )
-    
+
     @staticmethod
-    def validate_smiles(data: Union[pd.DataFrame, List[Dict[str, str]]],
-                        ground_truth_col: str = 'ground_truth',
-                        mapped_cols: List[str] = ['rxn_mapper', 'graphormer', 'local_mapper'],
-                        check_method: str = 'RC',
-                        ignore_aromaticity: bool = False,
-                        n_jobs: int = 1,
-                        verbose: int = 0,
-                        ensemble = False) -> List[Dict[str, Union[str, float, List[bool]]]]:
+    def validate_smiles(
+        data: Union[pd.DataFrame, List[Dict[str, str]]],
+        ground_truth_col: str = "ground_truth",
+        mapped_cols: List[str] = ["rxn_mapper", "graphormer", "local_mapper"],
+        check_method: str = "RC",
+        ignore_aromaticity: bool = False,
+        n_jobs: int = 1,
+        verbose: int = 0,
+        ensemble=False,
+    ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
         Validates collections of mapped SMILES against their ground truths for multiple mappers and calculates the accuracy.
 
@@ -143,42 +168,78 @@ class AMMValidator:
         validation_results = []
 
         for mapped_col in mapped_cols:
-            
 
             if isinstance(data, pd.DataFrame):
-                mappings = data.to_dict('records')
+                mappings = data.to_dict("records")
             elif isinstance(data, list):
                 mappings = data
             else:
-                raise ValueError("Data must be either a pandas DataFrame or a list of dictionaries.")
+                raise ValueError(
+                    "Data must be either a pandas DataFrame or a list of dictionaries."
+                )
 
             # Use joblib to parallelize the validation checks
-            results = Parallel(n_jobs=n_jobs, verbose=verbose)(delayed(AMMValidator.check_pair)(mapping, mapped_col, ground_truth_col, 
-                                                                                                check_method, ignore_aromaticity) for mapping in mappings)
+            results = Parallel(n_jobs=n_jobs, verbose=verbose)(
+                delayed(AMMValidator.check_pair)(
+                    mapping,
+                    mapped_col,
+                    ground_truth_col,
+                    check_method,
+                    ignore_aromaticity,
+                )
+                for mapping in mappings
+            )
             accuracy = sum(results) / len(mappings) if mappings else 0
 
             # Store the results for each mapper in the list
-            validation_results.append({
-                'mapper': mapped_col,
-                'accuracy': accuracy,
-                'results': results,
-                'success_rate': 100
-            })
+            validation_results.append(
+                {
+                    "mapper": mapped_col,
+                    "accuracy": accuracy,
+                    "results": results,
+                    "success_rate": 100,
+                }
+            )
         if ensemble:
-            threshold = len(mapped_cols) -1
-            
-            its_graph, _ = ITSExtraction.parallel_process_smiles(mappings, mapped_cols, threshold=threshold, n_jobs=n_jobs, verbose=verbose, export_full=False, check_method=check_method)
-            id = [value['R-id'] for value in its_graph]
-            data_ensemble = [value for value in mappings if value['R-id'] in id]
-            data_ensemble = [{'R-id': value['R-id'], 'ensemble': value['local_mapper'], 'ground_truth': value['ground_truth']} for value in data_ensemble]
-            results = Parallel(n_jobs=n_jobs, verbose=verbose)(delayed(AMMValidator.check_pair)(mapping, 'ensemble', ground_truth_col, 
-                                                                                                check_method, ignore_aromaticity) for mapping in data_ensemble)
+            threshold = len(mapped_cols) - 1
+
+            its_graph, _ = ITSExtraction.parallel_process_smiles(
+                mappings,
+                mapped_cols,
+                threshold=threshold,
+                n_jobs=n_jobs,
+                verbose=verbose,
+                export_full=False,
+                check_method=check_method,
+            )
+            id = [value["R-id"] for value in its_graph]
+            data_ensemble = [value for value in mappings if value["R-id"] in id]
+            data_ensemble = [
+                {
+                    "R-id": value["R-id"],
+                    "ensemble": value["local_mapper"],
+                    "ground_truth": value["ground_truth"],
+                }
+                for value in data_ensemble
+            ]
+            results = Parallel(n_jobs=n_jobs, verbose=verbose)(
+                delayed(AMMValidator.check_pair)(
+                    mapping,
+                    "ensemble",
+                    ground_truth_col,
+                    check_method,
+                    ignore_aromaticity,
+                )
+                for mapping in data_ensemble
+            )
             accuracy = sum(results) / len(data_ensemble)
-            validation_results.append({
-                'mapper': 'ensemble',
-                'accuracy': accuracy,
-                'results': results,
-                'success_rate': 100* len(data_ensemble)/len(mappings)
-            })
+            validation_results.append(
+                {
+                    "mapper": "ensemble",
+                    "accuracy": accuracy,
+                    "results": results,
+                    "success_rate": 100 * len(data_ensemble) / len(mappings),
+                }
+            )
 
         return validation_results, data_ensemble if ensemble else None

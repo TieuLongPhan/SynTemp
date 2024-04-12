@@ -13,7 +13,7 @@ from SynTemp.SynUtils.utils import load_database, save_database, save_to_pickle,
 from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynMØD.naive_cluster import NaiveCluster
+from SynTemp.SynMØD.rule_cluster import NaiveCluster
 from SynTemp.SynITS.uncertain_refinement import UncertainRefinement
 
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:

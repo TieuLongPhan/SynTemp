@@ -9,6 +9,7 @@ from rxnmapper import RXNMapper
 from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
 from SynTemp.SynUtils.utils import save_database
+
 root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 
@@ -16,8 +17,14 @@ sys.path.append(str(root_dir))
 warnings.filterwarnings("ignore")
 transformers.logging.set_verbosity_error()
 
-def map_batch(batch_data: List[Dict], rxn_mapper: RXNMapper, mapper_types: List[str] = ['rxn_mapper', 'graphormer', 'local_mapper'],
-               rdt_jar_path: Optional[str] = None, working_dir: Optional[str] = None) -> pd.DataFrame:
+
+def map_batch(
+    batch_data: List[Dict],
+    rxn_mapper: RXNMapper,
+    mapper_types: List[str] = ["rxn_mapper", "graphormer", "local_mapper"],
+    rdt_jar_path: Optional[str] = None,
+    working_dir: Optional[str] = None,
+) -> pd.DataFrame:
     """
     Map a batch of reactions using the given mappers.
 
@@ -30,22 +37,29 @@ def map_batch(batch_data: List[Dict], rxn_mapper: RXNMapper, mapper_types: List[
 
     Returns:
     - pd.DataFrame: A DataFrame with the batch of mapped reactions.
-    """ 
-    consensus_aam = ConsensusAAM(batch_data, rsmi_column='reactions', save_dir=f'{root_dir}/Data', 
-                                 mapper_types=mapper_types)
+    """
+    consensus_aam = ConsensusAAM(
+        batch_data,
+        rsmi_column="reactions",
+        save_dir=f"{root_dir}/Data",
+        mapper_types=mapper_types,
+    )
     return consensus_aam.fit(len(batch_data), rxn_mapper, rdt_jar_path, working_dir)
 
-def run_consensus_aam(data: List[Dict],
-             rsmi_column: str = 'reactions',
-             save_dir: Optional[str] = None,
-             mapper_types: List[str] = ['rxn_mapper', 'graphormer', 'local_mapper'],
-             data_name: str = '',
-             batch_size: int = 1000,
-             check_balance: bool = True,
-             n_jobs: int = 1,
-             verbose: int = 0,
-             rdt_jar_path: Optional[str] = None,
-             working_dir: Optional[str] = None) -> List[Dict]:
+
+def run_consensus_aam(
+    data: List[Dict],
+    rsmi_column: str = "reactions",
+    save_dir: Optional[str] = None,
+    mapper_types: List[str] = ["rxn_mapper", "graphormer", "local_mapper"],
+    data_name: str = "",
+    batch_size: int = 1000,
+    check_balance: bool = True,
+    n_jobs: int = 1,
+    verbose: int = 0,
+    rdt_jar_path: Optional[str] = None,
+    working_dir: Optional[str] = None,
+) -> List[Dict]:
     """
     Automatically maps a dataset of chemical reactions using Automated Atom-Mapping (AAM) and returns the mapped reactions.
 
@@ -68,20 +82,31 @@ def run_consensus_aam(data: List[Dict],
     rxn_mapper = RXNMapper()
 
     if check_balance:
-        df_data = pd.DataFrame(data)  
-        checker = BalanceReactionCheck(df_data, rsmi_column=rsmi_column, n_jobs=5, verbose=verbose)
+        df_data = pd.DataFrame(data)
+        checker = BalanceReactionCheck(
+            df_data, rsmi_column=rsmi_column, n_jobs=5, verbose=verbose
+        )
         balanced_reactions_df, _ = checker.check_balances()
-        balanced_reactions = balanced_reactions_df.to_dict('records')  
+        balanced_reactions = balanced_reactions_df.to_dict("records")
     else:
         balanced_reactions = data
-    
+
     # Split the data into batches
-    batches = [balanced_reactions[i:i + batch_size] for i in range(0, len(balanced_reactions), batch_size)]
-    
+    batches = [
+        balanced_reactions[i : i + batch_size]
+        for i in range(0, len(balanced_reactions), batch_size)
+    ]
+
     # Parallel map the batches
-    mapped_reactions = Parallel(n_jobs=n_jobs, verbose=verbose)(delayed(map_batch)(batch, rxn_mapper, mapper_types, rdt_jar_path, working_dir) for batch in batches)
+    mapped_reactions = Parallel(n_jobs=n_jobs, verbose=verbose)(
+        delayed(map_batch)(batch, rxn_mapper, mapper_types, rdt_jar_path, working_dir)
+        for batch in batches
+    )
 
     if save_dir:
-        save_database(pd.DataFrame(mapped_reactions), f'{save_dir}/{data_name}_aam_reactions.json.gz')
-  
+        save_database(
+            pd.DataFrame(mapped_reactions),
+            f"{save_dir}/{data_name}_aam_reactions.json.gz",
+        )
+
     return mapped_reactions

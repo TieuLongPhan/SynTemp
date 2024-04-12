@@ -1,5 +1,7 @@
 import networkx as nx
 from typing import List
+
+
 def is_acyclic_graph(G: nx.Graph) -> bool:
     """
     Determines if the given graph is acyclic.
@@ -15,15 +17,15 @@ def is_acyclic_graph(G: nx.Graph) -> bool:
 
     return nx.is_tree(G)
 
- 
+
 def is_single_cyclic_graph(G: nx.Graph) -> bool:
     """
     Determines if the given graph is a single cyclic graph, which means the graph has exactly one cycle
     and all nodes in the graph are part of that cycle.
-    
+
     Parameters:
     - G (nx.Graph): The graph to be checked.
-    
+
     Returns:
     - bool: True if the graph is single cyclic, False otherwise.
     """
@@ -40,10 +42,14 @@ def is_single_cyclic_graph(G: nx.Graph) -> bool:
     # There should be at least one cycle, but we'll check if the union of all cycles covers all nodes
     if cycles:
         nodes_in_cycles = set(node for cycle in cycles for node in cycle)
-        if nodes_in_cycles == set(G.nodes()) and G.number_of_edges() == G.number_of_nodes():
+        if (
+            nodes_in_cycles == set(G.nodes())
+            and G.number_of_edges() == G.number_of_nodes()
+        ):
             return True
 
     return False
+
 
 def is_complex_cyclic_graph(G: nx.Graph) -> bool:
     """
@@ -101,7 +107,8 @@ def check_graph_type(G: nx.Graph) -> str:
         return "Complex Cyclic"
     else:
         return "None"
-    
+
+
 def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     """
     Identifies all cycles in the given graph using cycle bases to ensure no overlap and returns a list of the sizes of these cycles (member rings),
@@ -131,15 +138,15 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
 def load_gml_as_text(gml_file_path):
     """
     Load the contents of a GML file as a text string.
-    
+
     Parameters:
     - gml_file_path (str): The file path to the GML file.
-    
+
     Returns:
     - str: The text content of the GML file.
     """
     try:
-        with open(gml_file_path, 'r') as file:
+        with open(gml_file_path, "r") as file:
             return file.read()
     except FileNotFoundError:
         print(f"File not found: {gml_file_path}")
@@ -147,4 +154,3 @@ def load_gml_as_text(gml_file_path):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-  

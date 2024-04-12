@@ -3,11 +3,18 @@ from rdkit import Chem
 import unittest
 import sys
 from pathlib import Path
+
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynTemp.SynUtils.chemutils import (  
-    normalize_molecule, canonicalize_tautomer, salts_remover, reionize_charges, 
-    uncharge_molecule, assign_stereochemistry, fragments_remover, remove_hydrogens_and_sanitize
+from SynTemp.SynUtils.chemutils import (
+    normalize_molecule,
+    canonicalize_tautomer,
+    salts_remover,
+    reionize_charges,
+    uncharge_molecule,
+    assign_stereochemistry,
+    fragments_remover,
+    remove_hydrogens_and_sanitize,
 )
 
 
@@ -29,7 +36,9 @@ class TestMoleculeProcessing(unittest.TestCase):
         # Using a molecule with a known salt
         mol_with_salt = Chem.MolFromSmiles("CC(=O)O.[Na+]")
         salt_removed_mol = salts_remover(mol_with_salt)
-        self.assertNotEqual(Chem.MolToSmiles(salt_removed_mol), Chem.MolToSmiles(mol_with_salt))
+        self.assertNotEqual(
+            Chem.MolToSmiles(salt_removed_mol), Chem.MolToSmiles(mol_with_salt)
+        )
 
     def test_reionize_charges(self):
         reionized_mol = reionize_charges(self.mol)
@@ -43,17 +52,22 @@ class TestMoleculeProcessing(unittest.TestCase):
     def test_assign_stereochemistry(self):
         mol_with_stereo = Chem.MolFromSmiles("C[C@H](O)[C@@H](O)C")
         assign_stereochemistry(mol_with_stereo)
-        self.assertEqual(len(Chem.FindMolChiralCenters(mol_with_stereo, includeUnassigned=True)), 2)
+        self.assertEqual(
+            len(Chem.FindMolChiralCenters(mol_with_stereo, includeUnassigned=True)), 2
+        )
 
     def test_fragments_remover(self):
         mol_with_fragments = Chem.MolFromSmiles("CCO.OCC")
         largest_fragment = fragments_remover(mol_with_fragments)
-        self.assertEqual(largest_fragment.GetNumAtoms(), 3)  # Expecting the ethyl alcohol fragment
+        self.assertEqual(
+            largest_fragment.GetNumAtoms(), 3
+        )  # Expecting the ethyl alcohol fragment
 
     def test_remove_hydrogens_and_sanitize(self):
         mol_with_h = Chem.AddHs(self.mol)
         cleaned_mol = remove_hydrogens_and_sanitize(mol_with_h)
         self.assertEqual(cleaned_mol.GetNumAtoms(), self.mol.GetNumAtoms())
+
 
 if __name__ == "__main__":
     unittest.main()

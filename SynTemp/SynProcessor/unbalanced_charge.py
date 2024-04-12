@@ -1,9 +1,12 @@
 from typing import Dict, Any, List
 from joblib import Parallel, delayed
+
+
 class UnbalancedCharge:
     @staticmethod
-    def fix_negative_charge(reaction_dict: Dict[str, any],
-                            charges_column: str = 'total_charge_in_products') -> Dict[str, any]:
+    def fix_negative_charge(
+        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products"
+    ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a negative charge in the products by adding [Na+] ions.
 
@@ -20,32 +23,36 @@ class UnbalancedCharge:
         """
         # Calculate the number of sodium ions to add based on the absolute value of total_charge_in_products
         num_na_to_add = abs(reaction_dict[charges_column])
-        sodium_ion = '[Na+]'
-        
+        sodium_ion = "[Na+]"
+
         # Generate the string to add, with the correct number of sodium ions
-        sodium_addition = '.' + '.'.join([sodium_ion] * num_na_to_add) if num_na_to_add > 0 else ''
-        
+        sodium_addition = (
+            "." + ".".join([sodium_ion] * num_na_to_add) if num_na_to_add > 0 else ""
+        )
+
         # Add the sodium ions to reactants and products
-        new_reactants = reaction_dict['reactants'] + sodium_addition
-        new_products = reaction_dict['products'] + sodium_addition
-        
+        new_reactants = reaction_dict["reactants"] + sodium_addition
+        new_products = reaction_dict["products"] + sodium_addition
+
         # Generate the new reaction string
-        new_reactions = new_reactants + '>>' + new_products
-        
+        new_reactions = new_reactants + ">>" + new_products
+
         # Create the new reaction dictionary
         new_reaction_dict = {
-            'R-id': reaction_dict['R-id'],
-            'new_reaction': new_reactions,
-            'label': reaction_dict['label'],
-            'reactants': new_reactants,
-            'products': new_products,
-            charges_column: 0  # Assuming the charge is neutralized
+            "R-id": reaction_dict["R-id"],
+            "new_reaction": new_reactions,
+            "label": reaction_dict["label"],
+            "reactants": new_reactants,
+            "products": new_products,
+            charges_column: 0,  # Assuming the charge is neutralized
         }
-        
+
         return new_reaction_dict
 
     @staticmethod
-    def fix_positive_charge(reaction_dict: Dict[str, any], charges_column: str = 'total_charge_in_products') -> Dict[str, any]:
+    def fix_positive_charge(
+        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products"
+    ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a positive charge in the products by adding [Cl-] ions. The function
         takes into account the total positive charge indicated in the reaction dictionary and adds an equivalent number of
@@ -55,7 +62,7 @@ class UnbalancedCharge:
             reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction. This dictionary must include
                                             keys for reactants, products, and a specified charge column (default is
                                             'total_charge_in_products') which contains the total charge of the products.
-            charges_column (str, optional): The key in `reaction_dict` that contains the total charge of the products. 
+            charges_column (str, optional): The key in `reaction_dict` that contains the total charge of the products.
                                             Defaults to 'total_charge_in_products'.
 
         Returns:
@@ -65,32 +72,36 @@ class UnbalancedCharge:
         """
         # Calculate the number of chloride ions to add based on the positive total charge in the specified column
         num_cl_to_add = abs(reaction_dict[charges_column])
-        chloride_ion = '[Cl-]'
-        
+        chloride_ion = "[Cl-]"
+
         # Generate the string to add, with the correct number of chloride ions
-        chloride_addition = '.' + '.'.join([chloride_ion] * num_cl_to_add) if num_cl_to_add > 0 else ''
-        
+        chloride_addition = (
+            "." + ".".join([chloride_ion] * num_cl_to_add) if num_cl_to_add > 0 else ""
+        )
+
         # Add the chloride ions to reactants and products
-        new_reactants = reaction_dict['reactants'] + chloride_addition
-        new_products = reaction_dict['products'] + chloride_addition
-        
+        new_reactants = reaction_dict["reactants"] + chloride_addition
+        new_products = reaction_dict["products"] + chloride_addition
+
         # Generate the new reaction string
-        new_reactions = new_reactants + '>>' + new_products
-        
+        new_reactions = new_reactants + ">>" + new_products
+
         # Create and return the new reaction dictionary with the neutralized charge
         new_reaction_dict = {
-            'R-id': reaction_dict['R-id'],
-            'new_reaction': new_reactions,
-            'label': reaction_dict['label'],
-            'reactants': new_reactants,
-            'products': new_products,
-            charges_column: 0  # Update the charge column to reflect the neutralized charge
+            "R-id": reaction_dict["R-id"],
+            "new_reaction": new_reactions,
+            "label": reaction_dict["label"],
+            "reactants": new_reactants,
+            "products": new_products,
+            charges_column: 0,  # Update the charge column to reflect the neutralized charge
         }
-        
+
         return new_reaction_dict
 
     @staticmethod
-    def fix_unbalanced_charged(reaction_dict: Dict[str, any], charges_column: str = 'total_charge_in_products') -> Dict[str, any]:
+    def fix_unbalanced_charged(
+        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products"
+    ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for an unbalanced charge in the products by adding either [Cl-] ions
         for a positive charge or [Na+] ions for a negative charge. The function determines the direction of the charge
@@ -100,7 +111,7 @@ class UnbalancedCharge:
             reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction. This dictionary must include
                                             keys for reactants, products, and a specified charge column which contains
                                             the total charge of the products.
-            charges_column (str, optional): The key in `reaction_dict` that contains the total charge of the products. 
+            charges_column (str, optional): The key in `reaction_dict` that contains the total charge of the products.
                                             Defaults to 'total_charge_in_products'.
 
         Returns:
@@ -118,7 +129,12 @@ class UnbalancedCharge:
             return reaction_dict
 
     @classmethod
-    def parallel_fix_unbalanced_charge(cls, reaction_dicts: List[Dict[str, Any]], charges_column: str = 'total_charge_in_products', n_jobs: int = -1) -> List[Dict[str, Any]]:
+    def parallel_fix_unbalanced_charge(
+        cls,
+        reaction_dicts: List[Dict[str, Any]],
+        charges_column: str = "total_charge_in_products",
+        n_jobs: int = -1,
+    ) -> List[Dict[str, Any]]:
         """
         Processes a list of reaction dictionaries in parallel to compensate for unbalanced charges in the products,
         adding either [Cl-] ions for positive charges or [Na+] ions for negative charges.

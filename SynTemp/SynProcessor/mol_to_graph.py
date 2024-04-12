@@ -4,6 +4,7 @@ import networkx as nx
 from typing import Dict, Any
 import random
 
+
 class MolToGraph:
     """
     A class for converting molecules from SMILES strings to graph representations using RDKit and NetworkX.
@@ -36,10 +37,10 @@ class MolToGraph:
         """
         chiral_tag = atom.GetChiralTag()
         if chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CCW:
-            return 'S'
+            return "S"
         elif chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CW:
-            return 'R'
-        return 'N'
+            return "R"
+        return "N"
 
     @staticmethod
     def get_bond_stereochemistry(bond: Chem.Bond) -> str:
@@ -53,14 +54,14 @@ class MolToGraph:
             str: The stereochemistry ('E', 'Z', or 'N' for non-stereospecific or non-double bonds).
         """
         if bond.GetBondType() != Chem.BondType.DOUBLE:
-            return 'N'
+            return "N"
         stereo = bond.GetStereo()
         if stereo == Chem.BondStereo.STEREOE:
-            return 'E'
+            return "E"
         elif stereo == Chem.BondStereo.STEREOZ:
-            return 'Z'
-        return 'N'
-    
+            return "Z"
+        return "N"
+
     @staticmethod
     def has_atom_mapping(mol: Chem.Mol) -> bool:
         """
@@ -76,10 +77,10 @@ class MolToGraph:
         bool: True if any atom in the molecule has a mapping number, False otherwise.
         """
         for atom in mol.GetAtoms():
-            if atom.HasProp('molAtomMapNumber'):
+            if atom.HasProp("molAtomMapNumber"):
                 return True
         return False
-    
+
     @staticmethod
     def random_atom_mapping(mol: Chem.Mol) -> Chem.Mol:
         """
@@ -97,7 +98,7 @@ class MolToGraph:
         atom_indices = list(range(1, mol.GetNumAtoms() + 1))
         random.shuffle(atom_indices)
         for atom, idx in zip(mol.GetAtoms(), atom_indices):
-            atom.SetProp('molAtomMapNumber', str(idx))
+            atom.SetProp("molAtomMapNumber", str(idx))
         return mol
 
     @classmethod
@@ -124,20 +125,22 @@ class MolToGraph:
             # Skip atoms without atom mapping numbers if drop_non_aam is True
             if drop_non_aam and atom_map == 0:
                 continue
-            gasteiger_charge = round(float(atom.GetProp('_GasteigerCharge')), 3)
+            gasteiger_charge = round(float(atom.GetProp("_GasteigerCharge")), 3)
             index_to_class[atom.GetIdx()] = atom_map
-            graph.add_node(atom_map,
-                        charge=atom.GetFormalCharge(),
-                        hcount=atom.GetTotalNumHs(),
-                        aromatic=atom.GetIsAromatic(),
-                        element=atom.GetSymbol(),
-                        atom_map=atom_map,
-                        isomer=cls.get_stereochemistry(atom),
-                        partial_charge=gasteiger_charge,
-                        hybridization=str(atom.GetHybridization()),
-                        in_ring=atom.IsInRing(),
-                        explicit_valence=atom.GetExplicitValence(),
-                        implicit_hcount=atom.GetNumImplicitHs())
+            graph.add_node(
+                atom_map,
+                charge=atom.GetFormalCharge(),
+                hcount=atom.GetTotalNumHs(),
+                aromatic=atom.GetIsAromatic(),
+                element=atom.GetSymbol(),
+                atom_map=atom_map,
+                isomer=cls.get_stereochemistry(atom),
+                partial_charge=gasteiger_charge,
+                hybridization=str(atom.GetHybridization()),
+                in_ring=atom.IsInRing(),
+                explicit_valence=atom.GetExplicitValence(),
+                implicit_hcount=atom.GetNumImplicitHs(),
+            )
 
         for bond in mol.GetBonds():
             begin_atom_class = index_to_class.get(bond.GetBeginAtomIdx())
@@ -145,12 +148,14 @@ class MolToGraph:
             # Skip bonds if either atom is missing due to drop_non_aam option
             if begin_atom_class is None or end_atom_class is None:
                 continue
-            graph.add_edge(begin_atom_class, end_atom_class,
-                        order=bond.GetBondTypeAsDouble(),
-                        ez_isomer=cls.get_bond_stereochemistry(bond),
-                        bond_type=str(bond.GetBondType()),
-                        conjugated=bond.GetIsConjugated(),
-                        in_ring=bond.IsInRing())
+            graph.add_edge(
+                begin_atom_class,
+                end_atom_class,
+                order=bond.GetBondTypeAsDouble(),
+                ez_isomer=cls.get_bond_stereochemistry(bond),
+                bond_type=str(bond.GetBondType()),
+                conjugated=bond.GetIsConjugated(),
+                in_ring=bond.IsInRing(),
+            )
 
         return graph
-

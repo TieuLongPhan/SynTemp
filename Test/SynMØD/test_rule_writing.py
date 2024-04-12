@@ -3,27 +3,35 @@ import networkx as nx
 import unittest
 import sys
 from pathlib import Path
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
+
+# root_dir = Path(__file__).parents[2]
+# sys.path.append(str(root_dir))
 import time
-from SynTemp.SynMØD.MØD_rules import MØDRules
-\
+from SynTemp.SynMØD.rule_writing import RuleWriting
+
+
 class TestMODRules(unittest.TestCase):
 
     def test_convert_graph_to_gml(self):
         # Create a simple graph to test
         graph = nx.Graph()
-        graph.add_node(1, element='H')
-        graph.add_node(2, element='O')
+        graph.add_node(1, element="H")
+        graph.add_node(2, element="O")
         graph.add_edge(1, 2, order=1)
 
         # Generate GML string
-        gml_str = MØDRules.convert_graph_to_gml(graph, "left")
-        
+        gml_str = RuleWriting.convert_graph_to_gml(graph, "left", changed_node_ids=[])
+
         # Check if the GML string is formatted correctly
-        self.assertIn("node [ id 1 label \"H\" ]", gml_str)
-        self.assertIn("node [ id 2 label \"O\" ]", gml_str)
-        self.assertIn("edge [ source 1 target 2 label \"-\" ]", gml_str)
+        self.assertIn('edge [ source 1 target 2 label "-" ]', gml_str)
+
+        gml_str = RuleWriting.convert_graph_to_gml(
+            graph, "context", changed_node_ids=[]
+        )
+
+        # Check if the GML string is formatted correctly
+        self.assertIn('node [ id 1 label "H" ]', gml_str)
+        self.assertIn('node [ id 2 label "O" ]', gml_str)
 
     # def test_RulesGrammar(self):
     #     # Create simple graphs for L, R, and K
@@ -35,7 +43,7 @@ class TestMODRules(unittest.TestCase):
     #     K.add_node(1, element='H')
 
     #     # Generate GML string for the rule
-    #     gml_str = MØDRules.RulesGrammar(L, R, K, "test_rule")
+    #     gml_str = RuleWriting.RulesGrammar(L, R, K, "test_rule")
 
     #     # Check if the rule is formatted correctly
     #     self.assertIn("ruleID \"test_rule\"", gml_str)
@@ -52,7 +60,7 @@ class TestMODRules(unittest.TestCase):
     #     graph_rule['graph_rules'][0].add_node(1, element='H')  # Adding a node to L graph
 
     #     # Process the graph rule
-    #     result = MØDRules.process_graph_rules(graph_rule)
+    #     result = RuleWriting.process_graph_rules(graph_rule)
 
     #     # Check if the result is a dictionary with the correct rule ID
     #     self.assertIsInstance(result, str)
@@ -67,12 +75,13 @@ class TestMODRules(unittest.TestCase):
     #     data_dicts[0]['graph_rules'][0].add_node(1, element='H')  # Adding a node to L graph of the first rule
 
     #     # Test auto_extraction
-    #     results = MØDRules.auto_extraction(data_dicts, save_path=None)  # Not testing file saving here
+    #     results = RuleWriting.auto_extraction(data_dicts, save_path=None)  # Not testing file saving here
 
     #     # Check if the results are correct
     #     self.assertIsInstance(results, list)
     #     self.assertEqual(len(results), 1)
     #     self.assertIn("ruleID \"rule1\"", results[0])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

@@ -1,11 +1,13 @@
 import unittest
 import sys
 from pathlib import Path
+
 root_dir = Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 import time
 import networkx as nx
-from SynTemp.SynITS.its_hadjuster import ITSHAdjuster  
+from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
+
 
 class TestITSHAdjuster(unittest.TestCase):
 
@@ -31,11 +33,17 @@ class TestITSHAdjuster(unittest.TestCase):
         prod_graph = self.create_mock_graph({1: 0})
 
         # Add hydrogen nodes to reactant and product graphs
-        updated_react_graph, updated_prod_graph = ITSHAdjuster.add_hydrogen_nodes(react_graph, prod_graph)
+        updated_react_graph, updated_prod_graph = ITSHAdjuster.add_hydrogen_nodes(
+            react_graph, prod_graph
+        )
 
         # Verify that hydrogen nodes have been added correctly
-        self.assertIn(max(updated_react_graph.nodes), updated_react_graph.nodes)  # Hydrogen node added to reactant graph
-        self.assertEqual(updated_react_graph.nodes[max(updated_react_graph.nodes)]['element'], 'H')  # Check element of added node
+        self.assertIn(
+            max(updated_react_graph.nodes), updated_react_graph.nodes
+        )  # Hydrogen node added to reactant graph
+        self.assertEqual(
+            updated_react_graph.nodes[max(updated_react_graph.nodes)]["element"], "H"
+        )  # Check element of added node
 
     def test_add_hydrogen_nodes_multiple(self):
         # Mock reactant and product graphs with specified hydrogen counts
@@ -43,13 +51,20 @@ class TestITSHAdjuster(unittest.TestCase):
         prod_graph = self.create_mock_graph({1: 0, 2: 2})
 
         # Generate updated graph pairs with multiple hydrogen nodes added
-        updated_graph_pairs = ITSHAdjuster.add_hydrogen_nodes_multiple(react_graph, prod_graph)
+        updated_graph_pairs = ITSHAdjuster.add_hydrogen_nodes_multiple(
+            react_graph, prod_graph
+        )
 
         # Verify that multiple updated graph pairs are generated
         self.assertTrue(len(updated_graph_pairs) > 1)  # Multiple permutations generated
         for react_graph, prod_graph in updated_graph_pairs:
-            self.assertIn(max(react_graph.nodes), react_graph.nodes)  # Hydrogen node added to reactant graph
-            self.assertIn(max(prod_graph.nodes), prod_graph.nodes)  # Hydrogen node added to product graph
+            self.assertIn(
+                max(react_graph.nodes), react_graph.nodes
+            )  # Hydrogen node added to reactant graph
+            self.assertIn(
+                max(prod_graph.nodes), prod_graph.nodes
+            )  # Hydrogen node added to product graph
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

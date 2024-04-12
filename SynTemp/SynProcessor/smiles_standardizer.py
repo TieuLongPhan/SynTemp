@@ -6,15 +6,26 @@ from joblib import Parallel, delayed
 from typing import Tuple, Optional, Union
 from typing import List
 
-from SynTemp.SynUtils.chemutils import normalize_molecule, canonicalize_tautomer, salts_remover, reionize_charges, uncharge_molecule, assign_stereochemistry, fragments_remover, remove_hydrogens_and_sanitize
+from SynTemp.SynUtils.chemutils import (
+    normalize_molecule,
+    canonicalize_tautomer,
+    salts_remover,
+    reionize_charges,
+    uncharge_molecule,
+    assign_stereochemistry,
+    fragments_remover,
+    remove_hydrogens_and_sanitize,
+)
+
 
 class SMILESStandardizer:
     """
-    The SMILESStandardizer class is designed for comprehensive standardization of chemical structures 
-    represented in SMILES (Simplified Molecular Input Line Entry System) format. 
-    This class utilizes various functionalities from the RDKit library to process and normalize chemical structures 
+    The SMILESStandardizer class is designed for comprehensive standardization of chemical structures
+    represented in SMILES (Simplified Molecular Input Line Entry System) format.
+    This class utilizes various functionalities from the RDKit library to process and normalize chemical structures
     for consistency and comparability in cheminformatics applications.
     """
+
     def __init__(self):
         self.normalizer = MolStandardize.normalize.Normalizer()
 
@@ -29,7 +40,7 @@ class SMILESStandardizer:
         uncharge: bool = False,
         handle_stereo: bool = True,
         remove_fragments: bool = False,
-        largest_fragment_only: bool = False
+        largest_fragment_only: bool = False,
     ) -> Chem.Mol:
         """
         Apply comprehensive standardization to a molecule.
@@ -84,12 +95,9 @@ class SMILESStandardizer:
 
         return mol
 
-
     def standardize_smiles(
-        self, smiles: str, 
-        visualize: bool = False, 
-        **kwargs
-        ) -> Tuple[str, Optional[Chem.Mol]]:
+        self, smiles: str, visualize: bool = False, **kwargs
+    ) -> Tuple[str, Optional[Chem.Mol]]:
         """
         Standardize a SMILES string.
 
@@ -109,12 +117,14 @@ class SMILESStandardizer:
         if not original_mol:
             return None, None
         try:
-            standardized_mol = self.standardize_mol(original_mol, verbose=visualize, **kwargs)
+            standardized_mol = self.standardize_mol(
+                original_mol, verbose=visualize, **kwargs
+            )
             standardized_smiles = Chem.MolToSmiles(standardized_mol)
             return standardized_smiles, standardized_mol
         except Chem.MolSanitizeException:
             return "Sanitization failed for SMILES: " + smiles, None
-        
+
     def standardize_dict_smiles(
         self,
         data_input: Union[pd.DataFrame, List[dict]],
@@ -137,7 +147,7 @@ class SMILESStandardizer:
             keep_mol (bool, optional): If True, keep the RDKit Mol objects in the output.
 
         Returns:
-            Union[pd.DataFrame, List[dict]]: Data with standardized SMILES strings and, optionally, 
+            Union[pd.DataFrame, List[dict]]: Data with standardized SMILES strings and, optionally,
             standardized RDKit Mol objects for each key.
         """
         if isinstance(data_input, pd.DataFrame):
@@ -145,41 +155,61 @@ class SMILESStandardizer:
                 if parallel:
                     with Parallel(n_jobs=n_jobs, verbose=1) as parallel:
                         standardized_results = parallel(
-                            delayed(self.standardize_smiles)(smiles, visualize=visualize, **kwargs) 
+                            delayed(self.standardize_smiles)(
+                                smiles, visualize=visualize, **kwargs
+                            )
                             for smiles in data_input[key]
                         )
-                    data_input['standardized_' + key] = [result[0] for result in standardized_results]
+                    data_input["standardized_" + key] = [
+                        result[0] for result in standardized_results
+                    ]
                     if keep_mol:
-                        data_input['standardized_mol_' + key] = [result[1] for result in standardized_results]
+                        data_input["standardized_mol_" + key] = [
+                            result[1] for result in standardized_results
+                        ]
                 else:
-                    data_input['standardized_' + key] = data_input[key].apply(
-                        lambda x: self.standardize_smiles(x, visualize=visualize, **kwargs)[0]
+                    data_input["standardized_" + key] = data_input[key].apply(
+                        lambda x: self.standardize_smiles(
+                            x, visualize=visualize, **kwargs
+                        )[0]
                     )
                     if keep_mol:
-                        data_input['standardized_mol_' + key] = data_input[key].apply(
-                            lambda x: self.standardize_smiles(x, visualize=visualize, **kwargs)[1]
+                        data_input["standardized_mol_" + key] = data_input[key].apply(
+                            lambda x: self.standardize_smiles(
+                                x, visualize=visualize, **kwargs
+                            )[1]
                         )
-        elif isinstance(data_input, list) and all(isinstance(item, dict) for item in data_input):
+        elif isinstance(data_input, list) and all(
+            isinstance(item, dict) for item in data_input
+        ):
             for key in keys:
                 if parallel:
                     standardized_results = Parallel(n_jobs=n_jobs, verbose=1)(
-                        delayed(self.standardize_smiles)(reaction_data.get(key, ''), visualize=visualize, **kwargs)
+                        delayed(self.standardize_smiles)(
+                            reaction_data.get(key, ""), visualize=visualize, **kwargs
+                        )
                         for reaction_data in data_input
                     )
                     for i, reaction_data in enumerate(data_input):
-                        reaction_data['standardized_' + key] = standardized_results[i][0]
+                        reaction_data["standardized_" + key] = standardized_results[i][
+                            0
+                        ]
                         if keep_mol:
-                            reaction_data['standardized_mol_' + key] = standardized_results[i][1]
+                            reaction_data["standardized_mol_" + key] = (
+                                standardized_results[i][1]
+                            )
                 else:
                     for reaction_data in data_input:
-                        smiles = reaction_data.get(key, '')
+                        smiles = reaction_data.get(key, "")
                         standardized_smiles, standardized_mol = self.standardize_smiles(
                             smiles, visualize=visualize, **kwargs
                         )
-                        reaction_data['standardized_' + key] = standardized_smiles
+                        reaction_data["standardized_" + key] = standardized_smiles
                         if keep_mol:
-                            reaction_data['standardized_mol_' + key] = standardized_mol
+                            reaction_data["standardized_mol_" + key] = standardized_mol
         else:
-            raise TypeError("Input must be either a pandas DataFrame or a list of dictionaries.")
+            raise TypeError(
+                "Input must be either a pandas DataFrame or a list of dictionaries."
+            )
 
         return data_input

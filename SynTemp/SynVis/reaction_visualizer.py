@@ -41,7 +41,7 @@ class ReactionVisualizer:
         'new_reaction': 'C1=CC=CC=C1>>CCO'
     }
     visualizer.plot_reactions(reaction_data, 'old_reaction', 'new_reaction', compare=True, orientation='horizontal')
-    
+
     # To save the plot as an image
     visualizer.plot_reactions(reaction_data, 'old_reaction', 'new_reaction', compare=True, savefig=True, pathname='reaction_comparison.png')
     """
@@ -79,17 +79,16 @@ class ReactionVisualizer:
         self.atom_label_font_size = atom_label_font_size
         self.padding = padding
 
-    
     @staticmethod
     def draw_molecule_with_atom_numbers(mol):
         """
         Draw a molecule with atom numbers annotated.
-        
+
         Parameters
         ----------
         mol : RDKit Molecule object
             The molecule to be drawn with atom numbers.
-        
+
         Returns
         -------
         mol : RDKit Molecule object
@@ -97,11 +96,12 @@ class ReactionVisualizer:
         """
         mol_with_atom_numbers = Chem.Mol(mol)
         for atom in mol_with_atom_numbers.GetAtoms():
-            atom.SetProp('atomLabel', str(atom.GetIdx()))
+            atom.SetProp("atomLabel", str(atom.GetIdx()))
         return mol_with_atom_numbers
 
-
-    def visualize_reaction(self, reaction_str: str, show_atom_numbers: bool = False) -> Image:
+    def visualize_reaction(
+        self, reaction_str: str, show_atom_numbers: bool = False
+    ) -> Image:
         """
         Visualize a single chemical reaction and return the image.
 
@@ -116,15 +116,14 @@ class ReactionVisualizer:
             An image of the chemical reaction.
         """
         # Parse reactants and products from the reaction string
-        reactants_str, products_str = reaction_str.split('>>')
-        reactants = [Chem.MolFromSmiles(smiles) for smiles in reactants_str.split('.')]
-        products = [Chem.MolFromSmiles(smiles) for smiles in products_str.split('.')]
+        reactants_str, products_str = reaction_str.split(">>")
+        reactants = [Chem.MolFromSmiles(smiles) for smiles in reactants_str.split(".")]
+        products = [Chem.MolFromSmiles(smiles) for smiles in products_str.split(".")]
 
         if show_atom_numbers:
             reactants = [self.draw_molecule_with_atom_numbers(mol) for mol in reactants]
             products = [self.draw_molecule_with_atom_numbers(mol) for mol in products]
-            
-        
+
         rxn = AllChem.ChemicalReaction()
         for reactant in reactants:
             rxn.AddReactantTemplate(reactant)
@@ -135,26 +134,27 @@ class ReactionVisualizer:
         drawer = rdMolDraw2D.MolDraw2DCairo(2000, 600)  # Adjust canvas size as needed
         opts = drawer.drawOptions()
         opts.bondLineWidth = self.bond_line_width  # Increase bond line width
-        opts.atomLabelFontSize = self.atom_label_font_size  # Increase font size for atom labels
+        opts.atomLabelFontSize = (
+            self.atom_label_font_size
+        )  # Increase font size for atom labels
         opts.padding = self.padding  # Adjust padding around the drawing
 
         drawer.DrawReaction(rxn)
         drawer.FinishDrawing()
         return Image.open(io.BytesIO(drawer.GetDrawingText()))
 
-
     def plot_reactions(
-        self, 
-        data: Dict[str, str], 
-        old_reaction_col: str, 
-        new_reaction_col: str, 
-        compare: bool = False, 
-        orientation: str = 'vertical', 
-        savefig: bool = False, 
-        pathname: Optional[str] = None, 
+        self,
+        data: Dict[str, str],
+        old_reaction_col: str,
+        new_reaction_col: str,
+        compare: bool = False,
+        orientation: str = "vertical",
+        savefig: bool = False,
+        pathname: Optional[str] = None,
         dpi: int = 300,
-        show_atom_numbers: bool = False
-        ) -> None:
+        show_atom_numbers: bool = False,
+    ) -> None:
         """
         Plot one or two chemical reactions for visualization.
 
@@ -180,41 +180,53 @@ class ReactionVisualizer:
         # Get the old and new reaction strings from the data
         old_reaction_str = data[old_reaction_col]
         new_reaction_str = data[new_reaction_col]
-        
+
         # Create reaction images
-        new_reaction_image = self.visualize_reaction(new_reaction_str, show_atom_numbers)
-        old_reaction_image = self.visualize_reaction(old_reaction_str, show_atom_numbers) if compare else None
+        new_reaction_image = self.visualize_reaction(
+            new_reaction_str, show_atom_numbers
+        )
+        old_reaction_image = (
+            self.visualize_reaction(old_reaction_str, show_atom_numbers)
+            if compare
+            else None
+        )
 
         # Set up plot layout
         if compare:
-            nrows, ncols = (2, 1) if orientation == 'vertical' else (1, 2)
+            nrows, ncols = (2, 1) if orientation == "vertical" else (1, 2)
             fig, axs = plt.subplots(nrows, ncols, figsize=self.figsize, dpi=dpi)
-            ax_new = axs[1] if orientation == 'vertical' else axs[0]
-            ax_old = axs[0] if orientation == 'vertical' else axs[1]
+            ax_new = axs[1] if orientation == "vertical" else axs[0]
+            ax_old = axs[0] if orientation == "vertical" else axs[1]
         else:
             fig, ax = plt.subplots(figsize=self.figsize, dpi=dpi)
 
         # Plotting logic
         if compare:
             ax_old.imshow(old_reaction_image)
-            ax_old.axis('off')
+            ax_old.axis("off")
             ax_new.imshow(new_reaction_image)
-            ax_new.axis('off')
+            ax_new.axis("off")
         else:
             ax.imshow(new_reaction_image)
-            ax.axis('off')
+            ax.axis("off")
 
         # Setting titles
-        label_y_position = -0.1 if self.label_position == 'below' else 1.1
+        label_y_position = -0.1 if self.label_position == "below" else 1.1
         if compare:
-            ax_old.set_title('Old Reaction', position=(0.5, label_y_position), weight='bold')
-            ax_new.set_title('New Reaction', position=(0.5, label_y_position), weight='bold')
+            ax_old.set_title(
+                "Old Reaction", position=(0.5, label_y_position), weight="bold"
+            )
+            ax_new.set_title(
+                "New Reaction", position=(0.5, label_y_position), weight="bold"
+            )
         else:
-            ax.set_title('New Reaction', position=(0.5, label_y_position), weight='bold')
+            ax.set_title(
+                "New Reaction", position=(0.5, label_y_position), weight="bold"
+            )
 
         # Saving the figure
         if savefig and pathname:
             fig.savefig(pathname, dpi=dpi)
 
-        #plt.tight_layout()
+        # plt.tight_layout()
         return fig

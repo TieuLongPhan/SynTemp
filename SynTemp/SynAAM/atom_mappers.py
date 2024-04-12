@@ -9,9 +9,11 @@ from contextlib import contextmanager
 from localmapper import localmapper
 import re
 from rdkit import Chem
+
 # Initialize RXNMapper instance
 rxn_mapper = RXNMapper()
 import torch
+
 
 def map_with_rxn_mapper(reaction_smiles: str, rxn_mapper: RXNMapper) -> str:
     """
@@ -26,12 +28,15 @@ def map_with_rxn_mapper(reaction_smiles: str, rxn_mapper: RXNMapper) -> str:
     """
     try:
         # Map reaction using RXNMapper
-        mapped_rxn = rxn_mapper.get_attention_guided_atom_maps([reaction_smiles], canonicalize_rxns=False)[0]["mapped_rxn"]
+        mapped_rxn = rxn_mapper.get_attention_guided_atom_maps(
+            [reaction_smiles], canonicalize_rxns=False
+        )[0]["mapped_rxn"]
         # Return mapped reaction
         return mapped_rxn.split(" ")[0] if " " in mapped_rxn else mapped_rxn
     except Exception as e:
         print(f"RXNMapper mapping failed: {e}")
         return reaction_smiles
+
 
 def map_with_graphormer(reaction_smiles: str) -> str:
     """
@@ -54,8 +59,9 @@ def map_with_graphormer(reaction_smiles: str) -> str:
     except Exception as e:
         print(f"Graphormer mapping failed: {e}")
         return reaction_smiles
-    
-def map_with_local_mapper(reaction_smiles: str, mapper = localmapper()) -> str:
+
+
+def map_with_local_mapper(reaction_smiles: str, mapper=localmapper()) -> str:
     """
     Maps a reaction using the AtomMapper.
 
@@ -64,11 +70,11 @@ def map_with_local_mapper(reaction_smiles: str, mapper = localmapper()) -> str:
     Returns:
         str: The mapped reaction SMILES string.
     """
-    
+
     try:
         # Map reaction using AtomMapper
         _, prediction = mapper.get_atom_map(reaction_smiles)
-        mapped_rxn = prediction['mapped_rxn']
+        mapped_rxn = prediction["mapped_rxn"]
         # Return mapped reaction
         return mapped_rxn.split(" ")[0] if " " in mapped_rxn else mapped_rxn
     except Exception as e:
@@ -88,6 +94,7 @@ def temporary_change_dir(target_directory):
     finally:
         os.chdir(original_directory)  # Revert back to the original directory
 
+
 def map_with_rdt(reaction_smiles: str, rdt_jar_path: str, working_dir: str) -> str:
     """
     Maps a reaction using the RDT (Retro-Data) tool.
@@ -105,9 +112,9 @@ def map_with_rdt(reaction_smiles: str, rdt_jar_path: str, working_dir: str) -> s
     output_file = "ECBLAST_smiles_AAM.txt"
 
     try:
-        os.makedirs(unique_dir)  
+        os.makedirs(unique_dir)
 
-        with temporary_change_dir(unique_dir):  
+        with temporary_change_dir(unique_dir):
             command = f'java -jar "{rdt_jar_path}" -Q SMI -q "{reaction_smiles}" -c -j AAM -f TEXT > {output_file}'
             os.system(command)
 
@@ -120,7 +127,7 @@ def map_with_rdt(reaction_smiles: str, rdt_jar_path: str, working_dir: str) -> s
         print(f"RDT mapping failed: {e}")
         return reaction_smiles
     finally:
-        shutil.rmtree(unique_dir, ignore_errors=True)  
+        shutil.rmtree(unique_dir, ignore_errors=True)
 
 
 def remove_atom_mapping(smiles: str) -> str:
