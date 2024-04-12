@@ -231,29 +231,21 @@ def count_carbons(smiles_list: List[str]) -> int:
     return total_carbon_count
 
 
-def get_combined_molecular_formula(smiles_list: List[str]) -> str:
+def get_combined_molecular_formula(smiles: str) -> str:
     """
-    Computes the combined molecular formula for a list of molecules represented by SMILES strings.
+    Computes the molecular formula for a molecule represented by a SMILES string.
 
-    Args:
-        smiles_list (List[str]): A list of SMILES strings representing separate molecules.
+    Parameters:
+    - smiles (str): The SMILES string of the molecule.
 
     Returns:
-        str: The combined molecular formula. Returns an empty string if any SMILES string is invalid.
+    - str: The molecular formula, or an empty string if the molecule is invalid.
     """
-    total_formula = {}
-    for smiles in smiles_list:
-        mol = Chem.MolFromSmiles(smiles)
-        if not mol:  # Invalid SMILES string
-            return ""
-        formula = CalcMolFormula(mol)
-        for element in re.findall(r"([A-Z][a-z]*)(\d*)", formula):
-            symbol, count = element
-            count = int(count) if count else 1
-            total_formula[symbol] = total_formula.get(symbol, 0) + count
-    return "".join(
-        f"{symbol}{total_formula[symbol]}" for symbol in sorted(total_formula.keys())
-    )
+    mol = mol_from_smiles(smiles)
+    if not mol:
+        return ""
+    return CalcMolFormula(mol)
+)
 
 
 @staticmethod

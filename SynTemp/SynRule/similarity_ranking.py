@@ -6,6 +6,7 @@ from rdkit.Chem import AllChem, MACCSkeys
 from rdkit.Avalon import pyAvalonTools as fpAvalon
 from rdkit import DataStructs
 from rdkit.Chem.rdMolDescriptors import CalcMolFormula
+from SynTemp.SynUtils.chemutils import mol_from_smiles, get_combined_molecular_formula
 
 
 class SimilarityRanking:
@@ -84,34 +85,6 @@ class SimilarityRanking:
         """
         return DataStructs.TanimotoSimilarity(fp1, fp2)
 
-    @staticmethod
-    def smiles_to_mol(smiles: str) -> Union[Chem.Mol, None]:
-        """
-        Converts a SMILES string to an RDKit molecule object.
-
-        Parameters:
-        - smiles (str): The SMILES string to convert.
-
-        Returns:
-        - Chem.Mol: The RDKit molecule object, or None if the conversion fails.
-        """
-        return Chem.MolFromSmiles(smiles)
-
-    @staticmethod
-    def get_combined_molecular_formula(smiles: str) -> str:
-        """
-        Computes the molecular formula for a molecule represented by a SMILES string.
-
-        Parameters:
-        - smiles (str): The SMILES string of the molecule.
-
-        Returns:
-        - str: The molecular formula, or an empty string if the molecule is invalid.
-        """
-        mol = SimilarityRanking.smiles_to_mol(smiles)
-        if not mol:
-            return ""
-        return CalcMolFormula(mol)
 
     @classmethod
     def check_balance(cls, reactants: str, products: str) -> bool:
@@ -125,8 +98,8 @@ class SimilarityRanking:
         Returns:
         - bool: True if the reaction is balanced, otherwise False.
         """
-        reactant_formula = cls.get_combined_molecular_formula(reactants)
-        product_formula = cls.get_combined_molecular_formula(products)
+        reactant_formula = get_combined_molecular_formula(reactants)
+        product_formula = get_combined_molecular_formula(products)
         return reactant_formula == product_formula
 
     @classmethod
@@ -144,8 +117,8 @@ class SimilarityRanking:
         - Tuple[float, bool]: The summed Tanimoto similarity and a boolean indicating if the reaction is balanced.
         """
         reactants, products = reaction_smiles.split(">>")
-        reactant_mol = cls.smiles_to_mol(reactants)
-        product_mol = cls.smiles_to_mol(products)
+        reactant_mol = mol_from_smiles(reactants)
+        product_mol = mol_from_smiles(products)
 
         total_similarity = 0
         for fptype in fingerprint_types:
