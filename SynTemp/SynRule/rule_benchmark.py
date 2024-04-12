@@ -5,7 +5,7 @@ from SynTemp.SynUtils.chemutils import (
     standardize_rsmi,
     remove_stereochemistry_from_reaction_smiles,
 )
-from SynTemp.SynMØD.rule_engine import RuleEngine
+from SynTemp.SynRule.rule_engine import RuleEngine
 
 
 class RuleBenchmark:
@@ -46,7 +46,7 @@ class RuleBenchmark:
         rule_file_path: str,
         original_rsmi_col: str = "reactions",
         repeat_times: int = 1,
-        known_class: bool = True,
+        prior: bool = True,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates reactions from a database of molecular structures in both forward and backward directions, categorizes
@@ -63,7 +63,7 @@ class RuleBenchmark:
         - rule_file_path (str): The base path to the directory containing the rule files.
         - original_rsmi_col (str, optional): The key in the dictionaries for the original reaction SMILES string. Defaults to 'reactions'.
         - repeat_times (int, optional): The number of times to repeat the reaction simulation for each entry. Defaults to 1.
-        - known_class (bool, optional): If True, uses specific rule files identified by 'id_col'. If False, uses all rule files in the directory.
+        - prior (bool, optional): If True, uses specific rule files identified by 'id_col'. If False, uses all rule files in the directory.
 
         Returns:
         - Tuple[List[Dict], List[Dict]]: A tuple containing two lists of dictionaries, with the first list representing
@@ -81,7 +81,7 @@ class RuleBenchmark:
                 # entry["negative_reactions"] = []
                 entry["unrank"] = []
 
-                if known_class:
+                if prior:
                     rule_files = [f"{rule_file_path}/{entry[id_col]}.gml"]
                 else:
                     rule_files = glob.glob(f"{rule_file_path}/*.gml")
@@ -117,6 +117,10 @@ class RuleBenchmark:
                     # entry["negative_reactions"].extend(unmatched_reactions)
                     entry["unrank"].extend(reactions)
                 entry["positive_reactions"] = list(set(entry["positive_reactions"]))
+                if len(entry["positive_reactions"]) > 0:
+                    entry["positive_reactions"] = entry["positive_reactions"][0]
+                else:
+                    entry["positive_reactions"] = None
                 entry["unrank"] = list(set(entry["unrank"]))
 
         return updated_database_forward, updated_database_backward

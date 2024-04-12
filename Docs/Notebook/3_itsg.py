@@ -13,7 +13,7 @@ from SynTemp.SynUtils.utils import load_database, save_database, save_to_pickle,
 from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynMØD.rule_cluster import NaiveCluster
+from SynTemp.SynRule.rule_cluster import RuleCluster
 from SynTemp.SynITS.uncertain_refinement import UncertainRefinement
 
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:
@@ -173,7 +173,7 @@ def run_synitsg_pipeline(data, mapper_name=None, batch_size=1000, verbose=1, n_j
         logger.info(f"Data all for alignment: {len(process_graph_data)}")
         logger.info("Clustering ITS graphs.")
         node_label_names = ["element", "charge"]
-        naive_cluster = NaiveCluster(node_label_names=node_label_names, node_label_default=["*", 0], edge_attribute="order")
+        naive_cluster = RuleCluster(node_label_names=node_label_names, node_label_default=["*", 0], edge_attribute="order")
         its_graph_rules_cluster = naive_cluster.process_rules_clustering(process_graph_data, rule_column='GraphRules')
         if save_dir:
             save_to_pickle(its_graph_rules_cluster, f'{save_dir}/{data_name}_its_graph_rules_cluster.pkl.gz')

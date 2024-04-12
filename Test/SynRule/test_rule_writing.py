@@ -1,13 +1,6 @@
 import unittest
 import networkx as nx
-import unittest
-import sys
-from pathlib import Path
-
-# root_dir = Path(__file__).parents[2]
-# sys.path.append(str(root_dir))
-import time
-from SynTemp.SynMØD.rule_writing import RuleWriting
+from SynTemp.SynRule.rule_writing import RuleWriting
 
 
 class TestMODRules(unittest.TestCase):

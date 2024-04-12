@@ -1,9 +1,7 @@
 import unittest
 import networkx as nx
 import unittest
-import sys
-from pathlib import Path
-from SynTemp.SynMØD.rule_decompose import RuleDecompose
+from SynTemp.SynRule.rule_decompose import RuleDecompose
 
 
 class TestRuleDecompose(unittest.TestCase):

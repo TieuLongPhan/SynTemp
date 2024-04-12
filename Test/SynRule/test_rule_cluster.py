@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import networkx as nx
-from SynTemp.SynMØD.rule_cluster import RuleCluster
+from SynTemp.SynRule.rule_cluster import RuleCluster
 
 
 class TestRuleCluster(unittest.TestCase):
