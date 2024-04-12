@@ -1,15 +1,5 @@
 import unittest
 import networkx as nx
-<<<<<<< HEAD
-import unittest
-import sys
-from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
-import time
-=======
->>>>>>> bd12d73c8bed4cee5fafcc379f9f05958c1c21e0
 from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
 
 
