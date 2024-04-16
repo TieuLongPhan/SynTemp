@@ -245,7 +245,7 @@ def get_combined_molecular_formula(smiles: str) -> str:
     if not mol:
         return ""
     return CalcMolFormula(mol)
-)
+
 
 
 @staticmethod

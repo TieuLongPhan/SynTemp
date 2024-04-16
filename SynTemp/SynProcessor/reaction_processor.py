@@ -10,7 +10,7 @@ class ReactionProcessor:
     """
 
     @staticmethod
-    def label_reactions(reaction_dict: Dict) -> Dict:
+    def label_reactions(reaction_dict: Dict, id_column: str = "R-id", reaction_column: str = "reactions") -> Dict:
         """
         Labels chemical reactions based on their reactants, indicating whether they
         are oxidation or reduction reactions, and canonicalizes the SMILES strings.
@@ -26,7 +26,7 @@ class ReactionProcessor:
 
         label = "unspecified"
         r_id = reaction_dict.get("R-id", "N/A")
-        new_reaction = reaction_dict.get("new_reaction", "")
+        new_reaction = reaction_dict.get(reaction_column, "")
 
         try:
             reactants, products = new_reaction.split(">>", 1)
@@ -47,8 +47,8 @@ class ReactionProcessor:
         products_smiles = Chem.CanonSmiles(products) if products else ""
 
         new_dict = {
-            "R-id": r_id,
-            "new_reaction": new_reaction,
+            id_column: r_id,
+            reaction_column: new_reaction,
             "label": label,
             "reactants": reactants_smiles,
             "products": products_smiles,

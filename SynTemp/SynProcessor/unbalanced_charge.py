@@ -5,7 +5,8 @@ from joblib import Parallel, delayed
 class UnbalancedCharge:
     @staticmethod
     def fix_negative_charge(
-        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products"
+        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products", 
+        id_column: str = "R-id", reaction_column: str = "reactions"
     ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a negative charge in the products by adding [Na+] ions.
@@ -39,8 +40,8 @@ class UnbalancedCharge:
 
         # Create the new reaction dictionary
         new_reaction_dict = {
-            "R-id": reaction_dict["R-id"],
-            "new_reaction": new_reactions,
+            id_column: reaction_dict["R-id"],
+            reaction_column: new_reactions,
             "label": reaction_dict["label"],
             "reactants": new_reactants,
             "products": new_products,
@@ -51,7 +52,8 @@ class UnbalancedCharge:
 
     @staticmethod
     def fix_positive_charge(
-        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products"
+        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products",
+        id_column: str = "R-id", reaction_column: str = "reactions"
     ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a positive charge in the products by adding [Cl-] ions. The function
@@ -88,7 +90,7 @@ class UnbalancedCharge:
 
         # Create and return the new reaction dictionary with the neutralized charge
         new_reaction_dict = {
-            "R-id": reaction_dict["R-id"],
+            "R-id": reaction_dict[id_column],
             "new_reaction": new_reactions,
             "label": reaction_dict["label"],
             "reactants": new_reactants,

@@ -4,3 +4,4 @@
 *.DS_Store
 *.gml
 .pytest_cache
+__pycache__
