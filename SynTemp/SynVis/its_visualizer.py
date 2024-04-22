@@ -5,27 +5,37 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import rdChemReactions
+
+
 class ITSVisualizer:
     """
     Class for visualizing and analyzing chemical reactions using RDKit.
     """
 
-    AtomInfo = namedtuple('AtomInfo', ('mapnum', 'reactant', 'reactantAtom', 'product', 'productAtom'))
-    BondInfo = namedtuple('BondInfo', ('product', 'productAtoms', 'productBond', 'status'))
+    AtomInfo = namedtuple(
+        "AtomInfo", ("mapnum", "reactant", "reactantAtom", "product", "productAtom")
+    )
+    BondInfo = namedtuple(
+        "BondInfo", ("product", "productAtoms", "productBond", "status")
+    )
 
     def __init__(self, reaction_smiles: str) -> None:
         """
         Initialize the ITSVisualizer object with a reaction SMILES string.
         """
         self.reaction_smiles: str = reaction_smiles
-        self.rxn: rdChemReactions.ChemicalReaction = rdChemReactions.ReactionFromSmarts(self.reaction_smiles, useSmiles=True)
+        self.rxn: rdChemReactions.ChemicalReaction = rdChemReactions.ReactionFromSmarts(
+            self.reaction_smiles, useSmiles=True
+        )
         self.rxn.Initialize()
         self.atms: List[ITSVisualizer.AtomInfo]
         self.bnds: List[ITSVisualizer.BondInfo]
         self.atms, self.bnds = self.find_modifications_in_products(self.rxn)
 
     @staticmethod
-    def map_reacting_atoms_to_products(rxn: rdChemReactions.ChemicalReaction, reactingAtoms: List[List[int]]) -> List[AtomInfo]:
+    def map_reacting_atoms_to_products(
+        rxn: rdChemReactions.ChemicalReaction, reactingAtoms: List[List[int]]
+    ) -> List[AtomInfo]:
         """
         Maps reacting atoms to their corresponding products.
         """
@@ -37,7 +47,9 @@ class ITSVisualizer:
                 for pidx, product in enumerate(rxn.GetProducts()):
                     for paidx, patom in enumerate(product.GetAtoms()):
                         if patom.GetAtomMapNum() == mapnum:
-                            res.append(ITSVisualizer.AtomInfo(mapnum, ridx, raidx, pidx, paidx))
+                            res.append(
+                                ITSVisualizer.AtomInfo(mapnum, ridx, raidx, pidx, paidx)
+                            )
                             break
         return res
 
@@ -56,7 +68,9 @@ class ITSVisualizer:
         return res
 
     @staticmethod
-    def find_modifications_in_products(rxn: rdChemReactions.ChemicalReaction) -> Tuple[List[AtomInfo], List[BondInfo]]:
+    def find_modifications_in_products(
+        rxn: rdChemReactions.ChemicalReaction,
+    ) -> Tuple[List[AtomInfo], List[BondInfo]]:
         """
         Identifies modifications in products compared to reactants.
         """
@@ -76,17 +90,25 @@ class ITSVisualizer:
                     pbond = product.GetBondBetweenAtoms(*pnbrs[tpl])
                     if (pidx, pbond.GetIdx()) not in seen:
                         seen.add((pidx, pbond.GetIdx()))
-                        res.append(ITSVisualizer.BondInfo(pidx, pnbrs[tpl], pbond.GetIdx(), 'New'))
+                        res.append(
+                            ITSVisualizer.BondInfo(
+                                pidx, pnbrs[tpl], pbond.GetIdx(), "New"
+                            )
+                        )
         return amap, res
 
-    def draw_product_with_modified_bonds(self, productIdx: int = None, showAtomMaps: bool = False) -> str:
+    def draw_product_with_modified_bonds(
+        self, productIdx: int = None, showAtomMaps: bool = False
+    ) -> str:
         """
         Draws the product molecule highlighting the modified bonds and atoms.
         """
         rxn, atms, bnds = self.rxn, self.atms, self.bnds
         if productIdx is None:
             pcnts = [x.GetNumAtoms() for x in rxn.GetProducts()]
-            largestProduct = list(sorted(zip(pcnts, range(len(pcnts))), reverse=True))[0][1]
+            largestProduct = list(sorted(zip(pcnts, range(len(pcnts))), reverse=True))[
+                0
+            ][1]
             productIdx = largestProduct
         d2d = Draw.rdMolDraw2D.MolDraw2DCairo(350, 300)
         pmol = Chem.Mol(rxn.GetProductTemplate(productIdx))
@@ -98,14 +120,14 @@ class ITSVisualizer:
         highlight_bond_colors = {}
         atoms_seen = set()
         for binfo in bnds:
-            if binfo.product == productIdx and binfo.status == 'New':
+            if binfo.product == productIdx and binfo.status == "New":
                 bonds_to_highlight.append(binfo.productBond)
                 atoms_seen.update(binfo.productAtoms)
-                highlight_bond_colors[binfo.productBond] = (1, .4, .4)
-            if binfo.product == productIdx and binfo.status == 'Changed':
+                highlight_bond_colors[binfo.productBond] = (1, 0.4, 0.4)
+            if binfo.product == productIdx and binfo.status == "Changed":
                 bonds_to_highlight.append(binfo.productBond)
                 atoms_seen.update(binfo.productAtoms)
-                highlight_bond_colors[binfo.productBond] = (.4, .4, 1)
+                highlight_bond_colors[binfo.productBond] = (0.4, 0.4, 1)
         atoms_to_highlight = set()
         for ainfo in atms:
             if ainfo.product != productIdx or ainfo.productAtom in atoms_seen:
@@ -115,11 +137,14 @@ class ITSVisualizer:
         d2d.drawOptions().useBWAtomPalette()
         d2d.drawOptions().continuousHighlight = False
         d2d.drawOptions().highlightBondWidthMultiplier = 24
-        d2d.drawOptions().setHighlightColour((.9, .9, 0))
+        d2d.drawOptions().setHighlightColour((0.9, 0.9, 0))
         d2d.drawOptions().fillHighlights = False
         atoms_to_highlight.update(atoms_seen)
-        d2d.DrawMolecule(pmol, highlightAtoms=atoms_to_highlight, highlightBonds=bonds_to_highlight,
-                        highlightBondColors=highlight_bond_colors)
+        d2d.DrawMolecule(
+            pmol,
+            highlightAtoms=atoms_to_highlight,
+            highlightBonds=bonds_to_highlight,
+            highlightBondColors=highlight_bond_colors,
+        )
         d2d.FinishDrawing()
         return d2d.GetDrawingText()
-

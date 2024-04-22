@@ -1,6 +1,5 @@
 import os
 from typing import List, Dict, Set, Any
-from typing import Optional, Union, Callable, Tuple
 import json
 import pickle
 import random
@@ -13,7 +12,8 @@ def save_database(database: list[dict], pathname: str = "./Data/database.json") 
 
     Args:
         database: The database to be saved.
-        pathname: The path where the database will be saved. Defaults to './Data/database.json'.
+        pathname: The path where the database will be saved.
+                    Defaults to './Data/database.json'.
 
     Raises:
         TypeError: If the database is not a list of dictionaries.
@@ -34,7 +34,8 @@ def load_database(pathname: str = "./Data/database.json") -> List[Dict]:
     Load a database (a list of dictionaries) from a JSON file.
 
     Args:
-        pathname: The path from where the database will be loaded. Defaults to './Data/database.json'.
+        pathname: The path from where the database will be loaded.
+                    Defaults to './Data/database.json'.
 
     Returns:
         The loaded database.

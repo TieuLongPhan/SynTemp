@@ -5,8 +5,10 @@ from joblib import Parallel, delayed
 class UnbalancedCharge:
     @staticmethod
     def fix_negative_charge(
-        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products", 
-        id_column: str = "R-id", reaction_column: str = "reactions"
+        reaction_dict: Dict[str, any],
+        charges_column: str = "total_charge_in_products",
+        id_column: str = "R-id",
+        reaction_column: str = "reactions",
     ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a negative charge in the products by adding [Na+] ions.
@@ -52,8 +54,10 @@ class UnbalancedCharge:
 
     @staticmethod
     def fix_positive_charge(
-        reaction_dict: Dict[str, any], charges_column: str = "total_charge_in_products",
-        id_column: str = "R-id", reaction_column: str = "reactions"
+        reaction_dict: Dict[str, any],
+        charges_column: str = "total_charge_in_products",
+        id_column: str = "R-id",
+        reaction_column: str = "reactions",
     ) -> Dict[str, any]:
         """
         Adjusts a reaction dictionary to compensate for a positive charge in the products by adding [Cl-] ions. The function

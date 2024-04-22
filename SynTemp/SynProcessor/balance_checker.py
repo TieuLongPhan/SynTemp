@@ -1,5 +1,4 @@
 from rdkit import Chem
-from collections import defaultdict
 from joblib import Parallel, delayed
 from typing import List, Dict, Union, Tuple
 from rdkit.Chem import rdMolDescriptors
@@ -15,7 +14,7 @@ class BalanceReactionCheck:
         self,
         input_data: Union[str, List[Union[str, Dict[str, str]]]],
         rsmi_column: str = "reactions",
-        n_jobs: int = -1,
+        n_jobs: int = 4,
         verbose: int = 0,
     ):
         """

@@ -247,7 +247,6 @@ def get_combined_molecular_formula(smiles: str) -> str:
     return CalcMolFormula(mol)
 
 
-
 @staticmethod
 def generate_smiles_combinations(
     smiles_list: List[str], target_smiles: str, use_formula: bool = False

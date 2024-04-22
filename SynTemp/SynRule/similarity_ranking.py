@@ -85,7 +85,6 @@ class SimilarityRanking:
         """
         return DataStructs.TanimotoSimilarity(fp1, fp2)
 
-
     @classmethod
     def check_balance(cls, reactants: str, products: str) -> bool:
         """

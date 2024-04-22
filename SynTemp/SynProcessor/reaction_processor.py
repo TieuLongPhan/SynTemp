@@ -10,7 +10,9 @@ class ReactionProcessor:
     """
 
     @staticmethod
-    def label_reactions(reaction_dict: Dict, id_column: str = "R-id", reaction_column: str = "reactions") -> Dict:
+    def label_reactions(
+        reaction_dict: Dict, id_column: str = "R-id", reaction_column: str = "reactions"
+    ) -> Dict:
         """
         Labels chemical reactions based on their reactants, indicating whether they
         are oxidation or reduction reactions, and canonicalizes the SMILES strings.
