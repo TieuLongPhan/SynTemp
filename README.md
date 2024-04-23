@@ -18,7 +18,7 @@ Utilizing the Atom-Atom Mapping (AAM) technique, we identify and map correspondi
 
 ### Step 3: Rules Extraction
 In the final step, we focus on extracting the underlying rules from the ITS graph. This involves identifying significant nodes and edges that represent the core transformation mechanisms within the reaction. The extracted rules provide a concise and quantifiable description of the reaction process, instrumental for further analysis and application in computational chemistry.
-![Extracted Rules](./Image/rules.png)
+![Extracted Rules](./Docs/Image/rules.png)
 
 
 ## Table of Contents
