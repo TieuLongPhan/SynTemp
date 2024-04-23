@@ -1,9 +1,7 @@
 import unittest
-import sys
 from pathlib import Path
 
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
+
 from SynTemp.SynAAM.atom_mappers import (
     map_with_rxn_mapper,
     map_with_graphormer,
@@ -14,8 +12,9 @@ from SynTemp.SynAAM.atom_mappers import (
 )
 from rxnmapper import RXNMapper
 from localmapper import localmapper
-import torch
 from rdkit import Chem
+
+root_dir = Path(__file__).parents[2]
 
 
 class TestMappingFunctions(unittest.TestCase):

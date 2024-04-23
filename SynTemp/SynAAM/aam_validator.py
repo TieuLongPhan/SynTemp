@@ -1,13 +1,13 @@
 import networkx as nx
 import pandas as pd
-from typing import Dict, List, Tuple, Union, Any
+from typing import Dict, List, Tuple, Union
 from rdkit import Chem
 from operator import eq
 from joblib import Parallel, delayed
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynProcessor.mol_to_graph import MolToGraph
+from SynTemp.SynChemistry.mol_to_graph import MolToGraph
 from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
 from itertools import combinations
 
@@ -106,7 +106,7 @@ class AMMValidator:
 
             return equivariant == 1
 
-        except:
+        except ValueError:
             return False
 
     @staticmethod

@@ -1,6 +1,5 @@
 from typing import List
 from SynTemp.SynUtils.graph_utils import load_gml_as_text
-from SynTemp.SynUtils.utils import ensure_directory_exists, run_shell_command
 from mod import *
 
 

@@ -5,7 +5,7 @@ import torch
 import time
 root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
-from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
+from SynTemp.SynChemistry.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
 from SynTemp.SynUtils.utils import load_database, save_database
 import warnings

@@ -6,7 +6,7 @@ import warnings
 from joblib import Parallel, delayed
 import transformers
 from rxnmapper import RXNMapper
-from SynTemp.SynProcessor.balance_checker import BalanceReactionCheck
+from SynTemp.SynChemistry.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
 from SynTemp.SynUtils.utils import save_database
 

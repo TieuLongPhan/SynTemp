@@ -1,15 +1,12 @@
 import unittest
-import sys
 from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
 from rxnmapper import RXNMapper
 import os
 
+root_dir = Path(__file__).parents[2]
 
-# TODO, add real test cases
+
 class TestConsensusAAM(unittest.TestCase):
 
     def setUp(self):

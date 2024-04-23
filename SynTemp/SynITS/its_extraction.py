@@ -6,8 +6,8 @@ from joblib import Parallel, delayed
 from operator import eq
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from SynTemp.SynITS.its_construction import ITSConstruction
-from SynTemp.SynProcessor.mol_to_graph import MolToGraph
-from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
+from SynTemp.SynChemistry.mol_to_graph import MolToGraph
+from SynTemp.SynRule.rules_extraction import RuleExtraction
 
 
 class ITSExtraction:
@@ -107,7 +107,7 @@ class ITSExtraction:
             its_graphs.append(ITS)
 
             graphs_by_map[mapper] = (G, H, ITS)
-            rules_by_map[mapper] = GraphRuleExtraction.extract_reaction_rules(
+            rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(
                 G, H, ITS, extend=False
             )
             _, _, rules = rules_by_map[mapper]

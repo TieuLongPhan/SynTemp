@@ -1,10 +1,7 @@
 import unittest
 import networkx as nx
-from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
-
 from SynTemp.SynITS.its_construction import ITSConstruction
+
 
 
 class TestITSConstruction(unittest.TestCase):

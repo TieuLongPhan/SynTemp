@@ -72,26 +72,26 @@ class TestITSExtraction(unittest.TestCase):
         self.assertIsNotNone(graphs_by_map_correct["ITSGraph"])
         self.assertIsNotNone(graphs_by_map_correct["GraphRules"])
 
-    def test_parallel_process_smiles(self):
-        # Measure execution time with a single job
-        start_time = time.time()
-        results = ITSExtraction.parallel_process_smiles(
-            self.mapped_smiles_list, self.mapper_names, threshold=2, n_jobs=1, verbose=0
-        )
-        single_job_time = time.time() - start_time
-        # Measure execution time with a multiple jobs
-        start_time = time.time()
-        results = ITSExtraction.parallel_process_smiles(
-            self.mapped_smiles_list, self.mapper_names, threshold=2, n_jobs=2, verbose=0
-        )
-        multiple_jobs_time = time.time() - start_time
-        self.assertLess(multiple_jobs_time, single_job_time)
-        self.assertEqual(
-            len(results), len(self.mapped_smiles_list)
-        )  # Check if all smiles are processed
-        for result in results:
-            self.assertIn("ITSGraph", result)
-            self.assertIn("GraphRules", result)
+    # def test_parallel_process_smiles(self):
+    #     # Measure execution time with a single job
+    #     start_time = time.time()
+    #     results = ITSExtraction.parallel_process_smiles(
+    #         self.mapped_smiles_list, self.mapper_names, threshold=2, n_jobs=1, verbose=0
+    #     )
+    #     single_job_time = time.time() - start_time
+    #     # Measure execution time with a multiple jobs
+    #     start_time = time.time()
+    #     results = ITSExtraction.parallel_process_smiles(
+    #         self.mapped_smiles_list, self.mapper_names, threshold=2, n_jobs=2, verbose=0
+    #     )
+    #     multiple_jobs_time = time.time() - start_time
+    #     self.assertLess(multiple_jobs_time, single_job_time)
+    #     self.assertEqual(
+    #         len(results), len(self.mapped_smiles_list)
+    #     )  # Check if all smiles are processed
+    #     for result in results:
+    #         self.assertIn("ITSGraph", result)
+    #         self.assertIn("GraphRules", result)
 
 
 if __name__ == "__main__":

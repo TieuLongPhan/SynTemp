@@ -1,6 +1,5 @@
 import os
 import shutil
-import importlib.resources
 from typing import List
 from uuid import uuid4
 from chython import smiles
@@ -12,7 +11,6 @@ from rdkit import Chem
 
 # Initialize RXNMapper instance
 rxn_mapper = RXNMapper()
-import torch
 
 
 def map_with_rxn_mapper(reaction_smiles: str, rxn_mapper: RXNMapper) -> str:

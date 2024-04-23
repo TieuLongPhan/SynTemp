@@ -5,9 +5,9 @@ import time
 root_dir = pathlib.Path(__file__).parents[1]
 sys.path.append(str(root_dir))
 from SynTemp.SynUtils.utils import load_database, save_database
-from SynTemp.SynProcessor.reaction_processor import ReactionProcessor
-from SynTemp.SynProcessor.unbalanced_charge import UnbalancedCharge
-from SynTemp.SynProcessor.uncharge_reaction import UnchargeReaction
+from SynTemp.SynChemistry.reaction_processor import ReactionProcessor
+from SynTemp.SynChemistry.unbalanced_charge import UnbalancedCharge
+from SynTemp.SynChemistry.uncharge_reaction import UnchargeReaction
 import warnings
 warnings.filterwarnings("ignore")
 

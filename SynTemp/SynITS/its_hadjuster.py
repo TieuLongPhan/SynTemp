@@ -2,7 +2,7 @@ import networkx as nx
 from typing import Dict, List, Tuple, Iterable
 from joblib import Parallel, delayed
 from copy import deepcopy
-from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
+from SynTemp.SynRule.rules_extraction import RuleExtraction
 from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
 import itertools
@@ -166,7 +166,7 @@ class ITSHAdjuster:
 
         if hcount_change == 0:
             graph_data["ITSGraph"] = (react_graph, prod_graph, its)
-            graph_data["GraphRules"] = GraphRuleExtraction.extract_reaction_rules(
+            graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
                 react_graph, prod_graph, its, extend=False, n_knn=1
             )
 
@@ -176,7 +176,7 @@ class ITSHAdjuster:
             )
             its = ITSConstruction.ITSGraph(react_graph, prod_graph, ignore_aromaticity)
             graph_data["ITSGraph"] = (react_graph, prod_graph, its)
-            graph_data["GraphRules"] = GraphRuleExtraction.extract_reaction_rules(
+            graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
                 react_graph, prod_graph, its, extend=False, n_knn=1
             )
         elif 1 < hcount_change < 5:
@@ -196,7 +196,7 @@ class ITSHAdjuster:
                     combinations_solution[0][1],
                     its_list[0],
                 )
-                graph_data["GraphRules"] = GraphRuleExtraction.extract_reaction_rules(
+                graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
                     combinations_solution[0][0],
                     combinations_solution[0][1],
                     its_list[0],
@@ -206,7 +206,7 @@ class ITSHAdjuster:
                 if return_all:
                     graph_data["ITSGraph"] = (react_graph, prod_graph, its)
                     graph_data["GraphRules"] = (
-                        GraphRuleExtraction.extract_reaction_rules(
+                        RuleExtraction.extract_reaction_rules(
                             react_graph, prod_graph, its, extend=False, n_knn=1
                         )
                     )
@@ -217,7 +217,7 @@ class ITSHAdjuster:
         else:
             if return_all:
                 graph_data["ITSGraph"] = (react_graph, prod_graph, its)
-                graph_data["GraphRules"] = GraphRuleExtraction.extract_reaction_rules(
+                graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
                     react_graph, prod_graph, its, extend=False, n_knn=1
                 )
                 return graph_data

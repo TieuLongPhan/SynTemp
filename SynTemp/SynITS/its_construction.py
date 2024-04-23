@@ -1,5 +1,5 @@
 import networkx as nx
-from typing import Tuple, Dict, List, Any
+from typing import Tuple, Dict, Any
 from copy import deepcopy
 
 
