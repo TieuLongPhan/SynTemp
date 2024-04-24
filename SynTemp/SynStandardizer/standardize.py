@@ -32,7 +32,7 @@ class Standardize:
     def standardize_mol(
         mol: Chem.Mol,
         normalize: bool = True,
-        tautomerize: bool = True,
+        tautomerize: bool = False,
         remove_salts: bool = False,
         handle_charges: bool = False,
         uncharge: bool = True,

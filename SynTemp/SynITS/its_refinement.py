@@ -49,9 +49,7 @@ class ITSRefinement:
             if graph_data[column]:
                 try:
                     processed_data, type_of_graph = (
-                        ITSRefinement.process_and_check_graph(
-                            graph_data, column
-                        )
+                        ITSRefinement.process_and_check_graph(graph_data, column)
                     )
                     uncertain_graph.append(processed_data)
                     results.append(type_of_graph)
@@ -81,9 +79,7 @@ class ITSRefinement:
         - List[Optional[Dict]]: A list of processed graph data.
         """
         results = Parallel(n_jobs=n_jobs, verbose=verbose)(
-            delayed(ITSRefinement.process_dict)(
-                graph_dict, "ITSGraph", mapper_types
-            )
+            delayed(ITSRefinement.process_dict)(graph_dict, "ITSGraph", mapper_types)
             for graph_dict in graph_dicts
         )
         return results

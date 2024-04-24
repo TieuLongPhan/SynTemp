@@ -4,10 +4,11 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, MACCSkeys
 from rdkit.Avalon import pyAvalonTools as fpAvalon
 from rdkit import DataStructs
-from SynTemp.SynUtils.chemutils import mol_from_smiles, get_combined_molecular_formula
+from SynTemp.SynUtils.chemutils import mol_from_smiles
 
 
-class SimilarityRanking:
+class SFSimilarity:
+
     def __init__(self, fingerprint_types: List[str]):
         """
         Initialize the SimilarityRanking class with specific fingerprint types used for molecular analysis.
@@ -84,22 +85,6 @@ class SimilarityRanking:
         return DataStructs.TanimotoSimilarity(fp1, fp2)
 
     @classmethod
-    def check_balance(cls, reactants: str, products: str) -> bool:
-        """
-        Checks if the reaction is balanced based on the molecular formulas of reactants and products.
-
-        Parameters:
-        - reactants (str): SMILES string for the reactants.
-        - products (str): SMILES string for the products.
-
-        Returns:
-        - bool: True if the reaction is balanced, otherwise False.
-        """
-        reactant_formula = get_combined_molecular_formula(reactants)
-        product_formula = get_combined_molecular_formula(products)
-        return reactant_formula == product_formula
-
-    @classmethod
     def process_reaction_smiles(
         cls, reaction_smiles: str, fingerprint_types
     ) -> Tuple[float, bool]:
@@ -125,12 +110,11 @@ class SimilarityRanking:
                 reactant_fp, product_fp
             )
 
-        balanced = cls.check_balance(reactants, products)
-        return total_similarity, balanced
+        return total_similarity
 
-    @classmethod
-    def fit(
-        cls, reactions: List[str], fingerprint_types
+    def sort_reactions(
+        self,
+        reactions: List[str],
     ) -> Tuple[List[str], List[float]]:
         """
         Processes a list of reaction SMILES strings, returning lists of reaction SMILES and their summed similarities if balanced, sorted by similarity.
@@ -144,49 +128,10 @@ class SimilarityRanking:
         """
         results = []
         for rsmi in reactions:
-            total_similarity, balanced = cls.process_reaction_smiles(
-                rsmi, fingerprint_types
+            total_similarity = self.process_reaction_smiles(
+                rsmi, self.fingerprint_types
             )
-            if balanced:
-                results.append((rsmi, total_similarity))
+            results.append((rsmi, total_similarity))
         results.sort(key=lambda x: x[1], reverse=True)  # Sort by similarity descending
-        rsmi_list, similarity_list = zip(*results) if results else ([], [])
-        return list(rsmi_list), list(similarity_list)
-
-    @classmethod
-    def process_list_of_dicts(
-        cls, database: List[Dict], col_name: str, fingerprint_types
-    ) -> List[Dict]:
-        """
-        Processes a list of dictionaries containing reaction SMILES strings, returning the processed data
-        with reactions ranked by their calculated Tanimoto similarity.
-
-        Parameters:
-        - database (List[Dict]): List of dictionaries containing the reaction data.
-        - col_name (str): The key in each dictionary where reaction SMILES are stored.
-        - fingerprint_types (List[str]): List of fingerprint types used for calculating the similarity.
-
-        Returns:
-        - List[Dict]: The list of dictionaries updated to include 'rank' and 'similarity' keys.
-        """
-        list_of_dicts = copy.deepcopy(database)
-        for item in list_of_dicts:
-            reactions = []
-            for rsmi in item[col_name]:
-                total_similarity, balanced = cls.process_reaction_smiles(
-                    rsmi, fingerprint_types
-                )
-                if balanced:
-                    reactions.append((rsmi, total_similarity))
-
-            # Sort reactions by similarity in descending order
-            reactions.sort(key=lambda x: x[1], reverse=True)
-
-            # Prepare the output to include 'rank' and 'similarity' keys
-            item["rank"] = [rsmi for rsmi, sim in reactions]
-            item["similarity"] = [sim for rsmi, sim in reactions]
-
-            # Optionally remove the original reactions list if no longer needed
-            item.pop(col_name, None)
-
-        return list_of_dicts
+        rsmi_list, _ = zip(*results) if results else ([], [])
+        return rsmi_list

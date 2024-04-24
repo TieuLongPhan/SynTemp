@@ -44,16 +44,6 @@ class TestGraphRuleExtraction(unittest.TestCase):
         subgraph = RuleExtraction.extract_subgraph(G, node_indices)
         self.assertTrue(nx.is_isomorphic(subgraph, nx.Graph([(2, 3)])))
 
-    # def test_rules_extraction(self):
-    #     # This test would depend on the structure of your 'reaction_dict'
-    #     # and would require setting up a test case with a known outcome.
-    #     pass
-
-    # def test_process_rules_extraction(self):
-    #     # Similar to test_rules_extraction, this would require setting up
-    #     # multiple reaction_dicts and verifying the parallel processing outcomes.
-    #     pass
-
 
 if __name__ == "__main__":
     unittest.main()

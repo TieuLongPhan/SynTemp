@@ -3,7 +3,6 @@ import networkx as nx
 from SynTemp.SynITS.its_construction import ITSConstruction
 
 
-
 class TestITSConstruction(unittest.TestCase):
 
     def setUp(self):

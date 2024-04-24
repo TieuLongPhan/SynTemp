@@ -205,10 +205,8 @@ class ITSHAdjuster:
             else:
                 if return_all:
                     graph_data["ITSGraph"] = (react_graph, prod_graph, its)
-                    graph_data["GraphRules"] = (
-                        RuleExtraction.extract_reaction_rules(
-                            react_graph, prod_graph, its, extend=False, n_knn=1
-                        )
+                    graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
+                        react_graph, prod_graph, its, extend=False, n_knn=1
                     )
                     return graph_data
                 else:

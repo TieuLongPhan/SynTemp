@@ -14,7 +14,7 @@ from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
 from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynITS.uncertain_refinement import UncertainRefinement
+from SynTemp.SynITS.its_refinement import UncertainRefinement
 
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:
     """

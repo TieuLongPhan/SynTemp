@@ -6,6 +6,9 @@ from SynTemp.SynUtils.chemutils import (
     remove_stereochemistry_from_reaction_smiles,
 )
 from SynTemp.SynRule.rule_engine import RuleEngine
+from SynTemp.SynChemistry.sf_factory import SFFactory
+from SynTemp.SynChemistry.sf_similarity import SFSimilarity
+from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
 
 
 class RuleBenchmark:
@@ -132,6 +135,7 @@ class RuleBenchmark:
         rank_list_key: str,
         k: int,
         ignore_stero: bool = False,
+        scoring_function: str = SFSimilarity(['FCFP6']),
     ) -> float:
         """
         Calculates the top-k accuracy from a list of dictionaries based on the specified ground truth and ranking list keys.
@@ -157,6 +161,14 @@ class RuleBenchmark:
         correct = 0
         total = len(list_of_dicts)
 
+        # if scoring_function == "Similarity":
+        #     list_of_dicts = SFSimilarity.process_list_of_dicts(
+        #         list_of_dicts, "unrank", list_fp
+        #     )
+
+        factory = SFFactory(scoring_function=scoring_function)
+        list_of_dicts = factory.process_list_of_dicts(list_of_dicts, 'unrank')
+        # Check if the required keys are present
         for item in list_of_dicts:
             if ground_truth_key not in item or rank_list_key not in item:
                 raise ValueError(

@@ -14,7 +14,7 @@ class TestSMILESStandardizer(unittest.TestCase):  ## add Test case
     def test_standardize_mol(self):
         mol = Chem.MolFromSmiles(self.test_smiles)
         standardized_mol = self.standardizer.standardize_mol(
-            mol=mol, remove_salts=True, uncharge=True
+            mol=mol, remove_salts=True, uncharge=True, tautomerize=False
         )
         standardized_smiles = Chem.MolToSmiles(standardized_mol)
         self.assertNotIn("[Cl-]", standardized_smiles)

@@ -95,9 +95,7 @@ class RuleExtraction:
         )
 
         rules_graph = rules_network[2]
-        rules_graph = RuleExtraction.remove_normal_egdes(
-            rules_graph, "standard_order"
-        )
+        rules_graph = RuleExtraction.remove_normal_egdes(rules_graph, "standard_order")
         rules_network = (rules_network[0], rules_network[1], rules_graph)
         return rules_network
 

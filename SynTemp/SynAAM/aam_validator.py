@@ -8,7 +8,7 @@ from networkx.algorithms.isomorphism import generic_node_match, generic_edge_mat
 from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynChemistry.mol_to_graph import MolToGraph
-from SynTemp.SynITS.graph_rules_extraction import GraphRuleExtraction
+from SynTemp.SynRule.rules_extraction import RuleExtraction
 from itertools import combinations
 
 
@@ -95,9 +95,7 @@ class AMMValidator:
                 ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
                 its_graphs.append(ITS)
 
-                rules = GraphRuleExtraction.extract_reaction_rules(
-                    G, H, ITS, extend=False
-                )
+                rules = RuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
                 rules_graphs.append(rules[2])
 
             _, equivariant = AMMValidator.check_equivariant_graph(
@@ -141,6 +139,7 @@ class AMMValidator:
     @staticmethod
     def validate_smiles(
         data: Union[pd.DataFrame, List[Dict[str, str]]],
+        id_col: str = "R-id",
         ground_truth_col: str = "ground_truth",
         mapped_cols: List[str] = ["rxn_mapper", "graphormer", "local_mapper"],
         check_method: str = "RC",
@@ -154,6 +153,7 @@ class AMMValidator:
 
         Parameters:
             data (Union[pd.DataFrame, List[Dict[str, str]]]): The input data containing mapped and ground truth SMILES.
+            id_col (str): The name of the column or key containing the reaction ID.
             ground_truth_col (str): The name of the column or key containing the ground truth SMILES.
             mapped_cols (List[str]): The list of columns or keys containing the mapped SMILES for different mappers.
             check_method (str): The method used for validation ('RC' or 'ITS').
@@ -216,9 +216,9 @@ class AMMValidator:
             data_ensemble = [value for value in mappings if value["R-id"] in id]
             data_ensemble = [
                 {
-                    "R-id": value["R-id"],
-                    "ensemble": value["local_mapper"],
-                    "ground_truth": value["ground_truth"],
+                    id_col: value[id_col],
+                    "ensemble": value[mapped_cols[-1]],
+                    ground_truth_col: value[ground_truth_col],
                 }
                 for value in data_ensemble
             ]

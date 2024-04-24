@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 import networkx as nx
 from SynTemp.SynRule.rule_cluster import RuleCluster
 
