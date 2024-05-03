@@ -104,7 +104,8 @@ class AMMValidator:
 
             return equivariant == 1
 
-        except ValueError:
+        except Exception as e:  # Catch more general exceptions
+            print("An error occurred:", str(e))
             return False
 
     @staticmethod
@@ -147,6 +148,7 @@ class AMMValidator:
         n_jobs: int = 1,
         verbose: int = 0,
         ensemble=False,
+        strategies = [["rxn_mapper", "graphormer", "local_mapper"], ["rxn_mapper", "graphormer", "local_mapper", "rdt"]]
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
         Validates collections of mapped SMILES against their ground truths for multiple mappers and calculates the accuracy.
@@ -201,45 +203,47 @@ class AMMValidator:
                 }
             )
         if ensemble:
-            threshold = len(mapped_cols) - 1
+            for key, strategy in enumerate(strategies):
+                mapped_cols = strategy
+                threshold = len(mapped_cols) - 1
 
-            its_graph, _ = ITSExtraction.parallel_process_smiles(
-                mappings,
-                mapped_cols,
-                threshold=threshold,
-                n_jobs=n_jobs,
-                verbose=verbose,
-                export_full=False,
-                check_method=check_method,
-            )
-            id = [value["R-id"] for value in its_graph]
-            data_ensemble = [value for value in mappings if value["R-id"] in id]
-            data_ensemble = [
-                {
-                    id_col: value[id_col],
-                    "ensemble": value[mapped_cols[-1]],
-                    ground_truth_col: value[ground_truth_col],
-                }
-                for value in data_ensemble
-            ]
-            results = Parallel(n_jobs=n_jobs, verbose=verbose)(
-                delayed(AMMValidator.check_pair)(
-                    mapping,
-                    "ensemble",
-                    ground_truth_col,
-                    check_method,
-                    ignore_aromaticity,
+                its_graph, _ = ITSExtraction.parallel_process_smiles(
+                    mappings,
+                    mapped_cols,
+                    threshold=threshold,
+                    n_jobs=n_jobs,
+                    verbose=verbose,
+                    export_full=False,
+                    check_method=check_method,
                 )
-                for mapping in data_ensemble
-            )
-            accuracy = sum(results) / len(data_ensemble)
-            validation_results.append(
-                {
-                    "mapper": "ensemble",
-                    "accuracy": accuracy,
-                    "results": results,
-                    "success_rate": 100 * len(data_ensemble) / len(mappings),
-                }
-            )
+                id = [value["R-id"] for value in its_graph]
+                data_ensemble = [value for value in mappings if value["R-id"] in id]
+                data_ensemble = [
+                    {
+                        id_col: value[id_col],
+                        f"ensemble_{key+1}": value[mapped_cols[-1]],
+                        ground_truth_col: value[ground_truth_col],
+                    }
+                    for value in data_ensemble
+                ]
+                results = Parallel(n_jobs=n_jobs, verbose=verbose)(
+                    delayed(AMMValidator.check_pair)(
+                        mapping,
+                        f"ensemble_{key+1}",
+                        ground_truth_col,
+                        check_method,
+                        ignore_aromaticity,
+                    )
+                    for mapping in data_ensemble
+                )
+                accuracy = sum(results) / len(data_ensemble)
+                validation_results.append(
+                    {
+                        "mapper": f"ensemble_{key+1}",
+                        "accuracy": accuracy,
+                        "results": results,
+                        "success_rate": 100 * len(data_ensemble) / len(mappings),
+                    }
+                )
 
         return validation_results, data_ensemble if ensemble else None

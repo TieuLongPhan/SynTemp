@@ -95,23 +95,39 @@ class ITSExtraction:
         rules_graphs = []
 
         for mapper in mapper_names:
-            reactants_side, products_side = mapped_smiles[mapper].split(">>")
+            try:
+                reactants_side, products_side = mapped_smiles[mapper].split(">>")
 
-            # Get reactants graph G
-            G = ITSExtraction.graph_from_smiles(reactants_side)
+                # Get reactants graph G
+                G = ITSExtraction.graph_from_smiles(reactants_side)
 
-            # Get products graph H
-            H = ITSExtraction.graph_from_smiles(products_side)
+                # Get products graph H
+                H = ITSExtraction.graph_from_smiles(products_side)
 
-            ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
-            its_graphs.append(ITS)
+                # Construct the ITS graph
+                ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
+                its_graphs.append(ITS)
 
-            graphs_by_map[mapper] = (G, H, ITS)
-            rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(
-                G, H, ITS, extend=False
-            )
-            _, _, rules = rules_by_map[mapper]
-            rules_graphs.append(rules)
+                # Store graphs and ITS
+                graphs_by_map[mapper] = (G, H, ITS)
+
+                # Extract reaction rules
+                rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
+                _, _, rules = rules_by_map[mapper]
+                rules_graphs.append(rules)
+
+            except Exception as e:
+                print(f"Error processing {mapper}: {e}")
+
+                # Fallback: Create a one-node graph for ITS and Rules
+                one_node_graph = nx.Graph()
+                one_node_graph.add_node(0)  # Create a graph with a single node
+
+                # Use the one-node graph for ITS and Rules
+                its_graphs.append(one_node_graph)
+                graphs_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
+                rules_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
+                rules_graphs.append(one_node_graph)
         # threshold = len(its_graph)-1
         if check_method == "RC":
             _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)

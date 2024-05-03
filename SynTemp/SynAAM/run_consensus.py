@@ -21,6 +21,7 @@ transformers.logging.set_verbosity_error()
 def map_batch(
     batch_data: List[Dict],
     rxn_mapper: RXNMapper,
+    rsmi_column: str = "reactions",
     mapper_types: List[str] = ["rxn_mapper", "graphormer", "local_mapper"],
     rdt_jar_path: Optional[str] = None,
     working_dir: Optional[str] = None,
@@ -40,7 +41,7 @@ def map_batch(
     """
     consensus_aam = ConsensusAAM(
         batch_data,
-        rsmi_column="reactions",
+        rsmi_column=rsmi_column,
         save_dir=f"{root_dir}/Data",
         mapper_types=mapper_types,
     )
@@ -99,13 +100,16 @@ def run_consensus_aam(
 
     # Parallel map the batches
     mapped_reactions = Parallel(n_jobs=n_jobs, verbose=verbose)(
-        delayed(map_batch)(batch, rxn_mapper, mapper_types, rdt_jar_path, working_dir)
+        delayed(map_batch)(batch, rxn_mapper, rsmi_column, mapper_types, rdt_jar_path, working_dir)
         for batch in batches
     )
+   
+    mapped_reactions = [item for sublist in mapped_reactions for item in sublist]
+
 
     if save_dir:
         save_database(
-            pd.DataFrame(mapped_reactions),
+            mapped_reactions,
             f"{save_dir}/{data_name}_aam_reactions.json.gz",
         )
 

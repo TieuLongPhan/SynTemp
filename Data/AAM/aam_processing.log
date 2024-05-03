@@ -1,0 +1,693 @@
+2024-05-02 09:22:34,893 - INFO - Processed batch 1/1
+2024-05-02 09:22:34,893 - INFO - Data: ecoli - Mapper Type: rxn_mapper - Time taken: 0.15 seconds
+2024-05-02 09:22:35,194 - INFO - Processed batch 1/1
+2024-05-02 09:22:35,194 - INFO - Data: recon3d - Mapper Type: rxn_mapper - Time taken: 0.3 seconds
+2024-05-02 09:22:35,350 - INFO - Processed batch 1/1
+2024-05-02 09:22:35,350 - INFO - Data: uspto_3k - Mapper Type: rxn_mapper - Time taken: 0.16 seconds
+2024-05-02 09:22:35,504 - INFO - Processed batch 1/1
+2024-05-02 09:22:35,504 - INFO - Data: golden - Mapper Type: rxn_mapper - Time taken: 0.15 seconds
+2024-05-02 09:22:35,655 - INFO - Processed batch 1/1
+2024-05-02 09:22:35,656 - INFO - Data: natcomm - Mapper Type: rxn_mapper - Time taken: 0.15 seconds
+2024-05-02 09:22:36,800 - INFO - Processed batch 1/1
+2024-05-02 09:22:36,800 - INFO - Data: ecoli - Mapper Type: graphormer - Time taken: 1.14 seconds
+2024-05-02 09:22:38,353 - INFO - Processed batch 1/1
+2024-05-02 09:22:38,354 - INFO - Data: recon3d - Mapper Type: graphormer - Time taken: 1.55 seconds
+2024-05-02 09:22:39,310 - INFO - Processed batch 1/1
+2024-05-02 09:22:39,310 - INFO - Data: uspto_3k - Mapper Type: graphormer - Time taken: 0.96 seconds
+2024-05-02 09:22:39,964 - INFO - Processed batch 1/1
+2024-05-02 09:22:39,964 - INFO - Data: golden - Mapper Type: graphormer - Time taken: 0.65 seconds
+2024-05-02 09:22:40,704 - INFO - Processed batch 1/1
+2024-05-02 09:22:40,704 - INFO - Data: natcomm - Mapper Type: graphormer - Time taken: 0.74 seconds
+2024-05-02 09:22:41,773 - INFO - Processed batch 1/1
+2024-05-02 09:22:41,773 - INFO - Data: ecoli - Mapper Type: local_mapper - Time taken: 1.07 seconds
+2024-05-02 09:22:44,147 - INFO - Processed batch 1/1
+2024-05-02 09:22:44,148 - INFO - Data: recon3d - Mapper Type: local_mapper - Time taken: 2.37 seconds
+2024-05-02 09:22:45,211 - INFO - Processed batch 1/1
+2024-05-02 09:22:45,211 - INFO - Data: uspto_3k - Mapper Type: local_mapper - Time taken: 1.06 seconds
+2024-05-02 09:22:46,035 - INFO - Processed batch 1/1
+2024-05-02 09:22:46,036 - INFO - Data: golden - Mapper Type: local_mapper - Time taken: 0.82 seconds
+2024-05-02 09:22:47,300 - INFO - Processed batch 1/1
+2024-05-02 09:22:47,300 - INFO - Data: natcomm - Mapper Type: local_mapper - Time taken: 1.26 seconds
+2024-05-02 09:23:06,255 - INFO - Processed batch 1/1
+2024-05-02 09:23:06,256 - INFO - Data: ecoli - Mapper Type: rdt - Time taken: 18.96 seconds
+2024-05-02 09:24:27,566 - INFO - Processed batch 1/1
+2024-05-02 09:24:27,567 - INFO - Data: recon3d - Mapper Type: rdt - Time taken: 81.31 seconds
+2024-05-02 09:24:53,566 - INFO - Processed batch 1/1
+2024-05-02 09:24:53,567 - INFO - Data: uspto_3k - Mapper Type: rdt - Time taken: 26.0 seconds
+2024-05-02 09:25:14,818 - INFO - Processed batch 1/1
+2024-05-02 09:25:14,818 - INFO - Data: golden - Mapper Type: rdt - Time taken: 21.25 seconds
+2024-05-02 09:25:25,002 - INFO - Processed batch 1/1
+2024-05-02 09:25:25,002 - INFO - Data: natcomm - Mapper Type: rdt - Time taken: 10.18 seconds
+2024-05-02 09:25:25,006 - INFO - 
+          rxn_mapper  graphormer  local_mapper    rdt  Total
+ecoli           0.15        1.14          1.07  18.96  21.32
+recon3d         0.30        1.55          2.37  81.31  85.53
+uspto_3k        0.16        0.96          1.06  26.00  28.18
+golden          0.15        0.65          0.82  21.25  22.87
+natcomm         0.15        0.74          1.26  10.18  12.33
+2024-05-02 09:28:47,333 - INFO - Number of data columns:
+ecoli        273
+recon3d      382
+uspto_3k    3000
+golden      1758
+natcomm      491
+2024-05-02 09:28:47,495 - INFO - Processed batch 1/1
+2024-05-02 09:28:47,702 - INFO - Processed batch 1/1
+2024-05-02 09:28:47,853 - INFO - Processed batch 1/1
+2024-05-02 09:28:47,995 - INFO - Processed batch 1/1
+2024-05-02 09:28:48,116 - INFO - Processed batch 1/1
+2024-05-02 09:28:48,117 - INFO - ecoli (273) - rxn_mapper: 0.78 seconds
+2024-05-02 09:28:48,446 - INFO - Processed batch 1/1
+2024-05-02 09:28:48,774 - INFO - Processed batch 1/1
+2024-05-02 09:28:48,995 - INFO - Processed batch 1/1
+2024-05-02 09:28:49,276 - INFO - Processed batch 1/1
+2024-05-02 09:28:49,523 - INFO - Processed batch 1/1
+2024-05-02 09:28:49,523 - INFO - recon3d (382) - rxn_mapper: 1.41 seconds
+2024-05-02 09:28:49,675 - INFO - Processed batch 1/1
+2024-05-02 09:28:49,813 - INFO - Processed batch 1/1
+2024-05-02 09:28:49,968 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,119 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,271 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,272 - INFO - uspto_3k (3000) - rxn_mapper: 0.75 seconds
+2024-05-02 09:28:50,410 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,524 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,656 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,785 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,914 - INFO - Processed batch 1/1
+2024-05-02 09:28:50,915 - INFO - golden (1758) - rxn_mapper: 0.64 seconds
+2024-05-02 09:28:51,066 - INFO - Processed batch 1/1
+2024-05-02 09:28:51,197 - INFO - Processed batch 1/1
+2024-05-02 09:28:51,324 - INFO - Processed batch 1/1
+2024-05-02 09:28:51,459 - INFO - Processed batch 1/1
+2024-05-02 09:28:51,602 - INFO - Processed batch 1/1
+2024-05-02 09:28:51,602 - INFO - natcomm (491) - rxn_mapper: 0.69 seconds
+2024-05-02 09:28:52,608 - INFO - Processed batch 1/1
+2024-05-02 09:28:53,499 - INFO - Processed batch 1/1
+2024-05-02 09:28:54,246 - INFO - Processed batch 1/1
+2024-05-02 09:28:54,965 - INFO - Processed batch 1/1
+2024-05-02 09:28:55,584 - INFO - Processed batch 1/1
+2024-05-02 09:28:55,585 - INFO - ecoli (273) - graphormer: 3.98 seconds
+2024-05-02 09:28:56,925 - INFO - Processed batch 1/1
+2024-05-02 09:28:58,239 - INFO - Processed batch 1/1
+2024-05-02 09:28:59,241 - INFO - Processed batch 1/1
+2024-05-02 09:29:00,491 - INFO - Processed batch 1/1
+2024-05-02 09:29:01,681 - INFO - Processed batch 1/1
+2024-05-02 09:29:01,681 - INFO - recon3d (382) - graphormer: 6.1 seconds
+2024-05-02 09:29:02,556 - INFO - Processed batch 1/1
+2024-05-02 09:29:03,325 - INFO - Processed batch 1/1
+2024-05-02 09:29:04,314 - INFO - Processed batch 1/1
+2024-05-02 09:29:05,207 - INFO - Processed batch 1/1
+2024-05-02 09:29:06,076 - INFO - Processed batch 1/1
+2024-05-02 09:29:06,076 - INFO - uspto_3k (3000) - graphormer: 4.39 seconds
+2024-05-02 09:29:06,763 - INFO - Processed batch 1/1
+2024-05-02 09:29:07,439 - INFO - Processed batch 1/1
+2024-05-02 09:29:08,156 - INFO - Processed batch 1/1
+2024-05-02 09:29:08,872 - INFO - Processed batch 1/1
+2024-05-02 09:29:09,517 - INFO - Processed batch 1/1
+2024-05-02 09:29:09,517 - INFO - golden (1758) - graphormer: 3.44 seconds
+2024-05-02 09:29:10,303 - INFO - Processed batch 1/1
+2024-05-02 09:29:11,013 - INFO - Processed batch 1/1
+2024-05-02 09:29:11,720 - INFO - Processed batch 1/1
+2024-05-02 09:29:12,435 - INFO - Processed batch 1/1
+2024-05-02 09:29:13,173 - INFO - Processed batch 1/1
+2024-05-02 09:29:13,173 - INFO - natcomm (491) - graphormer: 3.66 seconds
+2024-05-02 09:29:14,248 - INFO - Processed batch 1/1
+2024-05-02 09:29:15,661 - INFO - Processed batch 1/1
+2024-05-02 09:29:16,658 - INFO - Processed batch 1/1
+2024-05-02 09:29:17,634 - INFO - Processed batch 1/1
+2024-05-02 09:29:18,326 - INFO - Processed batch 1/1
+2024-05-02 09:29:18,327 - INFO - ecoli (273) - local_mapper: 5.15 seconds
+2024-05-02 09:29:20,825 - INFO - Processed batch 1/1
+2024-05-02 09:29:23,403 - INFO - Processed batch 1/1
+2024-05-02 09:29:25,105 - INFO - Processed batch 1/1
+2024-05-02 09:29:27,354 - INFO - Processed batch 1/1
+2024-05-02 09:29:29,377 - INFO - Processed batch 1/1
+2024-05-02 09:29:29,378 - INFO - recon3d (382) - local_mapper: 11.05 seconds
+2024-05-02 09:29:30,630 - INFO - Processed batch 1/1
+2024-05-02 09:29:31,907 - INFO - Processed batch 1/1
+2024-05-02 09:29:33,179 - INFO - Processed batch 1/1
+2024-05-02 09:29:34,442 - INFO - Processed batch 1/1
+2024-05-02 09:29:35,689 - INFO - Processed batch 1/1
+2024-05-02 09:29:35,693 - INFO - uspto_3k (3000) - local_mapper: 6.32 seconds
+2024-05-02 09:29:36,588 - INFO - Processed batch 1/1
+2024-05-02 09:29:37,479 - INFO - Processed batch 1/1
+2024-05-02 09:29:38,408 - INFO - Processed batch 1/1
+2024-05-02 09:29:39,310 - INFO - Processed batch 1/1
+2024-05-02 09:29:40,046 - INFO - Processed batch 1/1
+2024-05-02 09:29:40,047 - INFO - golden (1758) - local_mapper: 4.35 seconds
+2024-05-02 09:29:41,166 - INFO - Processed batch 1/1
+2024-05-02 09:29:42,096 - INFO - Processed batch 1/1
+2024-05-02 09:29:43,026 - INFO - Processed batch 1/1
+2024-05-02 09:29:43,990 - INFO - Processed batch 1/1
+2024-05-02 09:29:44,964 - INFO - Processed batch 1/1
+2024-05-02 09:29:44,964 - INFO - natcomm (491) - local_mapper: 4.92 seconds
+2024-05-02 09:30:03,491 - INFO - Processed batch 1/1
+2024-05-02 09:30:49,124 - INFO - Processed batch 1/1
+2024-05-02 09:31:08,269 - INFO - Processed batch 1/1
+2024-05-02 09:31:23,220 - INFO - Processed batch 1/1
+2024-05-02 09:31:35,693 - INFO - Processed batch 1/1
+2024-05-02 09:31:35,694 - INFO - ecoli (273) - rdt: 110.73 seconds
+2024-05-02 09:32:43,908 - INFO - Processed batch 1/1
+2024-05-02 09:39:40,098 - INFO - Processed batch 1/1
+2024-05-02 09:40:16,225 - INFO - Processed batch 1/1
+2024-05-02 09:41:37,200 - INFO - Processed batch 1/1
+2024-05-02 09:42:31,739 - INFO - Processed batch 1/1
+2024-05-02 09:42:31,739 - INFO - recon3d (382) - rdt: 656.05 seconds
+2024-05-02 09:42:57,735 - INFO - Processed batch 1/1
+2024-05-02 09:43:17,389 - INFO - Processed batch 1/1
+2024-05-02 09:43:37,039 - INFO - Processed batch 1/1
+2024-05-02 09:44:10,475 - INFO - Processed batch 1/1
+2024-05-02 09:44:38,457 - INFO - Processed batch 1/1
+2024-05-02 09:44:38,458 - INFO - uspto_3k (3000) - rdt: 126.72 seconds
+2024-05-02 09:45:00,553 - INFO - Processed batch 1/1
+2024-05-02 09:45:18,444 - INFO - Processed batch 1/1
+2024-05-02 09:45:44,588 - INFO - Processed batch 1/1
+2024-05-02 09:46:01,376 - INFO - Processed batch 1/1
+2024-05-02 09:46:14,086 - INFO - Processed batch 1/1
+2024-05-02 09:46:14,086 - INFO - golden (1758) - rdt: 95.63 seconds
+2024-05-02 09:46:24,479 - INFO - Processed batch 1/1
+2024-05-02 09:46:34,690 - INFO - Processed batch 1/1
+2024-05-02 09:46:44,137 - INFO - Processed batch 1/1
+2024-05-02 09:46:54,321 - INFO - Processed batch 1/1
+2024-05-02 09:47:05,077 - INFO - Processed batch 1/1
+2024-05-02 09:47:05,077 - INFO - natcomm (491) - rdt: 50.99 seconds
+2024-05-02 09:47:05,081 - INFO - 
+          rxn_mapper  graphormer  local_mapper     rdt
+ecoli           0.78        3.98          5.15  110.73
+recon3d         1.41        6.10         11.05  656.05
+uspto_3k        0.75        4.39          6.32  126.72
+golden          0.64        3.44          4.35   95.63
+natcomm         0.69        3.66          4.92   50.99
+2024-05-02 09:55:55,893 - INFO - Number of data columns:
+ecoli        273
+recon3d      382
+uspto_3k    3000
+golden      1758
+natcomm      491
+2024-05-02 09:55:56,698 - INFO - Processed batch 1/1
+2024-05-02 09:55:58,023 - INFO - Processed batch 1/1
+2024-05-02 09:55:59,455 - INFO - Processed batch 1/1
+2024-05-02 09:56:00,760 - INFO - Processed batch 1/1
+2024-05-02 09:56:01,509 - INFO - Processed batch 1/1
+2024-05-02 09:56:02,068 - INFO - Processed batch 1/1
+2024-05-02 09:56:02,068 - INFO - ecoli (273) - rxn_mapper: 6.17 seconds
+2024-05-02 09:56:03,851 - INFO - Processed batch 1/1
+2024-05-02 09:56:06,044 - INFO - Processed batch 1/1
+2024-05-02 09:56:07,718 - INFO - Processed batch 1/1
+2024-05-02 09:56:09,125 - INFO - Processed batch 1/1
+2024-05-02 09:56:10,856 - INFO - Processed batch 1/1
+2024-05-02 09:56:12,025 - INFO - Processed batch 1/1
+2024-05-02 09:56:13,462 - INFO - Processed batch 1/1
+2024-05-02 09:56:14,499 - INFO - Processed batch 1/1
+2024-05-02 09:56:14,499 - INFO - recon3d (382) - rxn_mapper: 12.43 seconds
+2024-05-02 09:56:15,292 - INFO - Processed batch 1/1
+2024-05-02 09:56:15,976 - INFO - Processed batch 1/1
+2024-05-02 09:56:16,734 - INFO - Processed batch 1/1
+2024-05-02 09:56:17,396 - INFO - Processed batch 1/1
+2024-05-02 09:56:18,110 - INFO - Processed batch 1/1
+2024-05-02 09:56:18,891 - INFO - Processed batch 1/1
+2024-05-02 09:56:19,530 - INFO - Processed batch 1/1
+2024-05-02 09:56:20,153 - INFO - Processed batch 1/1
+2024-05-02 09:56:20,835 - INFO - Processed batch 1/1
+2024-05-02 09:56:21,524 - INFO - Processed batch 1/1
+2024-05-02 09:56:22,148 - INFO - Processed batch 1/1
+2024-05-02 09:56:22,778 - INFO - Processed batch 1/1
+2024-05-02 09:56:23,456 - INFO - Processed batch 1/1
+2024-05-02 09:56:24,095 - INFO - Processed batch 1/1
+2024-05-02 09:56:24,789 - INFO - Processed batch 1/1
+2024-05-02 09:56:25,544 - INFO - Processed batch 1/1
+2024-05-02 09:56:26,230 - INFO - Processed batch 1/1
+2024-05-02 09:56:26,894 - INFO - Processed batch 1/1
+2024-05-02 09:56:27,497 - INFO - Processed batch 1/1
+2024-05-02 09:56:28,192 - INFO - Processed batch 1/1
+2024-05-02 09:56:28,892 - INFO - Processed batch 1/1
+2024-05-02 09:56:29,544 - INFO - Processed batch 1/1
+2024-05-02 09:56:30,234 - INFO - Processed batch 1/1
+2024-05-02 09:56:30,879 - INFO - Processed batch 1/1
+2024-05-02 09:56:31,546 - INFO - Processed batch 1/1
+2024-05-02 09:56:32,214 - INFO - Processed batch 1/1
+2024-05-02 09:56:32,872 - INFO - Processed batch 1/1
+2024-05-02 09:56:33,547 - INFO - Processed batch 1/1
+2024-05-02 09:56:34,260 - INFO - Processed batch 1/1
+2024-05-02 09:56:34,980 - INFO - Processed batch 1/1
+2024-05-02 09:56:35,704 - INFO - Processed batch 1/1
+2024-05-02 09:56:36,404 - INFO - Processed batch 1/1
+2024-05-02 09:56:37,134 - INFO - Processed batch 1/1
+2024-05-02 09:56:37,861 - INFO - Processed batch 1/1
+2024-05-02 09:56:38,490 - INFO - Processed batch 1/1
+2024-05-02 09:56:39,131 - INFO - Processed batch 1/1
+2024-05-02 09:56:39,799 - INFO - Processed batch 1/1
+2024-05-02 09:56:40,549 - INFO - Processed batch 1/1
+2024-05-02 09:56:41,216 - INFO - Processed batch 1/1
+2024-05-02 09:56:41,991 - INFO - Processed batch 1/1
+2024-05-02 09:56:42,627 - INFO - Processed batch 1/1
+2024-05-02 09:56:43,365 - INFO - Processed batch 1/1
+2024-05-02 09:56:44,061 - INFO - Processed batch 1/1
+2024-05-02 09:56:44,711 - INFO - Processed batch 1/1
+2024-05-02 09:56:45,384 - INFO - Processed batch 1/1
+2024-05-02 09:56:46,128 - INFO - Processed batch 1/1
+2024-05-02 09:56:46,857 - INFO - Processed batch 1/1
+2024-05-02 09:56:47,599 - INFO - Processed batch 1/1
+2024-05-02 09:56:48,566 - INFO - Processed batch 1/1
+2024-05-02 09:56:49,355 - INFO - Processed batch 1/1
+2024-05-02 09:56:50,042 - INFO - Processed batch 1/1
+2024-05-02 09:56:50,771 - INFO - Processed batch 1/1
+2024-05-02 09:56:51,522 - INFO - Processed batch 1/1
+2024-05-02 09:56:52,202 - INFO - Processed batch 1/1
+2024-05-02 09:56:52,909 - INFO - Processed batch 1/1
+2024-05-02 09:56:53,577 - INFO - Processed batch 1/1
+2024-05-02 09:56:54,312 - INFO - Processed batch 1/1
+2024-05-02 09:56:55,033 - INFO - Processed batch 1/1
+2024-05-02 09:56:55,657 - INFO - Processed batch 1/1
+2024-05-02 09:56:56,287 - INFO - Processed batch 1/1
+2024-05-02 09:56:56,288 - INFO - uspto_3k (3000) - rxn_mapper: 41.79 seconds
+2024-05-02 09:56:56,874 - INFO - Processed batch 1/1
+2024-05-02 09:56:57,464 - INFO - Processed batch 1/1
+2024-05-02 09:56:58,156 - INFO - Processed batch 1/1
+2024-05-02 09:56:58,722 - INFO - Processed batch 1/1
+2024-05-02 09:56:59,221 - INFO - Processed batch 1/1
+2024-05-02 09:56:59,719 - INFO - Processed batch 1/1
+2024-05-02 09:57:00,202 - INFO - Processed batch 1/1
+2024-05-02 09:57:00,708 - INFO - Processed batch 1/1
+2024-05-02 09:57:01,307 - INFO - Processed batch 1/1
+2024-05-02 09:57:01,914 - INFO - Processed batch 1/1
+2024-05-02 09:57:02,460 - INFO - Processed batch 1/1
+2024-05-02 09:57:03,024 - INFO - Processed batch 1/1
+2024-05-02 09:57:03,677 - INFO - Processed batch 1/1
+2024-05-02 09:57:04,312 - INFO - Processed batch 1/1
+2024-05-02 09:57:04,953 - INFO - Processed batch 1/1
+2024-05-02 09:57:05,532 - INFO - Processed batch 1/1
+2024-05-02 09:57:06,271 - INFO - Processed batch 1/1
+2024-05-02 09:57:06,953 - INFO - Processed batch 1/1
+2024-05-02 09:57:07,443 - INFO - Processed batch 1/1
+2024-05-02 09:57:07,898 - INFO - Processed batch 1/1
+2024-05-02 09:57:08,484 - INFO - Processed batch 1/1
+2024-05-02 09:57:09,129 - INFO - Processed batch 1/1
+2024-05-02 09:57:09,721 - INFO - Processed batch 1/1
+2024-05-02 09:57:10,363 - INFO - Processed batch 1/1
+2024-05-02 09:57:10,873 - INFO - Processed batch 1/1
+2024-05-02 09:57:11,519 - INFO - Processed batch 1/1
+2024-05-02 09:57:12,279 - INFO - Processed batch 1/1
+2024-05-02 09:57:12,977 - INFO - Processed batch 1/1
+2024-05-02 09:57:13,686 - INFO - Processed batch 1/1
+2024-05-02 09:57:14,456 - INFO - Processed batch 1/1
+2024-05-02 09:57:15,188 - INFO - Processed batch 1/1
+2024-05-02 09:57:16,080 - INFO - Processed batch 1/1
+2024-05-02 09:57:16,860 - INFO - Processed batch 1/1
+2024-05-02 09:57:17,713 - INFO - Processed batch 1/1
+2024-05-02 09:57:18,390 - INFO - Processed batch 1/1
+2024-05-02 09:57:18,503 - INFO - Processed batch 1/1
+2024-05-02 09:57:18,504 - INFO - golden (1758) - rxn_mapper: 22.22 seconds
+2024-05-02 09:57:19,170 - INFO - Processed batch 1/1
+2024-05-02 09:57:19,876 - INFO - Processed batch 1/1
+2024-05-02 09:57:20,570 - INFO - Processed batch 1/1
+2024-05-02 09:57:21,269 - INFO - Processed batch 1/1
+2024-05-02 09:57:21,886 - INFO - Processed batch 1/1
+2024-05-02 09:57:22,424 - INFO - Processed batch 1/1
+2024-05-02 09:57:22,944 - INFO - Processed batch 1/1
+2024-05-02 09:57:23,448 - INFO - Processed batch 1/1
+2024-05-02 09:57:23,942 - INFO - Processed batch 1/1
+2024-05-02 09:57:24,363 - INFO - Processed batch 1/1
+2024-05-02 09:57:24,364 - INFO - natcomm (491) - rxn_mapper: 5.86 seconds
+2024-05-02 09:57:28,488 - INFO - Processed batch 1/1
+2024-05-02 09:57:34,166 - INFO - Processed batch 1/1
+2024-05-02 09:57:40,170 - INFO - Processed batch 1/1
+2024-05-02 09:57:46,081 - INFO - Processed batch 1/1
+2024-05-02 09:57:50,289 - INFO - Processed batch 1/1
+2024-05-02 09:57:53,083 - INFO - Processed batch 1/1
+2024-05-02 09:57:53,084 - INFO - ecoli (273) - graphormer: 28.72 seconds
+2024-05-02 09:57:59,301 - INFO - Processed batch 1/1
+2024-05-02 09:58:06,233 - INFO - Processed batch 1/1
+2024-05-02 09:58:13,334 - INFO - Processed batch 1/1
+2024-05-02 09:58:20,335 - INFO - Processed batch 1/1
+2024-05-02 09:58:28,112 - INFO - Processed batch 1/1
+2024-05-02 09:58:33,781 - INFO - Processed batch 1/1
+2024-05-02 09:58:40,233 - INFO - Processed batch 1/1
+2024-05-02 09:58:44,595 - INFO - Processed batch 1/1
+2024-05-02 09:58:44,596 - INFO - recon3d (382) - graphormer: 51.51 seconds
+2024-05-02 09:58:48,883 - INFO - Processed batch 1/1
+2024-05-02 09:58:52,924 - INFO - Processed batch 1/1
+2024-05-02 09:58:57,246 - INFO - Processed batch 1/1
+2024-05-02 09:59:01,486 - INFO - Processed batch 1/1
+2024-05-02 09:59:06,200 - INFO - Processed batch 1/1
+2024-05-02 09:59:10,916 - INFO - Processed batch 1/1
+2024-05-02 09:59:15,100 - INFO - Processed batch 1/1
+2024-05-02 09:59:19,066 - INFO - Processed batch 1/1
+2024-05-02 09:59:23,293 - INFO - Processed batch 1/1
+2024-05-02 09:59:27,672 - INFO - Processed batch 1/1
+2024-05-02 09:59:31,759 - INFO - Processed batch 1/1
+2024-05-02 09:59:35,846 - INFO - Processed batch 1/1
+2024-05-02 09:59:40,099 - INFO - Processed batch 1/1
+2024-05-02 09:59:44,174 - INFO - Processed batch 1/1
+2024-05-02 09:59:48,461 - INFO - Processed batch 1/1
+2024-05-02 09:59:52,801 - INFO - Processed batch 1/1
+2024-05-02 09:59:56,857 - INFO - Processed batch 1/1
+2024-05-02 10:00:00,959 - INFO - Processed batch 1/1
+2024-05-02 10:00:04,889 - INFO - Processed batch 1/1
+2024-05-02 10:00:09,367 - INFO - Processed batch 1/1
+2024-05-02 10:00:14,100 - INFO - Processed batch 1/1
+2024-05-02 10:00:19,189 - INFO - Processed batch 1/1
+2024-05-02 10:00:23,626 - INFO - Processed batch 1/1
+2024-05-02 10:00:27,983 - INFO - Processed batch 1/1
+2024-05-02 10:00:32,359 - INFO - Processed batch 1/1
+2024-05-02 10:00:38,074 - INFO - Processed batch 1/1
+2024-05-02 10:00:43,244 - INFO - Processed batch 1/1
+2024-05-02 10:00:48,725 - INFO - Processed batch 1/1
+2024-05-02 10:00:53,848 - INFO - Processed batch 1/1
+2024-05-02 10:00:58,024 - INFO - Processed batch 1/1
+2024-05-02 10:01:03,071 - INFO - Processed batch 1/1
+2024-05-02 10:01:08,191 - INFO - Processed batch 1/1
+2024-05-02 10:01:13,639 - INFO - Processed batch 1/1
+2024-05-02 10:01:18,069 - INFO - Processed batch 1/1
+2024-05-02 10:01:22,232 - INFO - Processed batch 1/1
+2024-05-02 10:01:26,375 - INFO - Processed batch 1/1
+2024-05-02 10:01:30,628 - INFO - Processed batch 1/1
+2024-05-02 10:01:35,279 - INFO - Processed batch 1/1
+2024-05-02 10:01:39,600 - INFO - Processed batch 1/1
+2024-05-02 10:01:44,000 - INFO - Processed batch 1/1
+2024-05-02 10:01:48,119 - INFO - Processed batch 1/1
+2024-05-02 10:01:52,298 - INFO - Processed batch 1/1
+2024-05-02 10:01:56,453 - INFO - Processed batch 1/1
+2024-05-02 10:02:00,644 - INFO - Processed batch 1/1
+2024-05-02 10:02:04,994 - INFO - Processed batch 1/1
+2024-05-02 10:02:09,419 - INFO - Processed batch 1/1
+2024-05-02 10:02:14,003 - INFO - Processed batch 1/1
+2024-05-02 10:02:18,163 - INFO - Processed batch 1/1
+2024-05-02 10:02:22,882 - INFO - Processed batch 1/1
+2024-05-02 10:02:27,495 - INFO - Processed batch 1/1
+2024-05-02 10:02:32,166 - INFO - Processed batch 1/1
+2024-05-02 10:02:36,749 - INFO - Processed batch 1/1
+2024-05-02 10:02:41,348 - INFO - Processed batch 1/1
+2024-05-02 10:02:45,785 - INFO - Processed batch 1/1
+2024-05-02 10:02:50,567 - INFO - Processed batch 1/1
+2024-05-02 10:02:55,075 - INFO - Processed batch 1/1
+2024-05-02 10:02:59,732 - INFO - Processed batch 1/1
+2024-05-02 10:03:05,086 - INFO - Processed batch 1/1
+2024-05-02 10:03:09,884 - INFO - Processed batch 1/1
+2024-05-02 10:03:15,148 - INFO - Processed batch 1/1
+2024-05-02 10:03:15,148 - INFO - uspto_3k (3000) - graphormer: 270.55 seconds
+2024-05-02 10:03:19,441 - INFO - Processed batch 1/1
+2024-05-02 10:03:23,178 - INFO - Processed batch 1/1
+2024-05-02 10:03:27,870 - INFO - Processed batch 1/1
+2024-05-02 10:03:31,660 - INFO - Processed batch 1/1
+2024-05-02 10:03:34,954 - INFO - Processed batch 1/1
+2024-05-02 10:03:38,163 - INFO - Processed batch 1/1
+2024-05-02 10:03:41,361 - INFO - Processed batch 1/1
+2024-05-02 10:03:44,500 - INFO - Processed batch 1/1
+2024-05-02 10:03:48,648 - INFO - Processed batch 1/1
+2024-05-02 10:03:53,693 - INFO - Processed batch 1/1
+2024-05-02 10:03:57,873 - INFO - Processed batch 1/1
+2024-05-02 10:04:01,108 - INFO - Processed batch 1/1
+2024-05-02 10:04:05,184 - INFO - Processed batch 1/1
+2024-05-02 10:04:09,657 - INFO - Processed batch 1/1
+2024-05-02 10:04:13,488 - INFO - Processed batch 1/1
+2024-05-02 10:04:17,276 - INFO - Processed batch 1/1
+2024-05-02 10:04:21,546 - INFO - Processed batch 1/1
+2024-05-02 10:04:25,547 - INFO - Processed batch 1/1
+2024-05-02 10:04:28,838 - INFO - Processed batch 1/1
+2024-05-02 10:04:32,271 - INFO - Processed batch 1/1
+2024-05-02 10:04:36,401 - INFO - Processed batch 1/1
+2024-05-02 10:04:40,878 - INFO - Processed batch 1/1
+2024-05-02 10:04:45,215 - INFO - Processed batch 1/1
+2024-05-02 10:04:49,602 - INFO - Processed batch 1/1
+2024-05-02 10:04:52,947 - INFO - Processed batch 1/1
+2024-05-02 10:04:56,687 - INFO - Processed batch 1/1
+2024-05-02 10:05:01,067 - INFO - Processed batch 1/1
+2024-05-02 10:05:05,293 - INFO - Processed batch 1/1
+2024-05-02 10:05:09,939 - INFO - Processed batch 1/1
+2024-05-02 10:05:14,703 - INFO - Processed batch 1/1
+2024-05-02 10:05:19,225 - INFO - Processed batch 1/1
+2024-05-02 10:05:24,317 - INFO - Processed batch 1/1
+2024-05-02 10:05:29,617 - INFO - Processed batch 1/1
+2024-05-02 10:05:35,728 - INFO - Processed batch 1/1
+2024-05-02 10:05:40,943 - INFO - Processed batch 1/1
+2024-05-02 10:05:41,922 - INFO - Processed batch 1/1
+2024-05-02 10:05:41,924 - INFO - golden (1758) - graphormer: 146.78 seconds
+2024-05-02 10:05:46,032 - INFO - Processed batch 1/1
+2024-05-02 10:05:49,985 - INFO - Processed batch 1/1
+2024-05-02 10:05:53,808 - INFO - Processed batch 1/1
+2024-05-02 10:05:57,588 - INFO - Processed batch 1/1
+2024-05-02 10:06:01,272 - INFO - Processed batch 1/1
+2024-05-02 10:06:04,674 - INFO - Processed batch 1/1
+2024-05-02 10:06:08,140 - INFO - Processed batch 1/1
+2024-05-02 10:06:11,283 - INFO - Processed batch 1/1
+2024-05-02 10:06:14,740 - INFO - Processed batch 1/1
+2024-05-02 10:06:17,448 - INFO - Processed batch 1/1
+2024-05-02 10:06:17,449 - INFO - natcomm (491) - graphormer: 35.52 seconds
+2024-05-02 10:06:22,602 - INFO - Processed batch 1/1
+2024-05-02 10:06:31,848 - INFO - Processed batch 1/1
+2024-05-02 10:06:41,698 - INFO - Processed batch 1/1
+2024-05-02 10:06:51,437 - INFO - Processed batch 1/1
+2024-05-02 10:06:57,123 - INFO - Processed batch 1/1
+2024-05-02 10:07:01,723 - INFO - Processed batch 1/1
+2024-05-02 10:07:01,724 - INFO - ecoli (273) - local_mapper: 44.27 seconds
+2024-05-02 10:07:13,853 - INFO - Processed batch 1/1
+2024-05-02 10:07:26,573 - INFO - Processed batch 1/1
+2024-05-02 10:07:39,390 - INFO - Processed batch 1/1
+2024-05-02 10:07:49,937 - INFO - Processed batch 1/1
+2024-05-02 10:08:06,127 - INFO - Processed batch 1/1
+2024-05-02 10:08:16,554 - INFO - Processed batch 1/1
+2024-05-02 10:08:29,256 - INFO - Processed batch 1/1
+2024-05-02 10:08:37,552 - INFO - Processed batch 1/1
+2024-05-02 10:08:37,552 - INFO - recon3d (382) - local_mapper: 95.83 seconds
+2024-05-02 10:08:43,469 - INFO - Processed batch 1/1
+2024-05-02 10:08:49,422 - INFO - Processed batch 1/1
+2024-05-02 10:08:55,875 - INFO - Processed batch 1/1
+2024-05-02 10:09:01,612 - INFO - Processed batch 1/1
+2024-05-02 10:09:07,855 - INFO - Processed batch 1/1
+2024-05-02 10:09:14,609 - INFO - Processed batch 1/1
+2024-05-02 10:09:21,138 - INFO - Processed batch 1/1
+2024-05-02 10:09:27,291 - INFO - Processed batch 1/1
+2024-05-02 10:09:33,536 - INFO - Processed batch 1/1
+2024-05-02 10:09:40,394 - INFO - Processed batch 1/1
+2024-05-02 10:09:45,591 - INFO - Processed batch 1/1
+2024-05-02 10:09:51,561 - INFO - Processed batch 1/1
+2024-05-02 10:09:57,342 - INFO - Processed batch 1/1
+2024-05-02 10:10:02,763 - INFO - Processed batch 1/1
+2024-05-02 10:10:10,097 - INFO - Processed batch 1/1
+2024-05-02 10:10:17,141 - INFO - Processed batch 1/1
+2024-05-02 10:10:23,221 - INFO - Processed batch 1/1
+2024-05-02 10:10:28,426 - INFO - Processed batch 1/1
+2024-05-02 10:10:33,307 - INFO - Processed batch 1/1
+2024-05-02 10:10:39,575 - INFO - Processed batch 1/1
+2024-05-02 10:10:46,374 - INFO - Processed batch 1/1
+2024-05-02 10:10:52,431 - INFO - Processed batch 1/1
+2024-05-02 10:10:59,049 - INFO - Processed batch 1/1
+2024-05-02 10:11:04,629 - INFO - Processed batch 1/1
+2024-05-02 10:11:10,020 - INFO - Processed batch 1/1
+2024-05-02 10:11:15,634 - INFO - Processed batch 1/1
+2024-05-02 10:11:21,867 - INFO - Processed batch 1/1
+2024-05-02 10:11:28,007 - INFO - Processed batch 1/1
+2024-05-02 10:11:34,928 - INFO - Processed batch 1/1
+2024-05-02 10:11:41,135 - INFO - Processed batch 1/1
+2024-05-02 10:11:47,598 - INFO - Processed batch 1/1
+2024-05-02 10:11:54,039 - INFO - Processed batch 1/1
+2024-05-02 10:12:00,208 - INFO - Processed batch 1/1
+2024-05-02 10:12:06,165 - INFO - Processed batch 1/1
+2024-05-02 10:12:11,694 - INFO - Processed batch 1/1
+2024-05-02 10:12:17,902 - INFO - Processed batch 1/1
+2024-05-02 10:12:23,761 - INFO - Processed batch 1/1
+2024-05-02 10:12:30,333 - INFO - Processed batch 1/1
+2024-05-02 10:12:35,885 - INFO - Processed batch 1/1
+2024-05-02 10:12:42,158 - INFO - Processed batch 1/1
+2024-05-02 10:12:47,236 - INFO - Processed batch 1/1
+2024-05-02 10:12:52,562 - INFO - Processed batch 1/1
+2024-05-02 10:12:58,033 - INFO - Processed batch 1/1
+2024-05-02 10:13:03,154 - INFO - Processed batch 1/1
+2024-05-02 10:13:08,797 - INFO - Processed batch 1/1
+2024-05-02 10:13:14,442 - INFO - Processed batch 1/1
+2024-05-02 10:13:19,850 - INFO - Processed batch 1/1
+2024-05-02 10:13:25,376 - INFO - Processed batch 1/1
+2024-05-02 10:13:32,767 - INFO - Processed batch 1/1
+2024-05-02 10:13:39,880 - INFO - Processed batch 1/1
+2024-05-02 10:13:46,285 - INFO - Processed batch 1/1
+2024-05-02 10:13:53,328 - INFO - Processed batch 1/1
+2024-05-02 10:14:00,417 - INFO - Processed batch 1/1
+2024-05-02 10:14:07,045 - INFO - Processed batch 1/1
+2024-05-02 10:14:13,222 - INFO - Processed batch 1/1
+2024-05-02 10:14:18,674 - INFO - Processed batch 1/1
+2024-05-02 10:14:24,609 - INFO - Processed batch 1/1
+2024-05-02 10:14:30,723 - INFO - Processed batch 1/1
+2024-05-02 10:14:35,858 - INFO - Processed batch 1/1
+2024-05-02 10:14:40,972 - INFO - Processed batch 1/1
+2024-05-02 10:14:40,972 - INFO - uspto_3k (3000) - local_mapper: 363.42 seconds
+2024-05-02 10:14:45,335 - INFO - Processed batch 1/1
+2024-05-02 10:14:50,122 - INFO - Processed batch 1/1
+2024-05-02 10:14:55,882 - INFO - Processed batch 1/1
+2024-05-02 10:15:00,237 - INFO - Processed batch 1/1
+2024-05-02 10:15:04,043 - INFO - Processed batch 1/1
+2024-05-02 10:15:07,682 - INFO - Processed batch 1/1
+2024-05-02 10:15:11,141 - INFO - Processed batch 1/1
+2024-05-02 10:15:14,224 - INFO - Processed batch 1/1
+2024-05-02 10:15:18,945 - INFO - Processed batch 1/1
+2024-05-02 10:15:23,391 - INFO - Processed batch 1/1
+2024-05-02 10:15:27,521 - INFO - Processed batch 1/1
+2024-05-02 10:15:31,956 - INFO - Processed batch 1/1
+2024-05-02 10:15:36,771 - INFO - Processed batch 1/1
+2024-05-02 10:15:41,396 - INFO - Processed batch 1/1
+2024-05-02 10:15:46,616 - INFO - Processed batch 1/1
+2024-05-02 10:15:51,013 - INFO - Processed batch 1/1
+2024-05-02 10:15:57,139 - INFO - Processed batch 1/1
+2024-05-02 10:16:02,578 - INFO - Processed batch 1/1
+2024-05-02 10:16:06,271 - INFO - Processed batch 1/1
+2024-05-02 10:16:08,982 - INFO - Processed batch 1/1
+2024-05-02 10:16:13,580 - INFO - Processed batch 1/1
+2024-05-02 10:16:19,144 - INFO - Processed batch 1/1
+2024-05-02 10:16:24,385 - INFO - Processed batch 1/1
+2024-05-02 10:16:29,650 - INFO - Processed batch 1/1
+2024-05-02 10:16:33,447 - INFO - Processed batch 1/1
+2024-05-02 10:16:39,242 - INFO - Processed batch 1/1
+2024-05-02 10:16:45,433 - INFO - Processed batch 1/1
+2024-05-02 10:16:50,954 - INFO - Processed batch 1/1
+2024-05-02 10:16:56,968 - INFO - Processed batch 1/1
+2024-05-02 10:17:03,836 - INFO - Processed batch 1/1
+2024-05-02 10:17:10,388 - INFO - Processed batch 1/1
+2024-05-02 10:17:19,089 - INFO - Processed batch 1/1
+2024-05-02 10:17:26,174 - INFO - Processed batch 1/1
+2024-05-02 10:17:33,399 - INFO - Processed batch 1/1
+2024-05-02 10:17:38,606 - INFO - Processed batch 1/1
+2024-05-02 10:17:39,400 - INFO - Processed batch 1/1
+2024-05-02 10:17:39,401 - INFO - golden (1758) - local_mapper: 178.43 seconds
+2024-05-02 10:17:44,214 - INFO - Processed batch 1/1
+2024-05-02 10:17:49,425 - INFO - Processed batch 1/1
+2024-05-02 10:17:54,463 - INFO - Processed batch 1/1
+2024-05-02 10:17:59,535 - INFO - Processed batch 1/1
+2024-05-02 10:18:03,934 - INFO - Processed batch 1/1
+2024-05-02 10:18:07,459 - INFO - Processed batch 1/1
+2024-05-02 10:18:11,082 - INFO - Processed batch 1/1
+2024-05-02 10:18:14,385 - INFO - Processed batch 1/1
+2024-05-02 10:18:17,838 - INFO - Processed batch 1/1
+2024-05-02 10:18:21,261 - INFO - Processed batch 1/1
+2024-05-02 10:18:21,262 - INFO - natcomm (491) - local_mapper: 41.86 seconds
+2024-05-02 10:20:07,617 - INFO - Processed batch 1/1
+2024-05-02 10:25:38,142 - INFO - Processed batch 1/1
+2024-05-02 10:30:05,530 - INFO - Processed batch 1/1
+2024-05-02 10:34:25,258 - INFO - Processed batch 1/1
+2024-05-02 10:36:22,696 - INFO - Processed batch 1/1
+2024-05-02 10:38:25,338 - INFO - Processed batch 1/1
+2024-05-02 10:38:25,339 - INFO - ecoli (273) - rdt: 1204.08 seconds
+2024-05-02 10:49:40,221 - INFO - Processed batch 1/1
+2024-05-02 10:55:20,217 - INFO - Processed batch 1/1
+2024-05-02 11:01:28,911 - INFO - Processed batch 1/1
+2024-05-02 11:06:21,358 - INFO - Processed batch 1/1
+2024-05-02 11:14:24,006 - INFO - Processed batch 1/1
+2024-05-02 11:17:51,267 - INFO - Processed batch 1/1
+2024-05-02 11:23:59,253 - INFO - Processed batch 1/1
+2024-05-02 11:32:51,647 - INFO - Processed batch 1/1
+2024-05-02 11:32:51,648 - INFO - recon3d (382) - rdt: 3266.31 seconds
+2024-05-02 11:35:07,248 - INFO - Processed batch 1/1
+2024-05-02 11:37:04,162 - INFO - Processed batch 1/1
+2024-05-02 11:44:05,039 - INFO - Processed batch 1/1
+2024-05-02 11:47:03,916 - INFO - Processed batch 1/1
+2024-05-02 11:50:54,703 - INFO - Processed batch 1/1
+2024-05-02 11:54:21,584 - INFO - Processed batch 1/1
+2024-05-02 11:55:57,651 - INFO - Processed batch 1/1
+2024-05-02 11:58:08,551 - INFO - Processed batch 1/1
+2024-05-02 12:01:24,081 - INFO - Processed batch 1/1
+2024-05-02 12:04:01,617 - INFO - Processed batch 1/1
+2024-05-02 12:05:52,320 - INFO - Processed batch 1/1
+2024-05-02 12:08:11,948 - INFO - Processed batch 1/1
+2024-05-02 12:13:15,154 - INFO - Processed batch 1/1
+2024-05-02 12:14:48,487 - INFO - Processed batch 1/1
+2024-05-02 12:19:49,494 - INFO - Processed batch 1/1
+2024-05-02 12:25:31,074 - INFO - Processed batch 1/1
+2024-05-02 12:30:46,867 - INFO - Processed batch 1/1
+2024-05-02 12:32:25,332 - INFO - Processed batch 1/1
+2024-05-02 12:33:57,003 - INFO - Processed batch 1/1
+2024-05-02 12:37:47,318 - INFO - Processed batch 1/1
+2024-05-02 12:40:14,174 - INFO - Processed batch 1/1
+2024-05-02 12:41:56,377 - INFO - Processed batch 1/1
+2024-05-02 12:45:44,161 - INFO - Processed batch 1/1
+2024-05-02 12:47:20,538 - INFO - Processed batch 1/1
+2024-05-02 12:49:08,580 - INFO - Processed batch 1/1
+2024-05-02 12:52:38,008 - INFO - Processed batch 1/1
+2024-05-02 13:03:29,647 - INFO - Processed batch 1/1
+2024-05-02 13:05:59,492 - INFO - Processed batch 1/1
+2024-05-02 13:09:36,923 - INFO - Processed batch 1/1
+2024-05-02 13:13:16,935 - INFO - Processed batch 1/1
+2024-05-02 13:17:14,833 - INFO - Processed batch 1/1
+2024-05-02 13:23:39,968 - INFO - Processed batch 1/1
+2024-05-02 13:40:08,461 - INFO - Processed batch 1/1
+2024-05-02 13:43:48,332 - INFO - Processed batch 1/1
+2024-05-02 13:49:52,733 - INFO - Processed batch 1/1
+2024-05-02 13:54:10,790 - INFO - Processed batch 1/1
+2024-05-02 13:58:57,302 - INFO - Processed batch 1/1
+2024-05-02 14:02:17,645 - INFO - Processed batch 1/1
+2024-05-02 14:04:11,854 - INFO - Processed batch 1/1
+2024-05-02 14:08:08,803 - INFO - Processed batch 1/1
+2024-05-02 14:09:55,899 - INFO - Processed batch 1/1
+2024-05-02 14:11:55,755 - INFO - Processed batch 1/1
+2024-05-02 14:14:10,015 - INFO - Processed batch 1/1
+2024-05-02 14:16:21,932 - INFO - Processed batch 1/1
+2024-05-02 14:20:05,383 - INFO - Processed batch 1/1
+2024-05-02 14:23:40,841 - INFO - Processed batch 1/1
+2024-05-02 14:26:05,898 - INFO - Processed batch 1/1
+2024-05-02 14:28:12,347 - INFO - Processed batch 1/1
+2024-05-02 14:34:28,140 - INFO - Processed batch 1/1
+2024-05-02 14:39:37,876 - INFO - Processed batch 1/1
+2024-05-02 14:41:13,220 - INFO - Processed batch 1/1
+2024-05-02 14:44:11,303 - INFO - Processed batch 1/1
+2024-05-02 14:53:58,605 - INFO - Processed batch 1/1
+2024-05-02 15:01:18,715 - INFO - Processed batch 1/1
+2024-05-02 15:05:33,684 - INFO - Processed batch 1/1
+2024-05-02 15:07:15,226 - INFO - Processed batch 1/1
+2024-05-02 15:09:29,519 - INFO - Processed batch 1/1
+2024-05-02 15:14:05,571 - INFO - Processed batch 1/1
+2024-05-02 15:18:00,994 - INFO - Processed batch 1/1
+2024-05-02 15:20:04,039 - INFO - Processed batch 1/1
+2024-05-02 15:20:04,048 - INFO - uspto_3k (3000) - rdt: 13632.4 seconds
+2024-05-02 15:21:38,944 - INFO - Processed batch 1/1
+2024-05-02 15:22:38,535 - INFO - Processed batch 1/1
+2024-05-02 15:25:03,379 - INFO - Processed batch 1/1
+2024-05-02 15:26:44,331 - INFO - Processed batch 1/1
+2024-05-02 15:28:39,878 - INFO - Processed batch 1/1
+2024-05-02 15:30:12,051 - INFO - Processed batch 1/1
+2024-05-02 15:31:24,420 - INFO - Processed batch 1/1
+2024-05-02 15:32:29,822 - INFO - Processed batch 1/1
+2024-05-02 15:34:03,601 - INFO - Processed batch 1/1
+2024-05-02 15:35:22,752 - INFO - Processed batch 1/1
+2024-05-02 15:36:52,232 - INFO - Processed batch 1/1
+2024-05-02 15:41:02,612 - INFO - Processed batch 1/1
+2024-05-02 15:42:54,666 - INFO - Processed batch 1/1
+2024-05-02 15:44:18,448 - INFO - Processed batch 1/1
+2024-05-02 15:48:00,762 - INFO - Processed batch 1/1
+2024-05-02 15:50:36,836 - INFO - Processed batch 1/1
+2024-05-02 15:54:51,635 - INFO - Processed batch 1/1
+2024-05-02 16:00:34,143 - INFO - Processed batch 1/1
+2024-05-02 16:02:18,568 - INFO - Processed batch 1/1
+2024-05-02 16:03:15,605 - INFO - Processed batch 1/1
+2024-05-02 16:04:39,979 - INFO - Processed batch 1/1
+2024-05-02 16:06:04,209 - INFO - Processed batch 1/1
+2024-05-02 16:07:30,834 - INFO - Processed batch 1/1
+2024-05-02 16:09:47,539 - INFO - Processed batch 1/1
+2024-05-02 16:11:06,701 - INFO - Processed batch 1/1
+2024-05-02 16:15:21,129 - INFO - Processed batch 1/1
+2024-05-02 16:17:36,801 - INFO - Processed batch 1/1
+2024-05-02 16:19:44,386 - INFO - Processed batch 1/1
+2024-05-02 16:22:13,089 - INFO - Processed batch 1/1
+2024-05-02 16:26:34,930 - INFO - Processed batch 1/1
+2024-05-02 16:29:29,137 - INFO - Processed batch 1/1
+2024-05-02 16:38:39,693 - INFO - Processed batch 1/1
+2024-05-02 16:41:57,620 - INFO - Processed batch 1/1
+2024-05-02 16:44:17,113 - INFO - Processed batch 1/1
+2024-05-02 16:45:38,104 - INFO - Processed batch 1/1
+2024-05-02 16:45:45,625 - INFO - Processed batch 1/1
+2024-05-02 16:45:45,632 - INFO - golden (1758) - rdt: 5141.58 seconds
+2024-05-02 16:46:41,778 - INFO - Processed batch 1/1
+2024-05-02 16:48:29,905 - INFO - Processed batch 1/1
+2024-05-02 16:50:14,967 - INFO - Processed batch 1/1
+2024-05-02 16:52:19,143 - INFO - Processed batch 1/1
+2024-05-02 16:53:33,890 - INFO - Processed batch 1/1
+2024-05-02 16:55:08,037 - INFO - Processed batch 1/1
+2024-05-02 16:57:00,969 - INFO - Processed batch 1/1
+2024-05-02 16:58:13,496 - INFO - Processed batch 1/1
+2024-05-02 16:59:35,557 - INFO - Processed batch 1/1
+2024-05-02 17:04:07,782 - INFO - Processed batch 1/1
+2024-05-02 17:04:07,788 - INFO - natcomm (491) - rdt: 1102.16 seconds
+2024-05-02 17:04:07,806 - INFO - 
+          rxn_mapper  graphormer  local_mapper       rdt
+ecoli           6.17       28.72         44.27   1204.08
+recon3d        12.43       51.51         95.83   3266.31
+uspto_3k       41.79      270.55        363.42  13632.40
+golden         22.22      146.78        178.43   5141.58
+natcomm         5.86       35.52         41.86   1102.16
