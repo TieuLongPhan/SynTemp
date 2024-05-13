@@ -47,9 +47,9 @@ class ChemicalReactionVisualizer:
     @staticmethod
     def visualize_reaction(
         reaction_smiles: str,
-        img_size: tuple = (600, 300),
+        img_size: tuple = (600, 200),
         highlight_by_reactant: bool = True,
-        mol_scale: float = 0.5,
+        mol_scale: float = 0.9,
         bond_line_width: float = 2.0,
         atom_label_font_size: int = 12,
         padding: float = 0.01,

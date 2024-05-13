@@ -216,6 +216,7 @@ class ChemicalGraphVisualizer:
         left_graph_title="Reactants",
         k_graph_title="ITS Graph",
         right_graph_title="Products",
+        save_path = None
     ):
         """
         Visualize reactants, ITS graph, and products in one figure.
@@ -242,6 +243,8 @@ class ChemicalGraphVisualizer:
         axs[2].set_title(right_graph_title, fontsize=24, weight="bold")
 
         plt.tight_layout()
+        if save_path is not None:
+            plt.savefig(save_path, dpi=600)
         plt.show()
 
     def multigraph_vis(

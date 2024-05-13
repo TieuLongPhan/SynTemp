@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='SynTemp',
-    version='0.1.0',
+    version='0.0.1',
     description='Graph Rules Extraction from Reaction Graphs',
     author='TieuLongPhan',
     author_email='ptlong8995@gmail.com',
