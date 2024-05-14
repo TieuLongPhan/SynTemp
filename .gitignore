@@ -11,3 +11,5 @@ clean_code.ipynb
 test.py
 test_database_out.json.gz
 test_database.json.gz
+Data/uspto/*
+
