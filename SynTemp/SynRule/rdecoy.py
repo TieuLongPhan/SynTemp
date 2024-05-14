@@ -1,9 +1,9 @@
 from typing import Optional, List, Tuple, Dict
-from SynTemp.SynUtils.chemutils import (
-    standardize_rsmi
-)
+from SynTemp.SynUtils.chemutils import standardize_rsmi
 import copy
 from SynTemp.SynRule.rule_engine import RuleEngine
+
+
 class RDecoy:
     @staticmethod
     def categorize_reactions(
@@ -36,20 +36,19 @@ class RDecoy:
         rule_file_path: str,
         original_rsmi_col: str = "reactions",
         repeat_times: int = 1,
-        cluster_col: Optional[str] = 'Cluster',
-        reaction_side_index: int = 0  # Assuming you want the index to be passed or set a default value
+        cluster_col: Optional[str] = "Cluster",
+        reaction_side_index: int = 0,  # Assuming you want the index to be passed or set a default value
     ) -> Tuple[List[Dict], List[Dict]]:
-        
+
         updated_database_forward = copy.deepcopy(database)
         for entry in updated_database_forward:
-            entry[original_rsmi_col] = standardize_rsmi(entry[original_rsmi_col], stereo=False)
+            entry[original_rsmi_col] = standardize_rsmi(
+                entry[original_rsmi_col], stereo=False
+            )
             entry["positive_reactions"] = []
             entry["negative_reactions"] = []
-            
 
-            
             rule_files = [f"{rule_file_path}/{entry[cluster_col]}.gml"]
-           
 
             for rule_file in rule_files:
                 initial_smiles_list = (
@@ -62,15 +61,12 @@ class RDecoy:
                     repeat_times=repeat_times,
                     prediction_type="forward",
                 )
-                
 
                 reactions = list(
                     set([standardize_rsmi(value, stereo=True) for value in reactions])
                 )
-                matched_reactions, unmatched_reactions = (
-                    RDecoy.categorize_reactions(
-                        reactions, entry[original_rsmi_col]
-                    )
+                matched_reactions, unmatched_reactions = RDecoy.categorize_reactions(
+                    reactions, entry[original_rsmi_col]
                 )
 
                 if matched_reactions:
@@ -80,10 +76,13 @@ class RDecoy:
                     entry["negative_reactions"].extend(unmatched_reactions)
                 #
             entry["positive_reactions"] = list(set(entry["positive_reactions"]))
-            entry["positive_reactions"] = entry["positive_reactions"][0] if entry["positive_reactions"] else None
-            
+            entry["positive_reactions"] = (
+                entry["positive_reactions"][0] if entry["positive_reactions"] else None
+            )
+
             entry["negative_reactions"] = list(set(entry["negative_reactions"]))
-            entry["negative_reactions"] = entry["negative_reactions"] if entry["negative_reactions"] else None
+            entry["negative_reactions"] = (
+                entry["negative_reactions"] if entry["negative_reactions"] else None
+            )
 
         return updated_database_forward
-

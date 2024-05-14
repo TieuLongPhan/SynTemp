@@ -99,12 +99,16 @@ class ITSVisualizer:
                     pbond = product.GetBondBetweenAtoms(*pnbrs[tpl])
                     # present in both reactants and products, check to see if it changed
                     rbond = reactant.GetBondBetweenAtoms(*rnbrs[tpl])
-                    if rbond.GetBondType()!=pbond.GetBondType():
-                        res.append(ITSVisualizer.BondInfo(pidx,pnbrs[tpl],pbond.GetIdx(),'Changed'))
+                    if rbond.GetBondType() != pbond.GetBondType():
+                        res.append(
+                            ITSVisualizer.BondInfo(
+                                pidx, pnbrs[tpl], pbond.GetIdx(), "Changed"
+                            )
+                        )
         return amap, res
 
     def draw_product_with_modified_bonds(
-        self, productIdx: int = None, showAtomMaps: bool = False, img_size = (1200, 500)
+        self, productIdx: int = None, showAtomMaps: bool = False, img_size=(1200, 500)
     ) -> str:
         """
         Draws the product molecule highlighting the modified bonds and atoms.
@@ -116,7 +120,7 @@ class ITSVisualizer:
                 0
             ][1]
             productIdx = largestProduct
-        d2d = Draw.rdMolDraw2D.MolDraw2DCairo(img_size[0], img_size[1]) 
+        d2d = Draw.rdMolDraw2D.MolDraw2DCairo(img_size[0], img_size[1])
 
         pmol = Chem.Mol(rxn.GetProductTemplate(productIdx))
         Chem.SanitizeMol(pmol)
@@ -162,70 +166,81 @@ class ITSVisualizer:
         return d2d.GetDrawingText()
 
     def draw_highlighted_subgraph(
-            self, productIdx: int = None, showAtomMaps: bool = False, img_size = (1200, 500)
-        ) -> str:
-            """
-            Draws only the subgraph of the product molecule containing modified atoms and bonds,
-            with specified colors for highlighted bonds.
-            """
-            rxn, atms, bnds = self.rxn, self.atms, self.bnds
-            if productIdx is None:
-                pcnts = [x.GetNumAtoms() for x in rxn.GetProducts()]
-                largestProduct = max(enumerate(pcnts), key=lambda x: x[1])[0]
-                productIdx = largestProduct
+        self, productIdx: int = None, showAtomMaps: bool = False, img_size=(1200, 500)
+    ) -> str:
+        """
+        Draws only the subgraph of the product molecule containing modified atoms and bonds,
+        with specified colors for highlighted bonds.
+        """
+        rxn, atms, bnds = self.rxn, self.atms, self.bnds
+        if productIdx is None:
+            pcnts = [x.GetNumAtoms() for x in rxn.GetProducts()]
+            largestProduct = max(enumerate(pcnts), key=lambda x: x[1])[0]
+            productIdx = largestProduct
 
-            d2d = Draw.rdMolDraw2D.MolDraw2DCairo(img_size[0], img_size[1])  # Improved resolution and anti-aliasing
+        d2d = Draw.rdMolDraw2D.MolDraw2DCairo(
+            img_size[0], img_size[1]
+        )  # Improved resolution and anti-aliasing
 
-            pmol = Chem.Mol(rxn.GetProductTemplate(productIdx))
-            Chem.SanitizeMol(pmol)
-            if not showAtomMaps:
-                for atom in pmol.GetAtoms():
-                    atom.SetAtomMapNum(0)
+        pmol = Chem.Mol(rxn.GetProductTemplate(productIdx))
+        Chem.SanitizeMol(pmol)
+        if not showAtomMaps:
+            for atom in pmol.GetAtoms():
+                atom.SetAtomMapNum(0)
 
-            # Identifying the atoms and bonds to highlight
-            atoms_to_highlight = set()
-            bonds_to_highlight = {}
-            for binfo in bnds:
-                if binfo.product == productIdx:
-                    for atom in binfo.productAtoms:
-                        atoms_to_highlight.add(atom)
-                    if binfo.status == "New":
-                        bonds_to_highlight[binfo.productBond] = (0.4, 0.4, 1)
-                    elif binfo.status == "Changed":
-                        bonds_to_highlight[binfo.productBond] = (1, 0.4, 0.4)
+        # Identifying the atoms and bonds to highlight
+        atoms_to_highlight = set()
+        bonds_to_highlight = {}
+        for binfo in bnds:
+            if binfo.product == productIdx:
+                for atom in binfo.productAtoms:
+                    atoms_to_highlight.add(atom)
+                if binfo.status == "New":
+                    bonds_to_highlight[binfo.productBond] = (0.4, 0.4, 1)
+                elif binfo.status == "Changed":
+                    bonds_to_highlight[binfo.productBond] = (1, 0.4, 0.4)
 
-            # Creating a subgraph with the highlighted atoms and bonds
-            submol = Chem.PathToSubmol(pmol, list(bonds_to_highlight.keys()))
-            atom_map = {atom_idx: submol.GetAtomWithIdx(i).GetIdx() for i, atom_idx in enumerate(atoms_to_highlight)}
+        # Creating a subgraph with the highlighted atoms and bonds
+        submol = Chem.PathToSubmol(pmol, list(bonds_to_highlight.keys()))
+        atom_map = {
+            atom_idx: submol.GetAtomWithIdx(i).GetIdx()
+            for i, atom_idx in enumerate(atoms_to_highlight)
+        }
 
-            highlight_atom_ids = [atom_map[atom_idx] for atom_idx in atoms_to_highlight if atom_idx in atom_map]
-            highlight_bond_colors = {}
-            for bond_idx, color in bonds_to_highlight.items():
-                bond = pmol.GetBondWithIdx(bond_idx)
-                if bond:
-                    begin_idx = bond.GetBeginAtomIdx()
-                    end_idx = bond.GetEndAtomIdx()
-                    if begin_idx in atom_map and end_idx in atom_map:
-                        sub_bond = submol.GetBondBetweenAtoms(atom_map[begin_idx], atom_map[end_idx])
-                        if sub_bond:
-                            highlight_bond_colors[sub_bond.GetIdx()] = color
+        highlight_atom_ids = [
+            atom_map[atom_idx]
+            for atom_idx in atoms_to_highlight
+            if atom_idx in atom_map
+        ]
+        highlight_bond_colors = {}
+        for bond_idx, color in bonds_to_highlight.items():
+            bond = pmol.GetBondWithIdx(bond_idx)
+            if bond:
+                begin_idx = bond.GetBeginAtomIdx()
+                end_idx = bond.GetEndAtomIdx()
+                if begin_idx in atom_map and end_idx in atom_map:
+                    sub_bond = submol.GetBondBetweenAtoms(
+                        atom_map[begin_idx], atom_map[end_idx]
+                    )
+                    if sub_bond:
+                        highlight_bond_colors[sub_bond.GetIdx()] = color
 
-            # Drawing options for the subgraph
-            d2d.drawOptions().useBWAtomPalette()
-            d2d.drawOptions().continuousHighlight = False
-            d2d.drawOptions().highlightBondWidthMultiplier = 24
-            d2d.drawOptions().setHighlightColour((0.9, 0.9, 0))
-            d2d.drawOptions().fillHighlights = False
-            d2d.drawOptions().bondLineWidth = 3
-            d2d.drawOptions().scale = 1
-            d2d.drawOptions().atomLabelFontSize = 24
-            d2d.drawOptions().padding = 0.1
+        # Drawing options for the subgraph
+        d2d.drawOptions().useBWAtomPalette()
+        d2d.drawOptions().continuousHighlight = False
+        d2d.drawOptions().highlightBondWidthMultiplier = 24
+        d2d.drawOptions().setHighlightColour((0.9, 0.9, 0))
+        d2d.drawOptions().fillHighlights = False
+        d2d.drawOptions().bondLineWidth = 3
+        d2d.drawOptions().scale = 1
+        d2d.drawOptions().atomLabelFontSize = 24
+        d2d.drawOptions().padding = 0.1
 
-            d2d.DrawMolecule(
-                submol,
-                highlightAtoms=highlight_atom_ids,
-                highlightBonds=list(highlight_bond_colors.keys()),
-                highlightBondColors=highlight_bond_colors,
-            )
-            d2d.FinishDrawing()
-            return d2d.GetDrawingText()
+        d2d.DrawMolecule(
+            submol,
+            highlightAtoms=highlight_atom_ids,
+            highlightBonds=list(highlight_bond_colors.keys()),
+            highlightBondColors=highlight_bond_colors,
+        )
+        d2d.FinishDrawing()
+        return d2d.GetDrawingText()

@@ -200,14 +200,17 @@ def standardize_rsmi(rsmi: str, stereo: bool = False) -> str:
 
     # Convert molecules back to SMILES, sort them, and assemble the standardized reaction SMILES string
     standardized_reactants = ".".join(
-        sorted(Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in reactant_molecules)
+        sorted(
+            Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in reactant_molecules
+        )
     )
     standardized_products = ".".join(
-        sorted(Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in product_molecules)
+        sorted(
+            Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in product_molecules
+        )
     )
 
     return f"{standardized_reactants}>>{standardized_products}"
-
 
 
 def count_carbons(smiles_list: List[str]) -> int:

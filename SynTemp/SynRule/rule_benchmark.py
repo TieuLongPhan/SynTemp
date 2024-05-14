@@ -135,7 +135,7 @@ class RuleBenchmark:
         rank_list_key: str,
         k: int,
         ignore_stero: bool = False,
-        scoring_function: str = SFSimilarity(['FCFP6']),
+        scoring_function: str = SFSimilarity(["FCFP6"]),
     ) -> float:
         """
         Calculates the top-k accuracy from a list of dictionaries based on the specified ground truth and ranking list keys.
@@ -167,7 +167,7 @@ class RuleBenchmark:
         #     )
 
         factory = SFFactory(scoring_function=scoring_function)
-        list_of_dicts = factory.process_list_of_dicts(list_of_dicts, 'unrank')
+        list_of_dicts = factory.process_list_of_dicts(list_of_dicts, "unrank")
         # Check if the required keys are present
         for item in list_of_dicts:
             if ground_truth_key not in item or rank_list_key not in item:

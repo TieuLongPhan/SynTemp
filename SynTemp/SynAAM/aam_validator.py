@@ -148,7 +148,10 @@ class AMMValidator:
         n_jobs: int = 1,
         verbose: int = 0,
         ensemble=False,
-        strategies = [["rxn_mapper", "graphormer", "local_mapper"], ["rxn_mapper", "graphormer", "local_mapper", "rdt"]]
+        strategies=[
+            ["rxn_mapper", "graphormer", "local_mapper"],
+            ["rxn_mapper", "graphormer", "local_mapper", "rdt"],
+        ],
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
         Validates collections of mapped SMILES against their ground truths for multiple mappers and calculates the accuracy.

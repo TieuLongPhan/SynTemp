@@ -68,7 +68,9 @@ class RuleEngine:
 
         # Convert SMILES strings to molecule objects, avoiding duplicate conversions
         initial_molecules = [smiles(smile) for smile in set(initial_smiles)]
-        initial_molecules = sorted(initial_molecules, key=lambda molecule: molecule.numVertices, reverse=False)
+        initial_molecules = sorted(
+            initial_molecules, key=lambda molecule: molecule.numVertices, reverse=False
+        )
         max_vertices = sum(molecule.numVertices for molecule in initial_molecules)
 
         # Load the reaction rule from the GML file
@@ -76,19 +78,19 @@ class RuleEngine:
         reaction_rule = ruleGMLString(gml_content, invert=invert_rule)
 
         # Define the reaction strategy
-        #universe = addUniverse(initial_molecules[0])
+        # universe = addUniverse(initial_molecules[0])
         subsets = (
             addSubset(initial_molecules)
             # if len(initial_molecules) > 1
             # else addSubset(initial_molecules[0])
         )
-        #strategy = subsets >> repeat[repeat_times]([reaction_rule])
+        # strategy = subsets >> repeat[repeat_times]([reaction_rule])
 
         # Initialize the derivation graph and execute the strategy
         dg = DG(graphDatabase=initial_molecules)
-        #dg.build().execute(strategy, verbosity=8)
+        # dg.build().execute(strategy, verbosity=8)
         dg.build().apply(initial_molecules, reaction_rule)
-        #dg.build().execute(addSubset(initial_molecules) >> reaction_rule, verbosity=8)
+        # dg.build().execute(addSubset(initial_molecules) >> reaction_rule, verbosity=8)
         if print_results:
             dg.print()
 

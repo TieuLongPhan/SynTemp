@@ -100,12 +100,13 @@ def run_consensus_aam(
 
     # Parallel map the batches
     mapped_reactions = Parallel(n_jobs=n_jobs, verbose=verbose)(
-        delayed(map_batch)(batch, rxn_mapper, rsmi_column, mapper_types, rdt_jar_path, working_dir)
+        delayed(map_batch)(
+            batch, rxn_mapper, rsmi_column, mapper_types, rdt_jar_path, working_dir
+        )
         for batch in batches
     )
-   
-    mapped_reactions = [item for sublist in mapped_reactions for item in sublist]
 
+    mapped_reactions = [item for sublist in mapped_reactions for item in sublist]
 
     if save_dir:
         save_database(

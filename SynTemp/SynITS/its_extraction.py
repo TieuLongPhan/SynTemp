@@ -112,7 +112,9 @@ class ITSExtraction:
                 graphs_by_map[mapper] = (G, H, ITS)
 
                 # Extract reaction rules
-                rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
+                rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(
+                    G, H, ITS, extend=False
+                )
                 _, _, rules = rules_by_map[mapper]
                 rules_graphs.append(rules)
 

@@ -216,7 +216,7 @@ class ChemicalGraphVisualizer:
         left_graph_title="Reactants",
         k_graph_title="ITS Graph",
         right_graph_title="Products",
-        save_path = None
+        save_path=None,
     ):
         """
         Visualize reactants, ITS graph, and products in one figure.
