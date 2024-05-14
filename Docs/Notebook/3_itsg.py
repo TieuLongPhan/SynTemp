@@ -14,7 +14,7 @@ from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
 from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynITS.its_refinement import UncertainRefinement
+from SynTemp.SynITS.its_refinement import ITSRefinement
 
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:
     """
@@ -52,7 +52,7 @@ def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Lo
     return logger
 
 def process_batch(batch, batch_index, temp_dir, n_jobs, verbose):
-    result = UncertainRefinement.process_graphs_in_parallel(batch, n_jobs=n_jobs, verbose=verbose)
+    result = ITSRefinement.process_graphs_in_parallel(batch, n_jobs=n_jobs, verbose=verbose)
     result = [value for value in result if value is not None]
     # Save the result to a file in the temporary directory
     temp_file_path = os.path.join(temp_dir, f"batch_{batch_index}.pkl.gz")

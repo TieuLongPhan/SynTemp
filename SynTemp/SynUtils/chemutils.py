@@ -182,16 +182,14 @@ def filter_valid_molecules(smiles_list: List[str]) -> List[Chem.Mol]:
     return valid_molecules
 
 
-def standardize_rsmi(rsmi: str) -> str:
+def standardize_rsmi(rsmi: str, stereo: bool = False) -> str:
     """
     Standardizes a reaction SMILES (rSMI) by ensuring that all reactants and products are valid molecules with atoms
-    and that the SMILES strings within the reactants and products are in ascending order.
-
-    The function splits the reaction into reactants and products, filters and validates them, sorts them in ascending order,
-    and then assembles them back into a standardized reaction SMILES string.
+    and that the SMILES strings within the reactants and products are in ascending order. Optionally ignores stereochemistry.
 
     Parameters:
     - rsmi (str): The reaction SMILES string to be standardized.
+    - ignore_stereo (bool): If True, stereochemical information is ignored in the SMILES representation.
 
     Returns:
     - str: The standardized reaction SMILES string with valid, non-empty, and sorted reactants and products.
@@ -202,13 +200,14 @@ def standardize_rsmi(rsmi: str) -> str:
 
     # Convert molecules back to SMILES, sort them, and assemble the standardized reaction SMILES string
     standardized_reactants = ".".join(
-        sorted(Chem.MolToSmiles(mol) for mol in reactant_molecules)
+        sorted(Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in reactant_molecules)
     )
     standardized_products = ".".join(
-        sorted(Chem.MolToSmiles(mol) for mol in product_molecules)
+        sorted(Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in product_molecules)
     )
 
     return f"{standardized_reactants}>>{standardized_products}"
+
 
 
 def count_carbons(smiles_list: List[str]) -> int:
