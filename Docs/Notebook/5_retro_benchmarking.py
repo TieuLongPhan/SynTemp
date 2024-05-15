@@ -9,7 +9,28 @@ from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
 
 if __name__ == "__main__":
+    import logging
+    import pandas as pd
+
+    # Set up logging
+    logging.basicConfig(filename=f'{root_dir}/Docs/Notebook/topk_accuracy.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+    # Load the database
     database = load_database(f"{root_dir}/Data/uspto/demo_database.json.gz")
+
+    # Set the parameters for the experiment
+    top_k_values = [1, 3, 5, 10]
+    scoring_functions = {
+        'MaxFrag': SFMaxFrag(),
+        'ECFP6': SFSimilarity(["ECFP6"]),
+        'MACCS': SFSimilarity(["MACCS"]),
+        'RDK7': SFSimilarity(["RDK7"])
+    }
+
+    # Prepare DataFrame to store results
+    results_list = []
+
+    # Run benchmark for each scoring function and Top K
     fw, bw = RuleBenchmark.reproduce_reactions(
         database=database,
         id_col="R-id",
@@ -19,25 +40,33 @@ if __name__ == "__main__":
         prior=True,
     )
 
-    print(
-        "Top 5 accuracy-MaxFrag:",
-        RuleBenchmark.TopKAccuracy(
-            fw,
-            "reactions",
-            "ranked_reactions",
-            5,
-            ignore_stero=True,
-            scoring_function=SFMaxFrag(),
-        ),
-    )
-    print(
-        "Top 5 accuracy-ECFP6:",
-        RuleBenchmark.TopKAccuracy(
-            fw,
-            "reactions",
-            "ranked_reactions",
-            5,
-            ignore_stero=True,
-            scoring_function=SFSimilarity(["ECFP6"]),
-        ),
-    )
+    for name, func in scoring_functions.items():
+        for k in top_k_values:
+            accuracy = RuleBenchmark.TopKAccuracy(
+                fw,
+                "reactions",
+                "ranked_reactions",
+                k,
+                ignore_stero=True,
+                scoring_function=func,
+            )
+            log_message = f"Top {k} accuracy for {name}: {accuracy}"
+            print(log_message)
+            logging.info(log_message)
+            
+            # Append results to the list
+            results_list.append({'Scoring Function': name, 'Top K': f'Top {k}', 'Accuracy': accuracy})
+
+    # Convert list to DataFrame
+    results_df = pd.DataFrame(results_list)
+
+    # Pivot the DataFrame to get the desired layout
+    pivot_df = results_df.pivot(index='Scoring Function', columns='Top K', values='Accuracy')
+
+    # # Save results to CSV
+    # pivot_df.to_csv('topk_accuracy_matrix.csv')
+    # logging.info("Results matrix saved to topk_accuracy_matrix.csv")
+
+    # Log the pivot table
+    pivot_log = pivot_df.to_string()
+    logging.info("Results Matrix:\n" + pivot_log)

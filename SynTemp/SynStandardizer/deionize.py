@@ -224,7 +224,7 @@ class Deionize:
         cls,
         reactions: List[Dict[str, str]],
         uncharge_smiles_func: Callable[[str], str],
-        n_jobs: int = -1,
+        n_jobs: int = 4,
     ) -> List[Dict[str, str]]:
         """
         Applies a given uncharge SMILES function to the reactants
@@ -267,7 +267,7 @@ class Deionize:
             if uncharged_reactants_formula != uncharged_products_formula:
                 reaction["success"] = False
                 reaction["new_reactants"] = fix_reactants
-                reaction["new_products"] = fix_reactants
+                reaction["new_products"] = fix_products
             else:
                 reaction["success"] = True
                 reaction["new_reactants"] = uncharged_reactants

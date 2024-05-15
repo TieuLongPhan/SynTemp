@@ -1,42 +1,29 @@
 import pathlib
 import sys
-import logging
 import time
-
-root_dir = pathlib.Path(__file__).parents[1]
+import logging
+root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 from SynTemp.SynUtils.utils import load_database, save_database
-from SynTemp.SynChemistry.reaction_processor import ReactionProcessor
-from SynTemp.SynChemistry.unbalanced_charge import UnbalancedCharge
-from SynTemp.SynChemistry.uncharge_reaction import UnchargeReaction
 import warnings
+from SynTemp.SynUtils.utils import load_database
+from SynTemp.SynStandardizer.neutralize import Neutralize
+from SynTemp.SynStandardizer.deionize import Deionize
+
 
 warnings.filterwarnings("ignore")
 
 
 def main():
-    rule_balanced = load_database(f"{root_dir}/Data/rule_based_reactions.json.gz")
-    rule_balanced = [
-        {"R-id": d["R-id"], "new_reaction": d["new_reaction"]}
-        for d in rule_balanced
-        if "R-id" in d and "new_reaction" in d
-    ]
+    data = load_database(f'{root_dir}/Data/uspto/uspto_rule_based_reactions.json.gz')
+    df = [{'R-id':value['R-id'], 'reactions':value['new_reaction']} for value in data]
+    data = Neutralize.parallel_fix_unbalanced_charge(df, "reactions", 4)
+    data = Deionize.apply_uncharge_smiles_to_reactions(data, Deionize.uncharge_smiles)
+    data = [{'R-id':value['R-id'], 'reactions':value['standardized_reactions']} for value in data]
+    print(df[7])
+    print(data[7])
 
-    labeled_list = ReactionProcessor.process_reactions_parallel(rule_balanced, n_jobs=4)
-    label_charge_list = ReactionProcessor.sum_of_charge_in_products(
-        labeled_list, n_jobs=4
-    )
-
-    fix_charge_balance = UnbalancedCharge.parallel_fix_unbalanced_charge(
-        label_charge_list, charges_column="total_charge_in_products", n_jobs=4
-    )
-
-    uncharge_fix = UnchargeReaction()
-    fix_charge_balance_post = uncharge_fix.apply_uncharge_smiles_to_reactions(
-        fix_charge_balance, uncharge_fix.uncharge_smiles, n_jobs=4
-    )
-
-    save_database(fix_charge_balance_post, f"{root_dir}/Data/clean_reactions.json.gz")
+    # save_database(fix_charge_balance_post, f"{root_dir}/Data/clean_reactions.json.gz")
 
 
 if __name__ == "__main__":

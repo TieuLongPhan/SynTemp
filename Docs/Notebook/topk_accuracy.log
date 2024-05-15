@@ -1,0 +1,23 @@
+2024-05-15 14:59:24,447 - Top 1 accuracy for MaxFrag: 62.71
+2024-05-15 14:59:24,625 - Top 3 accuracy for MaxFrag: 94.92
+2024-05-15 14:59:24,802 - Top 5 accuracy for MaxFrag: 96.61
+2024-05-15 14:59:24,983 - Top 10 accuracy for MaxFrag: 98.31
+2024-05-15 14:59:25,080 - Top 1 accuracy for ECFP6: 84.75
+2024-05-15 14:59:25,202 - Top 3 accuracy for ECFP6: 98.31
+2024-05-15 14:59:25,324 - Top 5 accuracy for ECFP6: 100.0
+2024-05-15 14:59:25,445 - Top 10 accuracy for ECFP6: 100.0
+2024-05-15 14:59:25,658 - Top 1 accuracy for MACCS: 83.05
+2024-05-15 14:59:25,879 - Top 3 accuracy for MACCS: 96.61
+2024-05-15 14:59:26,100 - Top 5 accuracy for MACCS: 96.61
+2024-05-15 14:59:26,327 - Top 10 accuracy for MACCS: 98.31
+2024-05-15 14:59:26,589 - Top 1 accuracy for RDK7: 62.71
+2024-05-15 14:59:26,890 - Top 3 accuracy for RDK7: 98.31
+2024-05-15 14:59:27,185 - Top 5 accuracy for RDK7: 98.31
+2024-05-15 14:59:27,489 - Top 10 accuracy for RDK7: 100.0
+2024-05-15 14:59:27,493 - Results Matrix:
+Top K             Top 1  Top 10  Top 3   Top 5
+Scoring Function                              
+ECFP6             84.75  100.00  98.31  100.00
+MACCS             83.05   98.31  96.61   96.61
+MaxFrag           62.71   98.31  94.92   96.61
+RDK7              62.71  100.00  98.31   98.31
