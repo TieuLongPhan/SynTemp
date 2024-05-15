@@ -1,53 +1,75 @@
 import pathlib
 import sys
 import logging
-import torch
 import time
+
 root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 from SynTemp.SynChemistry.balance_checker import BalanceReactionCheck
 from SynTemp.SynAAM.consensus_aam import ConsensusAAM
 from SynTemp.SynUtils.utils import load_database, save_database
 import warnings
-warnings.filterwarnings("ignore")
+
+
 import transformers
 from rxnmapper import RXNMapper
 from localmapper import localmapper
+warnings.filterwarnings("ignore")
 transformers.logging.set_verbosity_error()
 
-def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=True):
+
+def main(data, save_dir=None, data_name="", batch_size=1000, check_balance=True):
     rxn_mapper = RXNMapper()
-    
+
     if check_balance:
-        checker = BalanceReactionCheck(data, rsmi_column='reactions', n_jobs=5, verbose=2)
+        checker = BalanceReactionCheck(
+            data, rsmi_column="reactions", n_jobs=5, verbose=2
+        )
         balanced_reactions, _ = checker.check_balances()
     else:
         balanced_reactions = data
-    
-    consensus_aam = ConsensusAAM(balanced_reactions, rsmi_column='reactions', save_dir=f'{root_dir}/Data', 
-                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper', 'rdt'])
-       
-    mapped_reactions = consensus_aam.fit(batch_size, rxn_mapper, rdt_jar_path=f'{root_dir}/Data/RDT_2.4.1.jar', working_dir=f'{root_dir}/Docs/Notebook')
+
+    consensus_aam = ConsensusAAM(
+        balanced_reactions,
+        rsmi_column="reactions",
+        save_dir=f"{root_dir}/Data",
+        mapper_types=["rxn_mapper", "graphormer", "local_mapper", "rdt"],
+    )
+
+    mapped_reactions = consensus_aam.fit(
+        batch_size,
+        rxn_mapper,
+        rdt_jar_path=f"{root_dir}/Data/RDT_2.4.1.jar",
+        working_dir=f"{root_dir}/Docs/Notebook",
+    )
     if save_dir:
-        save_database(mapped_reactions, f'{save_dir}/{data_name}_aam_reactions.json.gz')
-  
+        save_database(mapped_reactions, f"{save_dir}/{data_name}_aam_reactions.json.gz")
+
     return mapped_reactions
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import pandas as pd
+
     logging.basicConfig(level=logging.INFO)
-    #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'golden'
-    start_time = time.time()  
-    save_dir = f'{root_dir}/Data/AAM/{folder_name}'
-    data = load_database(f'{save_dir}/{folder_name}_reactions.json.gz')
+    # folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
+    folder_name = "golden"
+    start_time = time.time()
+    save_dir = f"{root_dir}/Data/AAM/{folder_name}"
+    data = load_database(f"{save_dir}/{folder_name}_reactions.json.gz")
     data = pd.DataFrame(data)
-    #data['reactions'] = data['ground_truth']
-    #data['ground_truth'] = data['reactions']
-    data = data.to_dict('records')
+    # data['reactions'] = data['ground_truth']
+    # data['ground_truth'] = data['reactions']
+    data = data.to_dict("records")
     print(len(data))
-    mapped_reactions = main(data, save_dir=save_dir, data_name = folder_name, batch_size=50, check_balance=False)
-    end_time = time.time() 
+    mapped_reactions = main(
+        data,
+        save_dir=save_dir,
+        data_name=folder_name,
+        batch_size=50,
+        check_balance=False,
+    )
+    end_time = time.time()
 
     elapsed_time = end_time - start_time
     logging.info(f"Execution time: {elapsed_time:.2f} seconds")

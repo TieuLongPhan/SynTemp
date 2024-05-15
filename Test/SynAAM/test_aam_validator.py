@@ -2,12 +2,16 @@ import unittest
 from pathlib import Path
 from SynTemp.SynAAM.aam_validator import AMMValidator
 import pandas as pd
+
 root_dir = Path(__file__).parents[2]
+
 
 class TestAMMValidator(unittest.TestCase):
 
     def setUp(self):
-        self.valid_data = pd.read_csv(f"{root_dir}/Data/AAM/aam_benchmark/benchmark.csv")
+        self.valid_data = pd.read_csv(
+            f"{root_dir}/Data/AAM/aam_benchmark/benchmark.csv"
+        )
 
     def test_smiles_check(self):
 

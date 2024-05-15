@@ -9,7 +9,6 @@ from SynTemp.SynUtils.chemutils import (
 from SynTemp.SynRule.rule_engine import RuleEngine
 from SynTemp.SynChemistry.sf_factory import SFFactory
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
-from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
 
 
 class RuleBenchmark:

@@ -1,5 +1,4 @@
-from typing import Callable, List, Tuple, Dict
-import copy
+from typing import Callable, List, Tuple
 from rdkit import Chem
 from rdkit.Chem import AllChem, MACCSkeys
 from rdkit.Avalon import pyAvalonTools as fpAvalon

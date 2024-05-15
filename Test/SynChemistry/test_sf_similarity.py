@@ -1,6 +1,4 @@
 import unittest
-from rdkit import Chem
-from rdkit.Chem import AllChem
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 
 

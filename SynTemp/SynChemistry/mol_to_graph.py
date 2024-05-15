@@ -117,7 +117,7 @@ class MolToGraph:
         cls.add_partial_charges(mol)
         graph = nx.Graph()
         index_to_class: Dict[int, int] = {}
-        if cls.has_atom_mapping(mol) == False:
+        if cls.has_atom_mapping(mol) is False:
             mol = cls.random_atom_mapping(mol)
 
         for atom in mol.GetAtoms():

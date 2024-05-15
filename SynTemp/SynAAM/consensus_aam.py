@@ -114,7 +114,7 @@ class ConsensusAAM:
             List[Dict]: Updated list of reaction dictionaries with mapping results.
         """
         for i in range(0, len(self.smiles_list), batch_size):
-            batch = self.smiles_list[i : i + batch_size]
+            batch = self.smiles_list[i: i + batch_size]
             self.process_batch(batch, rxn_mapper, rdt_jar_path, working_dir)
             batch_number = i // batch_size + 1
             logging.info(

@@ -1,9 +1,6 @@
 import unittest
 from rdkit import Chem
-import unittest
-import sys
 import networkx as nx
-from pathlib import Path
 
 from SynTemp.SynChemistry.graph_to_mol import GraphToMol
 

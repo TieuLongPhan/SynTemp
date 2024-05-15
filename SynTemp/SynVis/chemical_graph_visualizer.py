@@ -2,8 +2,7 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
-from typing import Optional, Dict, Any
-import networkx as nx
+from typing import Optional, Dict
 import logging
 
 color_scheme = {

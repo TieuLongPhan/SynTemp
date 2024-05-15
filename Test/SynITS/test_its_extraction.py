@@ -1,5 +1,4 @@
 import unittest
-import time
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynITS.its_construction import ITSConstruction
 
