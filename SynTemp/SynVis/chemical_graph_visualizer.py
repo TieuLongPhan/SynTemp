@@ -1,7 +1,10 @@
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
+import seaborn as sns
 from typing import Optional, Dict, Any
+import networkx as nx
+import logging
 
 color_scheme = {
     "H": "#FFFFFF",  # White
@@ -208,134 +211,166 @@ class ChemicalGraphVisualizer:
                 edge_color=edge_colors,
             )
 
-    def visualize_all(
+    def vis_three_graph(
         self,
         graph_tuple,
         figsize=(15, 5),
         left_graph_title="Reactants",
         k_graph_title="ITS Graph",
         right_graph_title="Products",
+        show_node_labels=True,
+        title_fontsize=24,
+        title_weight="bold",
         save_path=None,
+        display_inline=False,
+        log=False,
     ):
         """
         Visualize reactants, ITS graph, and products in one figure.
 
         Parameters:
-        graph_tuple (tuple): Tuple of NetworkX graphs (reactants, products, ITS graph).
+            graph_tuple (tuple): Tuple of NetworkX graphs (reactants, ITS graph, products).
+            figsize (tuple): Figure size in inches (width, height).
+            left_graph_title (str): Title for the left subplot.
+            k_graph_title (str): Title for the middle subplot.
+            right_graph_title (str): Title for the right subplot.
+            show_node_labels (bool): If True, show node labels on the graphs.
+            title_fontsize (int): Font size for subplot titles.
+            title_weight (str): Font weight for subplot titles.
+            save_path (str, optional): Path to save the figure to file.
+            display_inline (bool): If True, display the figure inline in the notebook.
+            log (bool): If True, enable logging of function progress.
         """
-        # Unpack the tuple
-        reactants_graph, products_graph, its_graph = graph_tuple
+        if log:
+            logging.basicConfig(level=logging.INFO)
 
-        # Create a figure with subplots
-        fig, axs = plt.subplots(1, 3, figsize=figsize)  # Adjust figsize as needed
+        try:
+            # Unpack the tuple
+            reactants_graph, products_graph, its_graph = graph_tuple
 
-        # Initialize visualizer
+            # Create a figure with subplots
+            fig, axs = plt.subplots(1, 3, figsize=figsize)
 
-        # Visualize each graph on its respective subplot
-        self.graph_vis(reactants_graph, ax=axs[0], show_node_labels=True)
-        self.its_vis(its_graph, ax=axs[1], show_node_labels=True)
-        self.graph_vis(products_graph, ax=axs[2], show_node_labels=True)
+            # Visualize each graph on its respective subplot
+            self.graph_vis(
+                reactants_graph, ax=axs[0], show_node_labels=show_node_labels
+            )
+            self.its_vis(its_graph, ax=axs[1], show_node_labels=show_node_labels)
+            self.graph_vis(products_graph, ax=axs[2], show_node_labels=show_node_labels)
 
-        # Set titles for subplots
-        axs[0].set_title(left_graph_title, fontsize=24, weight="bold")
-        axs[1].set_title(k_graph_title, fontsize=24, weight="bold")
-        axs[2].set_title(right_graph_title, fontsize=24, weight="bold")
+            # Set titles for subplots
+            axs[0].set_title(
+                left_graph_title, fontsize=title_fontsize, weight=title_weight
+            )
+            axs[1].set_title(
+                k_graph_title, fontsize=title_fontsize, weight=title_weight
+            )
+            axs[2].set_title(
+                right_graph_title, fontsize=title_fontsize, weight=title_weight
+            )
 
-        plt.tight_layout()
-        if save_path is not None:
-            plt.savefig(save_path, dpi=600)
-        plt.show()
+            plt.tight_layout()
 
-    def multigraph_vis(
+            if save_path is not None:
+                plt.savefig(save_path, dpi=600)
+                if log:
+                    logging.info(f"Figure saved to {save_path}")
+
+            if display_inline:
+                plt.show()
+            else:
+                plt.close(fig)
+
+            return fig
+        except Exception as e:
+            if log:
+                logging.error("Failed to visualize graphs: ", exc_info=True)
+            raise RuntimeError("Error in graph visualization: ") from e
+
+    def visualize_all(
         self,
-        G: nx.MultiGraph,
-        node_size: int = 100,
-        show_node_labels: bool = False,
-        node_label_font_size: int = 12,
-        ax: Optional[Any] = None,
-    ) -> None:
-        if ax is None:
-            _, ax = plt.subplots()
+        graph_tuple_row1,
+        graph_tuple_row2,
+        figsize=(15, 10),
+        titles_row1=("A. Reactant Graph", "B. ITS Graph", "C Products"),
+        titles_row2=("D. L Graph", "E. K Graph", "D. R Graph"),
+        show_node_labels=True,
+        show_grid=True,
+        grid_style="--",
+        title_fontsize=24,
+        title_weight="bold",
+        save_path=None,
+        display_inline=False,
+        log=False,
+    ):
+        """
+        Visualize two rows of graphs, each with three graphs, optionally displaying a grid.
 
-        pos = nx.spring_layout(G, seed=self.seed)
-        # Get colors for each node
-        node_colors = [
-            self.element_colors.get(G.nodes[node]["element"], "#000000")
-            for node in G.nodes()
-        ]
+        Parameters:
+            graph_tuple_row1 (tuple): Tuple of NetworkX graphs for the first row (reactants, ITS graph, products).
+            graph_tuple_row2 (tuple): Tuple of NetworkX graphs for the second row (L, K, R).
+            figsize (tuple): Figure size in inches (width, height).
+            titles_row1 (tuple): Titles for the first row subplots.
+            titles_row2 (tuple): Titles for the second row subplots.
+            show_node_labels (bool): If True, show node labels on the graphs.
+            show_grid (bool): If True, display grid lines on the plots.
+            grid_style (str): Style of the grid lines.
+            title_fontsize (int): Font size for subplot titles.
+            title_weight (str): Font weight for subplot titles.
+            save_path (str, optional): Path to save the figure to file.
+            display_inline (bool): If True, display the figure inline in the notebook.
+            log (bool): If True, enable logging of function progress.
+        """
+        if log:
+            logging.basicConfig(level=logging.INFO)
 
-        # Draw nodes
-        nx.draw_networkx_nodes(
-            G,
-            pos,
-            ax=ax,
-            node_size=node_size,
-            node_color=[
-                self.element_colors.get(G.nodes[node]["element"], "#000000")
-                for node in G.nodes()
-            ],
-        )
+        try:
+            sns.set_theme(style="darkgrid")  # Set the Seaborn style
+            reactants_graph, products_graph, its_graph = graph_tuple_row1
+            l_graph, r_graph, k_graph = graph_tuple_row2
 
-        # Draw edges based on bond order
-        for u, v, data in G.edges(data=True):
-            order = data.get("order", 1)
-            if order == 1:
-                style = "solid"
-            elif order == 1.5:
-                style = "dotted"
-            elif order == 2:
-                style = "double"
-            else:  # Assuming order 3 for triple bond
-                style = "triple"
+            # Create a figure with subplots
+            fig, axs = plt.subplots(2, 3, figsize=figsize)
 
-            if style == "double":
-                nx.draw_networkx_edges(
-                    G, pos, ax=ax, edgelist=[(u, v)], style=":", width=2
-                )
-                nx.draw_networkx_edges(
-                    G,
-                    pos,
-                    ax=ax,
-                    edgelist=[(u, v)],
-                    style="solid",
-                    width=2,
-                    edge_color="white",
-                    alpha=1,
-                )
-            elif style == "triple":
-                nx.draw_networkx_edges(
-                    G, pos, ax=ax, edgelist=[(u, v)], style="solid", width=4
-                )
-            elif style == "dotted":
-                nx.draw_networkx_edges(
-                    G, pos, ax=ax, edgelist=[(u, v)], style="dotted", width=2
-                )
-            else:  # single or dotted
-                nx.draw_networkx_edges(G, pos, ax=ax, edgelist=[(u, v)], style=style)
-
-        # Draw node labels if needed
-        if show_node_labels:
-            node_labels = {node: G.nodes[node]["element"] for node in G.nodes()}
-            nx.draw(
-                G,
-                pos,
-                ax=ax,
-                with_labels=True,
-                labels=node_labels,
-                node_color=node_colors,
-                node_size=node_size,
-                font_size=node_label_font_size,
-                font_weight="bold",
+            # Visualize each graph on its respective subplot (first row)
+            self.graph_vis(
+                reactants_graph, ax=axs[0, 0], show_node_labels=show_node_labels
             )
-        else:
-            nx.draw(
-                G,
-                pos,
-                ax=ax,
-                with_labels=False,
-                node_color=node_colors,
-                node_size=node_size,
-                font_weight="bold",
+            self.its_vis(its_graph, ax=axs[0, 1], show_node_labels=show_node_labels)
+            self.graph_vis(
+                products_graph, ax=axs[0, 2], show_node_labels=show_node_labels
             )
 
-        ax.axis("off")
+            # Visualize each graph on its respective subplot (second row)
+            self.graph_vis(l_graph, ax=axs[1, 0], show_node_labels=show_node_labels)
+            self.its_vis(k_graph, ax=axs[1, 1], show_node_labels=show_node_labels)
+            self.graph_vis(r_graph, ax=axs[1, 2], show_node_labels=show_node_labels)
+
+            # Set titles and enable grid for subplots
+            for ax, title in zip(axs[0], titles_row1):
+                ax.set_title(title, fontsize=title_fontsize, weight=title_weight)
+                if show_grid:
+                    ax.grid(True, linestyle=grid_style, which="both")
+
+            for ax, title in zip(axs[1], titles_row2):
+                ax.set_title(title, fontsize=title_fontsize, weight=title_weight)
+                if show_grid:
+                    ax.grid(True, linestyle=grid_style, which="both")
+
+            plt.tight_layout()
+
+            if save_path is not None:
+                plt.savefig(save_path, dpi=600)
+                if log:
+                    logging.info(f"Figure saved to {save_path}")
+
+            if display_inline:
+                plt.show()
+            else:
+                plt.close(fig)
+
+            return fig
+        except Exception as e:
+            if log:
+                logging.error("Failed to visualize graphs: ", exc_info=True)
+            raise RuntimeError("Error in graph visualization: ") from e
