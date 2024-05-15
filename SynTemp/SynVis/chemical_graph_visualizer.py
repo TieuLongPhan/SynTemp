@@ -2,7 +2,6 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 from typing import Optional, Dict, Any
-import networkx as nx
 
 color_scheme = {
     "H": "#FFFFFF",  # White

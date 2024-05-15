@@ -15,15 +15,16 @@ class BalanceReactionCheck:
         verbose: int = 0,
     ):
         """
-        Initializes the class with given input data, the column name for reactions in the input,
-        number of jobs for parallel processing, and verbosity level.
+        Initializes the class with given input data, the column name
+        for reactions in the input, number of jobs for
+        parallel processing, and verbosity level.
 
         Parameters:
         - input_data (Union[str, List[Union[str, Dict[str, str]]]]): A single SMILES string,
           a list of SMILES strings, or a list of dictionaries with 'reactions' keys.
         - rsmi_column (str): The key/column name for reaction SMILES strings in the input data.
-        - n_jobs (int): The number of parallel jobs to run for balance checking (default: -1, using all processors).
-        - verbose (int): The verbosity level of joblib parallel execution (default: 0).
+        - n_jobs (int): The number of parallel jobs to run for balance checking.
+        - verbose (int): The verbosity level of joblib parallel execution.
         """
 
         self.n_jobs = n_jobs
@@ -35,7 +36,8 @@ class BalanceReactionCheck:
         rsmi_column: str = "reactions",
     ) -> List[Dict[str, str]]:
         """
-        Parses the input data into a standardized list containing dictionaries for each reaction.
+        Parses the input data into a standardized list containing
+        dictionaries for each reaction.
 
         Parameters:
         - input_data (Union[str, List[Union[str, Dict[str, str]]]]): The input data to be processed.

@@ -40,6 +40,7 @@ class TestMappingFunctions(unittest.TestCase):
     def test_map_with_local_mapper(self):
 
         result = map_with_local_mapper(self.smiles, mapper=localmapper())
+        print(result)
         mapped_result = "[O:1]=[C:2]=[N:3][CH2:4][c:5]1[cH:6][cH:7][cH:8][o:9]1>>[O:1]=[C:2]([NH:3][CH2:4][c:5]1[cH:6][cH:7][cH:8][o:9]1)N1CCC(CCOc2ccc3cc2CCc2cncc(c2)Nc2ncc(Cl)c(n2)N3)CC1"
         self.assertEqual(result, mapped_result)
 

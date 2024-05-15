@@ -14,15 +14,17 @@ class AMMPostprocessor:
     @staticmethod
     def extract_mappings_and_count_atoms(smiles: str) -> Tuple[List[int], int]:
         """
-        Takes a SMILES string with atom mapping as input and returns a sorted list of atom mapping numbers
-        based on their appearance in the molecule along with the total count of atoms.
+        Takes a SMILES string with atom mapping as input and returns a sorted
+        list of atom mapping numbers based on their appearance in the molecule
+        along with the total count of atoms.
 
         Parameters:
         - smiles (str): A SMILES string with atom mapping representing the molecule.
 
         Returns:
-        - tuple: A tuple where the first element is a list of atom mapping numbers sorted based on their appearance,
-                and the second element is the total count of atoms in the molecule.
+        - tuple: A tuple where the first element is a list of atom mapping numbers
+                sorted based on their appearance, and the second element is the
+                total count of atoms in the molecule.
         """
         # molecule = AMMPostprocessor.smiles_to_mol(smiles)
         molecule = Chem.MolFromSmiles(smiles)
@@ -43,13 +45,15 @@ class AMMPostprocessor:
     @staticmethod
     def is_consistent_mapping(reaction_smiles: str) -> bool:
         """
-        Determines if the atom mapping numbers and atom counts in the reactants and products of a given reaction SMILES are consistent.
+        Determines if the atom mapping numbers and atom counts in the reactants
+        and products of a given reaction SMILES are consistent.
 
         Parameters:
         - reaction_smiles (str): A reaction SMILES string with atom mapping.
 
         Returns:
-        - bool: True if the mapping is consistent and the atom counts match, False otherwise.
+        - bool: True if the mapping is consistent and the
+                atom counts match, False otherwise.
         """
         reactants_smiles, products_smiles = reaction_smiles.split(">>")
         mapping_reactants, atom_count_reactants = (
@@ -100,10 +104,12 @@ class AMMPostprocessor:
         Processes a list of mapped SMILES strings in parallel.
 
         Parameters:
-        - mapped_smiles_list (List[Dict[str, str]]): A list of dictionaries of mapped SMILES strings.
+        - mapped_smiles_list (List[Dict[str, str]]): A list of dictionaries of
+                                                        mapped SMILES strings.
         - mapper_names (List[str]): List of mapper names to process.
         - threshold (int): Threshold for determining validity.
-        - n_jobs (int): Number of jobs to run in parallel. Defaults to -1 (use all processors).
+        - n_jobs (int): Number of jobs to run in parallel.
+                        Defaults to -1 (use all processors).
         - verbose (int): Verbosity level.
 
         Returns:

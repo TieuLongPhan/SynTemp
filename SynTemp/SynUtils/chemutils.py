@@ -4,7 +4,7 @@ from rdkit.Chem.MolStandardize import normalize, tautomer, charge
 from rdkit.Chem.SaltRemover import SaltRemover
 from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit.Chem.rdMolDescriptors import CalcMolFormula
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from collections import Counter
 from itertools import combinations_with_replacement
 
@@ -84,8 +84,11 @@ def assign_stereochemistry(
 
     Args:
         mol: RDKit Mol object.
-        cleanIt: Flag indicating whether to clean the molecule. Default is True.
-        force: Flag indicating whether to force stereochemistry assignment. Default is True.
+        cleanIt: Flag indicating whether to clean the molecule.
+                Default is True.
+        force: Flag indicating
+            whether to force stereochemistry assignment.
+            Default is True.
 
     Returns:
         None
@@ -127,14 +130,17 @@ def remove_atom_mapping(smiles: str) -> str:
     Removes atom mapping numbers and simplifies atomic notation in a SMILES string.
 
     This function processes a SMILES string to:
-    1. Remove any atom mapping numbers denoted by ':' followed by one or more digits.
-    2. Simplify the atomic notation by removing square brackets around atoms that do not need them.
+    1. Remove any atom mapping numbers denoted by ':'
+        followed by one or more digits.
+    2. Simplify the atomic notation by removing square
+        brackets around atoms that do not need them.
 
     Parameters:
     - smiles (str): The SMILES string to be processed.
 
     Returns:
-    - str: The processed SMILES string with atom mappings removed and simplified atomic notations.
+    - str: The processed SMILES string with atom mappings
+            removed and simplified atomic notations.
     """
     # Remove atom mapping numbers
     pattern = re.compile(r":\d+")
@@ -147,13 +153,15 @@ def remove_atom_mapping(smiles: str) -> str:
 
 def mol_from_smiles(smiles: str) -> Optional[Chem.Mol]:
     """
-    Converts a SMILES string to an RDKit Mol object, with error handling for invalid strings.
+    Converts a SMILES string to an RDKit Mol object,
+    with error handling for invalid strings.
 
     Parameters:
     - smiles (str): The SMILES string to be converted.
 
     Returns:
-    - Chem.Mol: An RDKit Mol object created from the given SMILES string. None if conversion fails.
+    - Chem.Mol: An RDKit Mol object created from the given SMILES string.
+                None if conversion fails.
 
     Raises:
     - ValueError: If the SMILES string is invalid and cannot be converted to a Mol object.
@@ -184,21 +192,23 @@ def filter_valid_molecules(smiles_list: List[str]) -> List[Chem.Mol]:
 
 def standardize_rsmi(rsmi: str, stereo: bool = False) -> str:
     """
-    Standardizes a reaction SMILES (rSMI) by ensuring that all reactants and products are valid molecules with atoms
-    and that the SMILES strings within the reactants and products are in ascending order. Optionally ignores stereochemistry.
+    Standardizes a reaction SMILES (rSMI) by ensuring that all reactants and products
+    are valid molecules with atoms and that the SMILES strings within the reactants
+    and products are in ascending order. Optionally ignores stereochemistry.
 
     Parameters:
     - rsmi (str): The reaction SMILES string to be standardized.
-    - ignore_stereo (bool): If True, stereochemical information is ignored in the SMILES representation.
+    - ignore_stereo (bool): If True, stereochemical information is
+                            ignored in the SMILES representation.
 
     Returns:
-    - str: The standardized reaction SMILES string with valid, non-empty, and sorted reactants and products.
+    - str: The standardized reaction SMILES string with valid,
+            non-empty, and sorted reactants and products.
     """
     reactants, products = rsmi.split(">>")
     reactant_molecules = filter_valid_molecules(reactants.split("."))
     product_molecules = filter_valid_molecules(products.split("."))
 
-    # Convert molecules back to SMILES, sort them, and assemble the standardized reaction SMILES string
     standardized_reactants = ".".join(
         sorted(
             Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in reactant_molecules
@@ -213,9 +223,39 @@ def standardize_rsmi(rsmi: str, stereo: bool = False) -> str:
     return f"{standardized_reactants}>>{standardized_products}"
 
 
+def categorize_reactions(
+    reactions: List[str], target_reaction: str
+) -> Tuple[List[str], List[str]]:
+    """
+    Sorts a list of reaction SMILES strings into two groups based on
+    their match with a specified target reaction. The categorization process
+    distinguishes between reactions that align with the target reaction
+    and those that do not.
+
+    Parameters:
+    - reactions (List[str]): The array of reaction SMILES strings to be categorized.
+    - target_reaction (str): The SMILES string of the target reaction
+                                used as the benchmark for categorization.
+
+    Returns:
+    - Tuple[List[str], List[str]]: A pair of lists, where the first contains
+                                reactions matching the target and the second
+                                comprises non-matching reactions.
+    """
+    match, not_match = [], []
+    target_reaction = standardize_rsmi(target_reaction, stereo=False)
+    for reaction_smiles in reactions:
+        if reaction_smiles == target_reaction:
+            match.append(reaction_smiles)
+        else:
+            not_match.append(reaction_smiles)
+    return match, not_match
+
+
 def count_carbons(smiles_list: List[str]) -> int:
     """
-    Counts the total number of carbon atoms across all molecules represented by a list of SMILES strings.
+    Counts the total number of carbon atoms across all molecules
+    represented by a list of SMILES strings.
 
     Args:
         smiles_list (List[str]): A list of SMILES strings representing molecules.
@@ -254,16 +294,19 @@ def generate_smiles_combinations(
     smiles_list: List[str], target_smiles: str, use_formula: bool = False
 ) -> List[List[str]]:
     """
-    Generates all combinations of SMILES strings from the given list that match the target specified by a target SMILES string.
+    Generates all combinations of SMILES strings from the given list
+    that match the target specified by a target SMILES string.
 
     Args:
         smiles_list (List[str]): A list of SMILES strings.
         target_smiles (str): The SMILES string of the target molecule.
-        use_formula (bool): If True, uses the molecular formula for comparison. If False, uses the total number of carbon atoms.
+        use_formula (bool): If True, uses the molecular formula for comparison.
+                            If False, uses the total number of carbon atoms.
 
     Returns:
-        List[List[str]]: A list of combinations, where each combination is a list of SMILES strings that together match the target
-                            specified by either the total number of carbon atoms or the molecular formula.
+        List[List[str]]: A list of combinations, where each combination is a list of
+        SMILES strings that together match the target specified by either the
+        total number of carbon atoms or the molecular formula.
     """
     if use_formula:
         target_formula = get_combined_molecular_formula([target_smiles])
@@ -293,10 +336,11 @@ def remove_stereochemistry_from_reaction_smiles(reaction_smiles: str) -> str:
     Removes stereochemical information from a reaction SMILES string.
 
     Parameters:
-    - reaction_smiles (str): A reaction SMILES string possibly containing stereochemical information.
+    - reaction_smiles (str): A reaction SMILES string possibly
+                    containing stereochemical information.
 
     Returns:
-    - str: A reaction SMILES string with stereochemistry removed from reactants and products.
+    - str: A reaction SMILES string with stereochemistry removal.
     """
     # Split the reaction SMILES into reactants, agents (optional), and products
     parts = reaction_smiles.split(">>")

@@ -1,34 +1,10 @@
-from typing import Optional, List, Tuple, Dict
-from SynTemp.SynUtils.chemutils import standardize_rsmi
 import copy
+from typing import Optional, List, Tuple, Dict
+from SynTemp.SynUtils.chemutils import standardize_rsmi, categorize_reactions
 from SynTemp.SynRule.rule_engine import RuleEngine
 
 
 class RDecoy:
-    @staticmethod
-    def categorize_reactions(
-        reactions: List[str], target_reaction: str
-    ) -> Tuple[List[str], List[str]]:
-        """
-        Sorts a list of reaction SMILES strings into two groups based on their match with a specified target reaction. The
-        categorization process distinguishes between reactions that align with the target reaction and those that do not.
-
-        Parameters:
-        - reactions (List[str]): The array of reaction SMILES strings to be categorized.
-        - target_reaction (str): The SMILES string of the target reaction used as the benchmark for categorization.
-
-        Returns:
-        - Tuple[List[str], List[str]]: A pair of lists, where the first contains reactions matching the target and the second
-                                    comprises non-matching reactions.
-        """
-        match, not_match = [], []
-        target_reaction = standardize_rsmi(target_reaction, stereo=False)
-        for reaction_smiles in reactions:
-            if reaction_smiles == target_reaction:
-                match.append(reaction_smiles)
-            else:
-                not_match.append(reaction_smiles)
-        return match, not_match
 
     @staticmethod
     def generate_reactions(
@@ -37,7 +13,7 @@ class RDecoy:
         original_rsmi_col: str = "reactions",
         repeat_times: int = 1,
         cluster_col: Optional[str] = "Cluster",
-        reaction_side_index: int = 0,  # Assuming you want the index to be passed or set a default value
+        reaction_side_index: int = 0,
     ) -> Tuple[List[Dict], List[Dict]]:
 
         updated_database_forward = copy.deepcopy(database)
@@ -65,7 +41,7 @@ class RDecoy:
                 reactions = list(
                     set([standardize_rsmi(value, stereo=True) for value in reactions])
                 )
-                matched_reactions, unmatched_reactions = RDecoy.categorize_reactions(
+                matched_reactions, unmatched_reactions = categorize_reactions(
                     reactions, entry[original_rsmi_col]
                 )
 

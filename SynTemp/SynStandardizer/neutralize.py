@@ -30,12 +30,15 @@ class Neutralize:
         Parses a reaction SMILES string into reactants and products.
 
         Parameters:
-        - reaction_smiles (str): A reaction SMILES string of the form "reactants>>products".
+        - reaction_smiles (str): A reaction SMILES string of the form
+                            "reactants>>products".
 
         Returns:
-        - Tuple[str, str]: A tuple containing the reactants and products SMILES strings, respectively.
+        - Tuple[str, str]: A tuple containing the reactants and
+                            products SMILES strings, respectively.
 
-        This function uses a while loop and exception handling to manage parsing errors and ensure the input is correctly formatted.
+        This function uses a while loop and exception handling to
+        manage parsing errors and ensure the input is correctly formatted.
         """
         try:
             reactants, products = reaction_smiles.split(">>")
@@ -81,18 +84,23 @@ class Neutralize:
         reaction_column: str = "reactions",
     ) -> Dict[str, any]:
         """
-        Adjusts a reaction dictionary to compensate for a negative charge in the products by adding [Na+] ions.
+        Adjusts a reaction dictionary to compensate for a negative charge
+        in the products by adding [Na+] ions.
 
-        This function calculates the number of sodium ions ([Na+]) needed to neutralize negative charges in the reaction products.
+        This function calculates the number of sodium ions ([Na+]) needed
+        to neutralize negative charges in the reaction products.
         It then adds the appropriate number of sodium ions to both the reactants and products.
 
         Args:
-            reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction. Must include keys for
-                                            'total_charge_in_products', 'reactants', 'products', 'R-id', and 'label'.
+            reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction.
+                                Must include keys for 'total_charge_in_products', 'reactants',
+                                'products', 'R-id', and 'label'.
 
         Returns:
-            Dict[str, any]: A new reaction dictionary with adjusted reactants and products to neutralize the negative charge.
-                            The 'total_charge_in_products' is set to 0, assuming the charge has been neutralized.
+            Dict[str, any]: A new reaction dictionary with adjusted reactants
+                            and products to neutralize the negative charge.
+                            The 'total_charge_in_products' is set to 0,
+                            assuming the charge has been neutralized.
         """
         # Calculate the number of sodium ions to add based on the absolute value of total_charge_in_products
         num_na_to_add = abs(reaction_dict[charges_column])
@@ -129,21 +137,27 @@ class Neutralize:
         reaction_column: str = "reactions",
     ) -> Dict[str, any]:
         """
-        Adjusts a reaction dictionary to compensate for a positive charge in the products by adding [Cl-] ions. The function
-        takes into account the total positive charge indicated in the reaction dictionary and adds an equivalent number of
+        Adjusts a reaction dictionary to compensate for a positive charge
+        in the products by adding [Cl-] ions. The function
+        takes into account the total positive charge indicated
+        in the reaction dictionary and adds an equivalent number of
         chloride ions ([Cl-]) to both reactants and products to neutralize the charge.
 
         Args:
-            reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction. This dictionary must include
-                                            keys for reactants, products, and a specified charge column (default is
-                                            'total_charge_in_products') which contains the total charge of the products.
+            reaction_dict (Dict[str, any]): A dictionary representing a chemical reaction.
+                                            This dictionary must include keys for reactants, products,
+                                            and a specified charge column (default is
+                                            'total_charge_in_products') which contains
+                                            the total charge of the products.
             charges_column (str, optional): The key in `reaction_dict` that contains the total charge of the products.
                                             Defaults to 'total_charge_in_products'.
 
         Returns:
-            Dict[str, any]: A modified reaction dictionary with added [Cl-] ions to neutralize the positive charge. The
-                            'total_charge_in_products' is updated to 0, indicating that the reaction's charge has been
-                            neutralized. The dictionary includes updated 'reactants', 'products', and a new reaction string.
+            Dict[str, any]: A modified reaction dictionary with added [Cl-] ions
+                            to neutralize the positive charge. The 'total_charge_in_products'
+                            is updated to 0, indicating that the reaction's charge has been neutralized.
+                            The dictionary includes updated 'reactants',
+                            'products', and a new reaction string.
         """
         # Calculate the number of chloride ions to add based on the positive total charge in the specified column
         num_cl_to_add = abs(reaction_dict[charges_column])
@@ -216,19 +230,27 @@ class Neutralize:
         n_jobs: int = 4,
     ) -> List[Dict[str, Any]]:
         """
-        Processes a list of reaction dictionaries in parallel to compensate for unbalanced charges in the products,
-        adding either [Cl-] ions for positive charges or [Na+] ions for negative charges.
+        Processes a list of reaction dictionaries in parallel to compensate
+        for unbalanced charges in the products, adding either [Cl-] ions
+        for positive charges or [Na+] ions for negative charges.
 
         Args:
-            reaction_dicts (List[Dict[str, Any]]): A list of dictionaries, each representing a chemical reaction that may have an unbalanced charge.
-            charges_column (str): The key in each reaction dictionary that contains the total charge of the products. Defaults to 'total_charge_in_products'.
-            n_jobs (int): The number of CPU cores to use for parallel processing. -1 means using all available cores.
+            reaction_dicts (List[Dict[str, Any]]): A list of dictionaries,
+                                                each representing a chemical reaction
+                                                that may have an unbalanced charge.
+            charges_column (str): The key in each reaction dictionary that contains
+                                the total charge of the products.
+                                Defaults to 'total_charge_in_products'.
+            n_jobs (int): The number of CPU cores to use for parallel processing.
+                            -1 means using all available cores.
 
         Returns:
-            List[Dict[str, Any]]: A list of modified reaction dictionaries with charges neutralized, reflecting the addition of necessary ions.
+            List[Dict[str, Any]]: A list of modified reaction dictionaries
+            with charges neutralized, reflecting the addition of necessary ions.
 
         Note:
-            This function requires the joblib library for parallel execution. Ensure joblib is installed and available for import.
+            This function requires the joblib library for parallel execution.
+            Ensure joblib is installed and available for import.
         """
         # Use joblib.Parallel and joblib.delayed to parallelize the charge fixing
         fixed_reactions = Parallel(n_jobs=n_jobs)(

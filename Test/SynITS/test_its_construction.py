@@ -32,7 +32,7 @@ class TestITSConstruction(unittest.TestCase):
         self.assertEqual(attributes, ("C", False, 2, 0))
 
         # Test with a non-existent node (should return defaults)
-        # default_attributes = ITSConstruction.get_node_attributes_with_defaults(self.G, 99)
+
         # self.assertEqual(default_attributes, ('*', False, 0, 0))
 
     def test_add_edges_to_ITS(self):

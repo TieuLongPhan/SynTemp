@@ -1,11 +1,6 @@
 import unittest
 from rdkit import Chem
-import unittest
-import sys
 from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 from SynTemp.SynUtils.chemutils import (
     normalize_molecule,
     canonicalize_tautomer,
@@ -16,6 +11,8 @@ from SynTemp.SynUtils.chemutils import (
     fragments_remover,
     remove_hydrogens_and_sanitize,
 )
+
+root_dir = Path(__file__).parents[2]
 
 
 class TestMoleculeProcessing(unittest.TestCase):

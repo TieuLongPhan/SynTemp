@@ -46,7 +46,7 @@ class TestRuleCluster(unittest.TestCase):
 
     def test_process_rules_clustering(self):
         # Test processing rules clustering
-        # Setting up a graph that would be deterministic for the functions 'check_graph_type' and 'get_cycle_member_rings'
+
         graph = nx.Graph([(1, 2), (2, 3)])
         reaction_dicts = [{"rules": ({}, {}, graph), "GraphRules": ({}, {}, graph)}]
 

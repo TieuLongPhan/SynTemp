@@ -20,7 +20,8 @@ def is_acyclic_graph(G: nx.Graph) -> bool:
 
 def is_single_cyclic_graph(G: nx.Graph) -> bool:
     """
-    Determines if the given graph is a single cyclic graph, which means the graph has exactly one cycle
+    Determines if the given graph is a single cyclic graph,
+    which means the graph has exactly one cycle
     and all nodes in the graph are part of that cycle.
 
     Parameters:
@@ -32,14 +33,11 @@ def is_single_cyclic_graph(G: nx.Graph) -> bool:
     if not isinstance(G, nx.Graph):
         raise TypeError("Input must be a networkx Graph object.")
 
-    # The graph must be connected to be single cyclic
     if not nx.is_connected(G):
         return False
 
-    # Find cycles using cycle_basis, which works for undirected graphs
     cycles = nx.cycle_basis(G)
 
-    # There should be at least one cycle, but we'll check if the union of all cycles covers all nodes
     if cycles:
         nodes_in_cycles = set(node for cycle in cycles for node in cycle)
         if (
@@ -53,7 +51,8 @@ def is_single_cyclic_graph(G: nx.Graph) -> bool:
 
 def is_complex_cyclic_graph(G: nx.Graph) -> bool:
     """
-    Determines if the given graph is a complex cyclic graph, which means all nodes are part of cycles,
+    Determines if the given graph is a complex cyclic graph,
+    which means all nodes are part of cycles,
     there are multiple cycles, and there are no acyclic parts.
 
     Parameters:
@@ -91,7 +90,8 @@ def check_graph_type(G: nx.Graph) -> str:
     - G (nx.Graph): The graph to be checked.
 
     Returns:
-    - str: A string indicating if the graph is "Acyclic", "Single Cyclic", or "Complex Cyclic".
+    - str: A string indicating if the graph is "Acyclic",
+            "Single Cyclic", or "Complex Cyclic".
 
     Raises:
     - TypeError: If the input G is not a networkx Graph.
@@ -111,7 +111,8 @@ def check_graph_type(G: nx.Graph) -> str:
 
 def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     """
-    Identifies all cycles in the given graph using cycle bases to ensure no overlap and returns a list of the sizes of these cycles (member rings),
+    Identifies all cycles in the given graph using cycle bases to ensure no overlap
+    and returns a list of the sizes of these cycles (member rings),
     sorted in ascending order.
 
     Parameters:

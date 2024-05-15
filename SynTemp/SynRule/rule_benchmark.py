@@ -2,6 +2,7 @@ import copy
 import glob
 from typing import List, Dict, Tuple
 from SynTemp.SynUtils.chemutils import (
+    categorize_reactions,
     standardize_rsmi,
     remove_stereochemistry_from_reaction_smiles,
 )
@@ -16,31 +17,6 @@ class RuleBenchmark:
     The MØDModeling class encapsulates functionalities for reaction modeling using the MØD toolkit.
     It provides methods for forward and backward prediction based on templates library.
     """
-
-    @staticmethod
-    def categorize_reactions(
-        reactions: List[str], target_reaction: str
-    ) -> Tuple[List[str], List[str]]:
-        """
-        Sorts a list of reaction SMILES strings into two groups based on their match with a specified target reaction. The
-        categorization process distinguishes between reactions that align with the target reaction and those that do not.
-
-        Parameters:
-        - reactions (List[str]): The array of reaction SMILES strings to be categorized.
-        - target_reaction (str): The SMILES string of the target reaction used as the benchmark for categorization.
-
-        Returns:
-        - Tuple[List[str], List[str]]: A pair of lists, where the first contains reactions matching the target and the second
-                                    comprises non-matching reactions.
-        """
-        match, not_match = [], []
-        target_reaction = standardize_rsmi(target_reaction)
-        for reaction_smiles in reactions:
-            if reaction_smiles == target_reaction:
-                match.append(reaction_smiles)
-            else:
-                not_match.append(reaction_smiles)
-        return match, list(set(not_match))
 
     @staticmethod
     def reproduce_reactions(
@@ -108,10 +84,8 @@ class RuleBenchmark:
                     reactions = list(
                         set([standardize_rsmi(value) for value in reactions])
                     )
-                    matched_reactions, unmatched_reactions = (
-                        RuleBenchmark.categorize_reactions(
-                            reactions, entry[original_rsmi_col]
-                        )
+                    matched_reactions, unmatched_reactions = categorize_reactions(
+                        reactions, entry[original_rsmi_col]
                     )
 
                     # Accumulate reactions

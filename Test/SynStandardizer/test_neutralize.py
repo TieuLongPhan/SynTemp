@@ -44,7 +44,10 @@ class TestNeutralize(unittest.TestCase):
         self.assertEqual(
             result,
             expected_output,
-            "The parse_reaction method should return None for both reactants and products on failure.",
+            (
+                "The parse_reaction method should return None"
+                + "for both reactants and products on failure."
+            ),
         )
 
     def test_calculate_charge_dict(self):
@@ -100,7 +103,7 @@ class TestNeutralize(unittest.TestCase):
             "R-id": "R3",
             "label": "test_label",
         }
-        # Since the charge is already balanced, the original dictionary should be returned unchanged.
+
         self.assertEqual(
             Neutralize.fix_unbalanced_charged(reaction_dict, "reactions"), reaction_dict
         )
@@ -110,7 +113,7 @@ class TestNeutralize(unittest.TestCase):
             "reactions": "CC(=O)[O-].[H+].[Cl-]>>CC(=O)O.[Cl-]",
             "R-id": "R3",
         }
-        # Since the charge is already balanced, the original dictionary should be returned unchanged.
+
         self.assertEqual(
             Neutralize.fix_unbalanced_charged(reaction_dict, "reactions")["reactions"],
             "CC(=O)[O-].[H+].[Cl-].[Na+]>>CC(=O)O.[Cl-].[Na+]",
@@ -121,7 +124,7 @@ class TestNeutralize(unittest.TestCase):
             "reactions": "CC(=O)[O-].[H+].[Na+]>>CC(=O)O.[Na+]",
             "R-id": "R3",
         }
-        # Since the charge is already balanced, the original dictionary should be returned unchanged.
+
         self.assertEqual(
             Neutralize.fix_unbalanced_charged(reaction_dict, "reactions")["reactions"],
             "CC(=O)[O-].[H+].[Na+].[Cl-]>>CC(=O)O.[Na+].[Cl-]",

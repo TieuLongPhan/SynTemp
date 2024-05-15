@@ -44,9 +44,6 @@ class TestRuleDecompose(unittest.TestCase):
         self.assertFalse(RuleDecompose.edge_match(edge1_attrs, edge2_attrs))
         self.assertTrue(RuleDecompose.edge_match(edge1_attrs, edge3_attrs))
 
-    # Add more tests for other methods like find_maximum_common_subgraph and remove_maximum_common_subgraph_edges
-    # Note: Testing visualize_with_common_subgraphs may not be straightforward as it involves visual inspection
-
     def test_find_maximum_common_subgraph(self):
         # Parent graph setup
         parent_graph = nx.Graph()

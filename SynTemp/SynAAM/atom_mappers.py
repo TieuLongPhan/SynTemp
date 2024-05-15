@@ -1,6 +1,5 @@
 import os
 import shutil
-from typing import List
 from uuid import uuid4
 from chython import smiles
 from rxnmapper import RXNMapper
@@ -71,10 +70,9 @@ def map_with_local_mapper(reaction_smiles: str, mapper=localmapper()) -> str:
 
     try:
         # Map reaction using AtomMapper
-        _, prediction = mapper.get_atom_map(reaction_smiles)
-        mapped_rxn = prediction["mapped_rxn"]
+        result = mapper.get_atom_map(reaction_smiles)
         # Return mapped reaction
-        return mapped_rxn.split(" ")[0] if " " in mapped_rxn else mapped_rxn
+        return result
     except Exception as e:
         print(f"AtomMapper mapping failed: {e}")
         return reaction_smiles
@@ -113,7 +111,10 @@ def map_with_rdt(reaction_smiles: str, rdt_jar_path: str, working_dir: str) -> s
         os.makedirs(unique_dir)
 
         with temporary_change_dir(unique_dir):
-            command = f'java -jar "{rdt_jar_path}" -Q SMI -q "{reaction_smiles}" -c -j AAM -f TEXT > {output_file}'
+            command = (
+                f'java -jar "{rdt_jar_path}" -Q SMI -q "{reaction_smiles}"'
+                + f" -c -j AAM -f TEXT > {output_file}"
+            )
             os.system(command)
 
             # Read the output from the file

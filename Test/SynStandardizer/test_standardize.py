@@ -4,11 +4,12 @@ import pandas as pd
 from SynTemp.SynStandardizer.standardize import Standardize
 
 
-class TestSMILESStandardizer(unittest.TestCase):  ## add Test case
+class TestSMILESStandardizer(unittest.TestCase):
     def setUp(self):
         self.standardizer = Standardize()
         self.test_smiles = (
-            "C[N+](C)(C)C.[Cl-]"  # Example molecule: Tetramethylammonium chloride
+            "C[N+](C)(C)C.[Cl-]"
+            # Example molecule: Tetramethylammonium chloride
         )
 
     def test_standardize_mol(self):

@@ -12,10 +12,12 @@ from SynTemp.SynUtils.utils import save_database
 
 class ConsensusAAM:
     """
-    A class to apply atom-atom mapping (AAM) consensus from multiple mappers to a list of chemical reactions.
+    A class to apply atom-atom mapping (AAM) consensus
+    from multiple mappers to a list of chemical reactions.
 
     Attributes:
-        reactions_list (List[Dict]): A list of dictionaries containing reaction information.
+        reactions_list (List[Dict]): A list of dictionaries containing
+                                    reaction information.
         return_confidence (bool): Flag to indicate whether to return confidence scores.
         root_dir (str): Root directory for the local mapper.
         save_dir (str): Directory where processed batches will be saved.
@@ -33,18 +35,20 @@ class ConsensusAAM:
         Constructs all the necessary attributes for the ConsensusAAM object.
 
         Parameters:
-            reactions_list (List[Dict]): List of dictionaries containing reaction information.
-            return_confidence (bool): Flag to return confidence scores (default is False).
-            root_dir (str): Root directory for the local mapper (default is '../SynITSG/LocalMapper').
-            save_dir (str): Directory to save processed batches (default is current directory).
-            mapper_types (List[str]): List of mapper types to be used (default includes rxn_mapper, graphormer, and local_mapper).
+            reactions_list (List[Dict]): List of dictionaries
+                                    containing reaction information.
+            return_confidence (bool): Flag to return confidence scores
+            root_dir (str): Root directory for the local mapper .
+            save_dir (str): Directory to save processed batches
+            mapper_types (List[str]): List of mapper types to be used
+
         """
         self.reactions_list = reactions_list
         self.rsmi_column = rsmi_column
         self.save_dir = save_dir
         self.mapper_types = mapper_types
         self.smiles_list = self.extract_smiles()
-        self.filename = os.path.join(self.save_dir, f"aam_reactions.json.gz")
+        self.filename = os.path.join(self.save_dir, "aam_reactions.json.gz")
 
     def extract_smiles(self) -> List[str]:
         """Extracts SMILES strings from the reactions list."""
@@ -56,7 +60,8 @@ class ConsensusAAM:
         self, batch: List[str], rxn_mapper, rdt_jar_path: str, working_dir: str
     ) -> None:
         """
-        Applies mapping functions to a batch of SMILES and updates the original dictionary with the results.
+        Applies mapping functions to a batch of SMILES and updates the
+        original dictionary with the results.
         Also saves the updated reactions_list after processing the batch.
 
         Parameters:
@@ -98,7 +103,8 @@ class ConsensusAAM:
         working_dir: str = None,
     ) -> List[Dict]:
         """
-        Processes the SMILES list in batches and returns the updated list of reaction dictionaries.
+        Processes the SMILES list in batches and returns the
+        updated list of reaction dictionaries.
 
         Parameters:
             batch_size (int): Number of reactions to process in each batch.

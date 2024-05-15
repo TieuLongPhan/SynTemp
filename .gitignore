@@ -13,3 +13,4 @@ test_database_out.json.gz
 test_database.json.gz
 Data/uspto/*
 
+aam_reactions.json.gz

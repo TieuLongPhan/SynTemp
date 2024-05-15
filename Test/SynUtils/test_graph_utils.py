@@ -1,9 +1,5 @@
 import unittest
-import sys
 from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
-sys.path.append(str(root_dir))
 import networkx as nx
 from SynTemp.SynUtils.graph_utils import (
     is_acyclic_graph,
@@ -12,6 +8,8 @@ from SynTemp.SynUtils.graph_utils import (
     check_graph_type,
     get_cycle_member_rings,
 )
+
+root_dir = Path(__file__).parents[2]
 
 
 class TestUncertainRefinement(unittest.TestCase):

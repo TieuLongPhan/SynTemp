@@ -25,7 +25,7 @@ def main(data, save_dir=None, data_name = '', batch_size=1000, check_balance=Tru
         balanced_reactions = data
     
     consensus_aam = ConsensusAAM(balanced_reactions, rsmi_column='reactions', save_dir=f'{root_dir}/Data', 
-                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper'])
+                             mapper_types=['rxn_mapper', 'graphormer', 'local_mapper', 'rdt'])
        
     mapped_reactions = consensus_aam.fit(batch_size, rxn_mapper, rdt_jar_path=f'{root_dir}/Data/RDT_2.4.1.jar', working_dir=f'{root_dir}/Docs/Notebook')
     if save_dir:
@@ -37,9 +37,9 @@ if __name__ == '__main__':
     import pandas as pd
     logging.basicConfig(level=logging.INFO)
     #folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = 'USPTO_50K'
+    folder_name = 'golden'
     start_time = time.time()  
-    save_dir = f'{root_dir}/Data/{folder_name}'
+    save_dir = f'{root_dir}/Data/AAM/{folder_name}'
     data = load_database(f'{save_dir}/{folder_name}_reactions.json.gz')
     data = pd.DataFrame(data)
     #data['reactions'] = data['ground_truth']

@@ -1,9 +1,7 @@
 from collections import namedtuple
-from IPython.display import Image
 from typing import List, Tuple, Dict
 from rdkit import Chem
 from rdkit.Chem import Draw
-from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import rdChemReactions
 
 
@@ -169,10 +167,10 @@ class ITSVisualizer:
         self, productIdx: int = None, showAtomMaps: bool = False, img_size=(1200, 500)
     ) -> str:
         """
-        Draws only the subgraph of the product molecule containing modified atoms and bonds,
-        with specified colors for highlighted bonds.
+        Draws only the subgraph of the product molecule containing modified
+        atoms and bonds, with specified colors for highlighted bonds.
         """
-        rxn, atms, bnds = self.rxn, self.atms, self.bnds
+        rxn, _, bnds = self.rxn, self.atms, self.bnds
         if productIdx is None:
             pcnts = [x.GetNumAtoms() for x in rxn.GetProducts()]
             largestProduct = max(enumerate(pcnts), key=lambda x: x[1])[0]

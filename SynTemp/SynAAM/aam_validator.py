@@ -37,13 +37,15 @@ class AMMValidator:
         its_graphs: List[nx.Graph],
     ) -> Tuple[List[Tuple[int, int]], int]:
         """
-        Checks for isomorphism among a list of ITS graphs and identifies all pairs of isomorphic graphs.
+        Checks for isomorphism among a list of ITS graphs and
+        identifies all pairs of isomorphic graphs.
 
         Parameters:
         - its_graphs (List[nx.Graph]): A list of ITS graphs.
 
         Returns:
-        - List[Tuple[int, int]]: A list of tuples representing pairs of indices of isomorphic graphs.
+        - List[Tuple[int, int]]: A list of tuples representing
+                pairs of indices of isomorphic graphs.
         - int: The count of unique isomorphic graph pairs found.
         """
         nodeLabelNames = ["typesGH"]
@@ -73,16 +75,20 @@ class AMMValidator:
         ignore_aromaticity: bool = False,
     ) -> bool:
         """
-        Checks the equivalence of mapped SMILES against ground truth using reaction center (RC) or ITS graph method.
+        Checks the equivalence of mapped SMILES against ground truth
+        using reaction center (RC) or ITS graph method.
 
         Parameters:
             mapped_smile (str): The mapped SMILES string.
             ground_truth (str): The ground truth SMILES string.
-            check_method (str): The method used for validation ('RC' or 'ITS').
-            ignore_aromaticity (bool): Flag to ignore aromaticity in ITS graph construction.
+            check_method (str): The method used for validation
+            ('RC' or 'ITS').
+            ignore_aromaticity (bool): Flag to ignore aromaticity
+                                        in ITS graph construction.
 
         Returns:
-            bool: True if the mapped SMILES is equivalent to the ground truth, False otherwise.
+            bool: True if the mapped SMILES is equivalent to the ground truth,
+                    False otherwise.
         """
         its_graphs = []
         rules_graphs = []
@@ -117,18 +123,26 @@ class AMMValidator:
         ignore_aromaticity: bool = False,
     ) -> bool:
         """
-        Checks the equivalence between the mapped and ground truth values within a given mapping dictionary,
-        using a specified check method. The check can optionally ignore aromaticity.
+        Checks the equivalence between the mapped and ground truth
+        values within a given mapping dictionary, using a specified check method.
+        The check can optionally ignore aromaticity.
 
         Parameters:
-        - mapping (Dict[str, str]): A dictionary containing the data entries to be checked.
-        - mapped_col (str): The key in the mapping dictionary corresponding to the mapped value.
-        - ground_truth_col (str): The key in the mapping dictionary corresponding to the ground truth value.
-        - check_method (str, optional): The method used for checking the equivalence. Defaults to 'RC'.
-        - ignore_aromaticity (bool, optional): Flag to indicate whether aromaticity should be ignored during the check. Defaults to False.
+        - mapping (Dict[str, str]): A dictionary containing the data entries to check.
+        - mapped_col (str): The key in the mapping dictionary corresponding
+                                    to the mapped value.
+        - ground_truth_col (str): The key in the mapping dictionary corresponding
+                                    to the ground truth value.
+        - check_method (str, optional): The method used for checking the equivalence.
+                                    Defaults to 'RC'.
+        - ignore_aromaticity (bool, optional): Flag to indicate whether aromaticity
+                                    should be ignored during the check.
+                                    Defaults to False.
 
         Returns:
-        - bool: The result of the check, indicating whether the mapped value is equivalent to the ground truth according to the specified method and considerations regarding aromaticity.
+        - bool: The result of the check, indicating whether the mapped value is
+                equivalent to the ground truth according to the specified method
+                and considerations regarding aromaticity.
         """
         return AMMValidator.smiles_check(
             mapping[mapped_col],
@@ -154,20 +168,27 @@ class AMMValidator:
         ],
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
-        Validates collections of mapped SMILES against their ground truths for multiple mappers and calculates the accuracy.
+        Validates collections of mapped SMILES against their ground truths
+        for multiple mappers and calculates the accuracy.
 
         Parameters:
-            data (Union[pd.DataFrame, List[Dict[str, str]]]): The input data containing mapped and ground truth SMILES.
-            id_col (str): The name of the column or key containing the reaction ID.
-            ground_truth_col (str): The name of the column or key containing the ground truth SMILES.
-            mapped_cols (List[str]): The list of columns or keys containing the mapped SMILES for different mappers.
+            data (Union[pd.DataFrame, List[Dict[str, str]]]): The input data
+                                    containing mapped and ground truth SMILES.
+            id_col (str): The name of the column or key containing
+                                    the reaction ID.
+            ground_truth_col (str): The name of the column or key containing
+                                    the ground truth SMILES.
+            mapped_cols (List[str]): The list of columns or keys containing
+                                    the mapped SMILES for different mappers.
             check_method (str): The method used for validation ('RC' or 'ITS').
-            ignore_aromaticity (bool): Whether to ignore aromaticity in ITS graph construction.
-            n_jobs (int): The number of parallel jobs to run. -1 means using all processors.
+            ignore_aromaticity (bool): Whether to ignore aromaticity
+                                    in ITS graph construction.
+            n_jobs (int): The number of parallel jobs to run.
             verbose (int): The verbosity level for joblib's parallel execution.
 
         Returns:
-            List[Dict[str, Union[str, float, List[bool]]]]: A list of dictionaries, each containing the mapper name,
+            List[Dict[str, Union[str, float, List[bool]]]]: A list of dictionaries,
+            each containing the mapper name,
             accuracy, and individual results for each SMILES pair.
         """
         validation_results = []

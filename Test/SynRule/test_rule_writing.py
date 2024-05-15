@@ -50,7 +50,7 @@ class TestMODRules(unittest.TestCase):
     #         'R-id': 'rule1',
     #         'graph_rules': (nx.Graph(), nx.Graph(), nx.Graph())
     #     }
-    #     graph_rule['graph_rules'][0].add_node(1, element='H')  # Adding a node to L graph
+    #     graph_rule['graph_rules'][0].add_node(1, element='H')
 
     #     # Process the graph rule
     #     result = RuleWriting.process_graph_rules(graph_rule)
@@ -65,10 +65,10 @@ class TestMODRules(unittest.TestCase):
     #         'R-id': 'rule1',
     #         'graph_rules': (nx.Graph(), nx.Graph(), nx.Graph())
     #     }]
-    #     data_dicts[0]['graph_rules'][0].add_node(1, element='H')  # Adding a node to L graph of the first rule
+    #     data_dicts[0]['graph_rules'][0].add_node(1, element='H')
 
     #     # Test auto_extraction
-    #     results = RuleWriting.auto_extraction(data_dicts, save_path=None)  # Not testing file saving here
+    #     results = RuleWriting.auto_extraction(data_dicts, save_path=None)
 
     #     # Check if the results are correct
     #     self.assertIsInstance(results, list)

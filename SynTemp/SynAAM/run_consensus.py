@@ -33,8 +33,10 @@ def map_batch(
     - batch_data: List[Dict], a list of dictionaries each containing a reaction.
     - rxn_mapper: RXNMapper, the RXNMapper object used for reaction mapping.
     - mapper_types: List[str], list of mapper types to use for consensus AAM.
-    - rdt_jar_path: Optional[str], the file path to the RDT JAR file if RDT mapper is used.
-    - working_dir: Optional[str], the working directory to execute external tools like RDT.
+    - rdt_jar_path: Optional[str], the file path to the
+                                RDT JAR file if RDT mapper is used.
+    - working_dir: Optional[str], the working directory to execute
+                    external tools like RDT.
 
     Returns:
     - pd.DataFrame: A DataFrame with the batch of mapped reactions.
@@ -62,20 +64,24 @@ def run_consensus_aam(
     working_dir: Optional[str] = None,
 ) -> List[Dict]:
     """
-    Automatically maps a dataset of chemical reactions using Automated Atom-Mapping (AAM) and returns the mapped reactions.
+    Automatically maps a dataset of chemical reactions using
+    Atom Atom-Mapping (AAM) and returns the mapped reactions.
 
     Parameters:
-    - data: List[Dict], the input list of dictionaries, each must contain a key for reaction strings.
-    - rsmi_column: str, the name of the key in the dictionaries that holds the reaction strings.
-    - save_dir: Optional[str], the directory to save the mapped reactions to. If None, do not save.
+    - data: List[Dict], the input list of dictionaries
+    - rsmi_column: str, the name of reaction smiles key in the dictionaries/
+    - save_dir: Optional[str], the directory to save the mapped
+                                reactions to. If None, do not save.
     - mapper_types: List[str], the types of mappers to use for consensus AAM.
     - data_name: str, the name to give the saved file.
     - batch_size: int, the batch size to use when running the mapper.
     - check_balance: bool, if True, checks the reaction balance before running the mapper.
-    - n_jobs: int, the number of parallel jobs to run. -1 means using all processors.
-    - verbose: int, the verbosity level for parallel processing.
-    - rdt_jar_path: Optional[str], the file path to the RDT JAR file if RDT mapper is used.
-    - working_dir: Optional[str], the working directory to execute external tools like RDT.
+    - n_jobs: int, the number of parallel jobs to run.
+    - verbose: int, the verbosity level.
+    - rdt_jar_path: Optional[str], the file path to the
+                    RDT JAR file if RDT mapper is used.
+    - working_dir: Optional[str], the working directory
+                to execute external tools like RDT.
 
     Returns:
     - List[Dict]: A list of dictionaries containing the mapped reactions.

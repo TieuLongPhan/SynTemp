@@ -1,9 +1,8 @@
 from typing import List, Tuple, Callable, Dict
 import random
-from itertools import combinations, chain
+from itertools import combinations
 from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit import Chem
-from rdkit.Chem import rdMolDescriptors
 from itertools import permutations
 from joblib import Parallel, delayed
 from SynTemp.SynUtils.chemutils import get_combined_molecular_formula
@@ -19,8 +18,10 @@ class Deionize:
         charges: List[int], smiles: List[str]
     ) -> Tuple[List[List[str]], List[List[int]]]:
         """
-        Generates non-overlapping groups of ions (2, 3, or 4) based on their charges and corresponding SMILES representations,
-        aiming to maximize the total number of ions used by preferring multiple smaller groups over fewer larger groups.
+        Generates non-overlapping groups of ions (2, 3, or 4) based on
+        their charges and corresponding SMILES representations,
+        aiming to maximize the total number of ions used by preferring
+        multiple smaller groups over fewer larger groups.
 
         Args:
         - charges (List[int]): A list of integer charges of the ions.
@@ -46,7 +47,6 @@ class Deionize:
         grouped_smiles = []
         grouped_charges = []
 
-        # Attempt to form groups of varying sizes, prioritizing smaller groups first (2, 3, then 4)
         for group_size in range(
             2, 5
         ):  # Start with pairs, then triples, and finally quads
@@ -67,8 +67,9 @@ class Deionize:
         """
         Removes charge from an anionic species represented by a SMILES string.
 
-        This function uses RDKit's standardization tools to neutralize the charges in the molecule.
-        It returns the SMILES representation of the uncharged molecule.
+        This function uses RDKit's standardization tools to neutralize
+        the charges in the molecule. It returns
+        the SMILES representation of the uncharged molecule.
 
         Args:
         - smiles (str): A SMILES string representing the anionic species.
@@ -78,7 +79,6 @@ class Deionize:
 
         Note:
         - The function assumes valid SMILES input.
-        - The RDKit library must be installed and properly configured to use this function.
         """
         if smiles == "[N-]=[N+]=[N-]":
             return "[N-]=[N+]=[N]"
@@ -106,8 +106,9 @@ class Deionize:
         """
         Removes charge from a cationic species represented by a SMILES string.
 
-        This function uses RDKit's standardization tools to neutralize the charges in the molecule.
-        It returns the SMILES representation of the uncharged molecule.
+        This function uses RDKit's standardization tools to neutralize
+        the charges in the molecule. It returns the
+        SMILES representation of the uncharged molecule.
 
         Args:
         - smiles (str): A SMILES string representing the cationic species.
@@ -117,9 +118,7 @@ class Deionize:
 
         Note:
         - The function assumes valid SMILES input.
-        - The RDKit library must be installed and properly configured to use this function.
         """
-        # Special case handling or custom logic can be added here if needed
 
         if charges == 1:
             new_smiles = smiles.replace("+", "")
@@ -131,10 +130,13 @@ class Deionize:
     @staticmethod
     def uncharge_smiles(charge_smiles: str) -> str:
         """
-        Processes a SMILES string containing ionic and non-ionic parts, neutralizes the charges, and returns a modified SMILES string.
+        Processes a SMILES string containing ionic and non-ionic parts,
+        neutralizes the charges, and returns a modified SMILES string.
 
-        The function splits the input SMILES string into individual components, identifies ionic and non-ionic parts,
-        and attempts to neutralize charged ions. It then creates permutations of the modified ions and combines them into
+        The function splits the input SMILES string into individual components,
+        identifies ionic and non-ionic parts,
+        and attempts to neutralize charged ions.
+        It then creates permutations of the modified ions and combines them into
         a single SMILES string, ensuring the molecular structure is valid.
 
         Args:
@@ -146,7 +148,8 @@ class Deionize:
         Note:
         - This function depends on RDKit for molecular operations.
         - The function assumes a valid SMILES input.
-        - The 'uncharge_anion' and 'random_pair_ions' functions must be defined and accessible.
+        - The 'uncharge_anion' and 'random_pair_ions' functions
+                    must be defined and accessible.
         """
 
         smiles = charge_smiles.split(".")
@@ -200,13 +203,15 @@ class Deionize:
     @staticmethod
     def ammonia_hydroxide_standardize(reaction_smiles: str) -> str:
         """
-        Replaces occurrences of ammonium hydroxide (NH4+ and OH-) in a reaction SMILES string with a simplified representation (N.O or O.N).
+        Replaces occurrences of ammonium hydroxide (NH4+ and OH-) in a
+        reaction SMILES string with a simplified representation (N.O or O.N).
 
         Args:
             reaction_smiles (str): The reaction SMILES string to be standardized.
 
         Returns:
-            str: The standardized reaction SMILES string with ammonium hydroxide represented as 'N.O' or 'O.N'.
+            str: The standardized reaction SMILES string with
+                ammonium hydroxide represented as 'N.O' or 'O.N'.
         """
         # Simplify the representation of ammonium hydroxide in the reaction SMILES
         new_smiles = reaction_smiles.replace("[NH4+].[OH-]", "N.O").replace(
@@ -222,17 +227,24 @@ class Deionize:
         n_jobs: int = -1,
     ) -> List[Dict[str, str]]:
         """
-        Applies a given uncharge SMILES function to the reactants and products of a list of chemical reactions,
-        parallelizing the process for improved performance. Each reaction is expected to be a dictionary
-        with at least 'reactants' and 'products' keys. The function adds three new keys to each reaction
-        dictionary: 'uncharged_reactants', 'uncharged_products', and 'uncharged_reactions', containing
-        the uncharged SMILES strings of reactants, products, and the overall reaction, respectively.
+        Applies a given uncharge SMILES function to the reactants
+        and products of a list of chemical reactions,
+        parallelizing the process for improved performance.
+        Each reaction is expected to be a dictionary
+        with at least 'reactants' and 'products' keys.
+        The function adds three new keys to each reaction
+        dictionary: 'uncharged_reactants', 'uncharged_products',
+        and 'uncharged_reactions', containing
+        the uncharged SMILES strings of reactants, products,
+        and the overall reaction, respectively.
 
         Args:
-            reactions (List[Dict[str, str]]): A list of dictionaries, where each dictionary represents
-                a chemical reaction with 'reactants' and 'products' keys.
-            uncharge_smiles_func (Callable[[str], str]): A function that takes a SMILES string as input
-                and returns a modified SMILES string with neutralized charges.
+            reactions (List[Dict[str, str]]): A list of dictionaries,
+                            where each dictionary represents
+                            a chemical reaction with 'reactants' and 'products' keys.
+            uncharge_smiles_func (Callable[[str], str]): A function that takes a
+                            SMILES string as input and returns a modified
+                            SMILES string with neutralized charges.
 
         Returns:
             List[Dict[str, str]]: The input list of reaction dictionaries, modified in-place to include

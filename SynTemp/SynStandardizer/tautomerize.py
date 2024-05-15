@@ -6,8 +6,9 @@ from joblib import Parallel, delayed
 
 class Tautomerize:
     """
-    A class to standardize molecules by converting specific functional groups to their
-    more common forms using RDKit for molecule manipulation.
+    A class to standardize molecules by converting specific
+    functional groups to their more common forms
+    using RDKit for molecule manipulation.
     """
 
     @staticmethod
@@ -16,12 +17,14 @@ class Tautomerize:
         Converts an enol form to a carbonyl form based on specified atom indices.
 
         Parameters:
-        - smiles (str): The SMILES string of the molecule.
-        - atom_indices (List[int], optional): List containing indices of two carbons and one oxygen
-                                              involved in the enol formation. Defaults to [0, 1, 2].
+        - smiles (str): The SMILES string.
+        - atom_indices (List[int], optional): List containing indices of
+                            two carbons and one oxygen involved in the enol formation.
+                            Defaults to [0, 1, 2].
 
         Returns:
-        - str: The SMILES string of the molecule after conversion. Returns an error message if indices are invalid.
+        - str: The SMILES string of the molecule after conversion.
+                Returns an error message if indices are invalid.
         """
         if atom_indices is None:
             atom_indices = [0, 1, 2]
@@ -55,7 +58,8 @@ class Tautomerize:
     @staticmethod
     def standardize_hemiketal(smiles: str, atom_indices: List[int]) -> str:
         """
-        Converts a hemiketal form to a carbonyl form based on specified atom indices.
+        Converts a hemiketal form to a carbonyl form based
+        on specified atom indices.
 
         Parameters:
         - smiles (str): SMILES representation of the original molecule.
@@ -63,7 +67,8 @@ class Tautomerize:
                                     involved in the transformation.
 
         Returns:
-        - str: SMILES string of the modified molecule if successful, otherwise returns an error message.
+        - str: SMILES string of the modified molecule if successful,
+                otherwise returns an error message.
         """
         mol = Chem.MolFromSmiles(smiles)
         if mol is None:
@@ -115,8 +120,8 @@ class Tautomerize:
     @staticmethod
     def fix_dict(data: Dict[str, str], reaction_column: str) -> Dict[str, str]:
         """
-        Updates a dictionary containing reaction data by standardizing the SMILES strings
-        of reactants and products.
+        Updates a dictionary containing reaction data by
+        standardizing the SMILES strings of reactants and products.
 
         Parameters:
         - data (Dict[str, str]): Dictionary containing the reaction data.
@@ -144,16 +149,19 @@ class Tautomerize:
         verbose: int = 0,
     ) -> List[Dict[str, str]]:
         """
-        Standardizes multiple dictionaries containing reaction data in parallel.
+        Standardizes multiple dictionaries containing
+        reaction data in parallel.
 
         Parameters:
         - data (List[Dict[str, str]]): List of dictionaries, each containing reaction data.
-        - reaction_column (str): The key where the reaction SMILES strings are stored in each dictionary.
+        - reaction_column (str): The key where the reaction SMILES strings are
+                                stored in each dictionary.
         - n_jobs (int, optional): Number of jobs to run in parallel. Defaults to 4.
         - verbose (int, optional): The verbosity level. Defaults to 0.
 
         Returns:
-        - List[Dict[str, str]]: A list of updated dictionaries with standardized SMILES strings.
+        - List[Dict[str, str]]: A list of updated dictionaries
+                            with standardized SMILES strings.
         """
         results = Parallel(n_jobs=n_jobs, verbose=verbose)(
             delayed(Tautomerize.fix_dict)(d, reaction_column) for d in data

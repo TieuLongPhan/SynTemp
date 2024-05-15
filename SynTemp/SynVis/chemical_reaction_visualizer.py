@@ -14,12 +14,14 @@ class ChemicalReactionVisualizer:
         title_size: int = 16,
     ) -> HTML:
         """
-        Creates an HTML table to display SVG images with titles in a structured 'subplot-like' layout.
+        Creates an HTML table to display SVG images with titles in
+        a structured 'subplot-like' layout.
 
         Parameters:
         - svg_list (List[str]): List of SVG content strings.
         - titles (List[str]): Corresponding titles for each SVG image.
-        - num_cols (int): Defines the number of columns for the 'vertical' layout or rows for 'horizontal' layout.
+        - num_cols (int): Defines the number of columns for the
+                        'vertical' layout or rows for 'horizontal' layout.
         - orientation (str): Layout orientation of images ('vertical' or 'horizontal').
         - title_size (int): Font size of the titles displayed above each image.
 
@@ -99,14 +101,17 @@ class ChemicalReactionVisualizer:
         orientation: str = "vertical",
     ) -> None:
         """
-        Visualizes and compares multiple chemical reactions, displaying them side by side in an HTML table.
+        Visualizes and compares multiple chemical reactions,
+        displaying them side by side in an HTML table.
 
         Parameters:
-        - input_dict (Dict[str, str]): Dictionary with reaction identifiers as keys and SMILES strings as values.
-        - id_col (str): A dictionary key to exclude from visualization (typically metadata).
-        - img_size (tuple): Dimensions of images to be generated.
-        - num_cols (int): Number of columns in the display table (affects layout).
-        - orientation (str): Whether the table should be laid out vertically or horizontally.
+        - input_dict (Dict[str, str]): Dictionary with reaction
+            identifiers as keys and SMILES strings as values.
+        - id_col (str): A dictionary key to exclude
+                        from visualization (typically metadata).
+        - img_size (tuple): size if image.
+        - num_cols (int): Number of columns in the display table.
+        - orientation (str): vertically or horizontally.
         """
         svg_list = []
         titles = []
