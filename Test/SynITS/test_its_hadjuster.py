@@ -6,7 +6,7 @@ from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
 class TestITSHAdjuster(unittest.TestCase):
 
     def create_mock_graph(self, hcounts: dict) -> nx.Graph:
-        """Utility function to create a mock graph with specified 
+        """Utility function to create a mock graph with specified
         hydrogen counts for nodes."""
         graph = nx.Graph()
         for node_id, hcount in hcounts.items():

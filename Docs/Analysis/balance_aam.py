@@ -6,7 +6,7 @@ import pandas as pd
 
 # Setup logging
 logging.basicConfig(
-    filename="./Data/AAM/unbalance/aam_processing.log",
+    filename="./Data/AAM/balance/aam_processing.log",
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
@@ -35,12 +35,12 @@ time_dict = {mapper: {} for mapper in mapper_types}
 
 for mapper in mapper_types:
     for folder_name, num_columns in list_data.items():
-        save_dir = f"{root_dir}/Data/AAM/unbalance/{folder_name}"
-        save_path = f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_aam_reactions.json.gz"
+        save_dir = f"{root_dir}/Data/AAM/balance/{folder_name}"
+        save_path = f"{root_dir}/Data/AAM/balance/{folder_name}/{folder_name}_aam_reactions.json.gz"
         
         logger.info(f"Loading data for {folder_name} with {mapper} mapper")
         data = load_database(
-            f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_reactions.json.gz"
+            f"{root_dir}/Data/AAM/balance/{folder_name}/{folder_name}_reactions.json.gz"
         )
         logger.info(f"Loaded {len(data)} reactions from {folder_name}")
 
@@ -70,4 +70,4 @@ df = pd.DataFrame(time_dict)
 logger.info("\n" + df.to_string())
 
 # Optionally, save the DataFrame to a file for further analysis
-df.to_csv(f"{root_dir}/Data/AAM/unbalance/mapping_times.csv")
+df.to_csv(f"{root_dir}/Data/AAM/balance/mapping_times.csv")

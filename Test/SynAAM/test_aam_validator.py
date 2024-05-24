@@ -46,7 +46,7 @@ class TestAMMValidator(unittest.TestCase):
             n_jobs=4,
             verbose=0,
             ensemble=True,
-            strategies=[["rxn_mapper", "graphormer", "local_mapper"]]
+            strategies=[["rxn_mapper", "graphormer", "local_mapper"]],
         )
 
         print(pd.DataFrame(results)[["mapper", "accuracy", "success_rate"]])

@@ -1,11 +1,15 @@
 import logging
 import os
 from typing import List, Dict
-from SynTemp.SynAAM.atom_mappers import (
+from SynTemp.SynAAM.rdt_wrapper import (
     map_with_rxn_mapper,
     map_with_graphormer,
-    map_with_local_mapper,
     map_with_rdt,
+)
+
+from SynTemp.SynAAM.local_mapper_wrapper import (
+    map_with_local_mapper_time_out,
+    map_with_local_mapper,
 )
 from SynTemp.SynUtils.utils import save_database
 
@@ -70,7 +74,9 @@ class ConsensusAAM:
         """
         results = {}
         if "local_mapper" in self.mapper_types:
-            results["local_mapper"] = [map_with_local_mapper(rxn) for rxn in batch]
+            results["local_mapper"] = [
+                map_with_local_mapper_time_out(rxn) for rxn in batch
+            ]
         if "rxn_mapper" in self.mapper_types:
             results["rxn_mapper"] = [
                 map_with_rxn_mapper(rxn, rxn_mapper) for rxn in batch
