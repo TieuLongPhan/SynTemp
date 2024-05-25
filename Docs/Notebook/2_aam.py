@@ -1,75 +1,73 @@
 import pathlib
 import sys
-import logging
 import time
+import logging
+import pandas as pd
 
 root_dir = pathlib.Path(__file__).parents[2]
+# Setup logging
+logging.basicConfig(
+    filename=f"{root_dir}/Data/AAM/unbalance/aam_processing.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+logger = logging.getLogger("AAMProcessing")
+
 sys.path.append(str(root_dir))
-from SynTemp.SynChemistry.balance_checker import BalanceReactionCheck
-from SynTemp.SynAAM.consensus_aam import ConsensusAAM
+from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
 from SynTemp.SynUtils.utils import load_database, save_database
-import warnings
 
+list_data = {
+    "ecoli": 273,
+    "recon3d": 382,
+    "uspto_3k": 3000,
+    "golden": 1758,
+    "natcomm": 491,
+}
+mapper_types = ["rxn_mapper", "graphormer", "local_mapper", "rdt"]
 
-import transformers
-from rxnmapper import RXNMapper
-from localmapper import localmapper
-warnings.filterwarnings("ignore")
-transformers.logging.set_verbosity_error()
+rdt_jar_path = f"{root_dir}/Data/RDT_2.4.1.jar"
+working_dir = f"{root_dir}"
 
+# Create a dictionary to store time taken for each mapper type for each data
+time_dict = {mapper: {} for mapper in mapper_types}
 
-def main(data, save_dir=None, data_name="", batch_size=1000, check_balance=True):
-    rxn_mapper = RXNMapper()
-
-    if check_balance:
-        checker = BalanceReactionCheck(
-            data, rsmi_column="reactions", n_jobs=5, verbose=2
+for mapper in mapper_types:
+    for folder_name, num_columns in list_data.items():
+        save_dir = f"{root_dir}/Data/AAM/unbalance/{folder_name}"
+        save_path = f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_aam_reactions.json.gz"
+        
+        logger.info(f"Loading data for {folder_name} with {mapper} mapper")
+        data = load_database(
+            f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_reactions.json.gz"
         )
-        balanced_reactions, _ = checker.check_balances()
-    else:
-        balanced_reactions = data
+        logger.info(f"Loaded {len(data)} reactions from {folder_name}")
 
-    consensus_aam = ConsensusAAM(
-        balanced_reactions,
-        rsmi_column="reactions",
-        save_dir=f"{root_dir}/Data",
-        mapper_types=["rxn_mapper", "graphormer", "local_mapper", "rdt"],
-    )
+        aam = AAMConsensus(data, mappers=[mapper])
+        
+        start_time = time.time()
+        logger.info(f"Starting consensus mapping for {folder_name} using {mapper}")
+        
+        results = aam.batch_consensus(data, rsmi_column='reactions', batch_size=len(data), job_timeout=None,
+                                      safe_mode=False, rdt_jar_path=rdt_jar_path, working_dir=working_dir)
+        
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        logger.info(f"Completed consensus mapping for {folder_name} using {mapper} in {elapsed_time:.2f} seconds")
+        
+        # Store the time taken in the dictionary
+        time_dict[mapper][folder_name] = elapsed_time
 
-    mapped_reactions = consensus_aam.fit(
-        batch_size,
-        rxn_mapper,
-        rdt_jar_path=f"{root_dir}/Data/RDT_2.4.1.jar",
-        working_dir=f"{root_dir}/Docs/Notebook",
-    )
-    if save_dir:
-        save_database(mapped_reactions, f"{save_dir}/{data_name}_aam_reactions.json.gz")
-
-    return mapped_reactions
+        save_database(results, save_path)
+        logger.info(f"Saved results to {save_path}")
 
 
-if __name__ == "__main__":
-    import pandas as pd
+# Create a DataFrame from the time dictionary
+df = pd.DataFrame(time_dict)
 
-    logging.basicConfig(level=logging.INFO)
-    # folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = "golden"
-    start_time = time.time()
-    save_dir = f"{root_dir}/Data/AAM/{folder_name}"
-    data = load_database(f"{save_dir}/{folder_name}_reactions.json.gz")
-    data = pd.DataFrame(data)
-    # data['reactions'] = data['ground_truth']
-    # data['ground_truth'] = data['reactions']
-    data = data.to_dict("records")
-    print(len(data))
-    mapped_reactions = main(
-        data,
-        save_dir=save_dir,
-        data_name=folder_name,
-        batch_size=50,
-        check_balance=False,
-    )
-    end_time = time.time()
+# Log the DataFrame to file
+logger.info("\n" + df.to_string())
 
-    elapsed_time = end_time - start_time
-    logging.info(f"Execution time: {elapsed_time:.2f} seconds")
+# Optionally, save the DataFrame to a file for further analysis
+df.to_csv(f"{root_dir}/Data/AAM/unbalance/mapping_times.csv")

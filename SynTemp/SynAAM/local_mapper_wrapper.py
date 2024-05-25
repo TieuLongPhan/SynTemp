@@ -33,7 +33,10 @@ def map_with_local_mapper(batch):
             result = mapper.get_atom_map(reaction)
             results.append(result)
         except Exception as e:
-            logger.error(f"Failed to process reaction '{reaction}' due to error: {e}", exc_info=True)
+            logger.error(
+                f"Failed to process reaction '{reaction}' due to error: {e}",
+                exc_info=True,
+            )
             results.append(reaction)  # Append the original reaction as a fallback
 
     # Return results in a format consistent with the input type
