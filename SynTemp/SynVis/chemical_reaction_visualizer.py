@@ -99,6 +99,7 @@ class ChemicalReactionVisualizer:
         img_size: tuple = (1000, 600),
         num_cols: int = 2,
         orientation: str = "vertical",
+        show_atom_map: bool = False,
     ) -> None:
         """
         Visualizes and compares multiple chemical reactions,
@@ -118,7 +119,7 @@ class ChemicalReactionVisualizer:
         for key, reaction_str in input_dict.items():
             if key != id_col:
                 svg = ChemicalReactionVisualizer.visualize_reaction(
-                    reaction_str, img_size=img_size, highlight_by_reactant=True
+                    reaction_str, img_size=img_size, highlight_by_reactant=True, show_atom_map = show_atom_map
                 )
                 svg_list.append(svg.data)
                 titles.append(key)

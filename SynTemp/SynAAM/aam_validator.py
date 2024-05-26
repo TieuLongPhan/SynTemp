@@ -1,6 +1,6 @@
 import networkx as nx
 import pandas as pd
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Optional
 from rdkit import Chem
 from operator import eq
 from joblib import Parallel, delayed
@@ -9,6 +9,7 @@ from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynChemistry.mol_to_graph import MolToGraph
 from SynTemp.SynRule.rules_extraction import RuleExtraction
+from SynTemp.SynUtils.chemutils import enumerate_tautomers
 from itertools import combinations
 
 
@@ -113,6 +114,43 @@ class AMMValidator:
         except Exception as e:  # Catch more general exceptions
             print("An error occurred:", str(e))
             return False
+        
+    def smiles_check_tautomer(
+        mapped_smile: str,
+        ground_truth: str,
+        check_method: str = "RC",  # or 'ITS'
+        ignore_aromaticity: bool = False,
+    ) -> Optional[bool]:
+        """
+        Determines if a given mapped SMILE string is equivalent to any tautomer of a ground truth SMILES string
+        using a specified comparison method.
+
+        The function first enumerates all possible tautomers of the ground truth SMILES and then checks
+        if the mapped SMILE string matches any of these tautomers based on the specified method.
+
+        Args:
+            mapped_smile (str): The SMILES string to check against the tautomers of the ground truth.
+            ground_truth (str): The reference SMILES string for generating possible tautomers.
+            check_method (str): The method to use for checking equivalence. Possible values are "RC" for
+                                relaxed chemical transformation or "ITS" for isomorphic tautomer search.
+                                Default is "RC".
+            ignore_aromaticity (bool): If True, the comparison ignores differences in aromaticity between
+                                       the mapped SMILE and the tautomers. Default is False.
+
+        Returns:
+            Optional[bool]: True if the mapped SMILE matches any of the enumerated tautomers of the ground truth
+                            according to the specified check method. Returns False if no match is found.
+                            Returns None if an error occurs during processing.
+
+        Raises:
+            Exception: If an error occurs during the tautomer enumeration or during the comparison process.
+        """
+        try:
+            ground_truth_tautomers = enumerate_tautomers(ground_truth)
+            return any(AMMValidator.smiles_check(mapped_smile, t, check_method, ignore_aromaticity) for t in ground_truth_tautomers)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
     @staticmethod
     def check_pair(
@@ -121,6 +159,7 @@ class AMMValidator:
         ground_truth_col: str,
         check_method: str = "RC",
         ignore_aromaticity: bool = False,
+        ignore_tautomers: bool = True
     ) -> bool:
         """
         Checks the equivalence between the mapped and ground truth
@@ -138,18 +177,29 @@ class AMMValidator:
         - ignore_aromaticity (bool, optional): Flag to indicate whether aromaticity
                                     should be ignored during the check.
                                     Defaults to False.
+        - ignore_tautomers (bool, optional): Flag to indicate whether tautomers
+                                    should be ignored during the check.
+                                    Defaults to False.
 
         Returns:
         - bool: The result of the check, indicating whether the mapped value is
                 equivalent to the ground truth according to the specified method
                 and considerations regarding aromaticity.
         """
-        return AMMValidator.smiles_check(
-            mapping[mapped_col],
-            mapping[ground_truth_col],
-            check_method,
-            ignore_aromaticity,
-        )
+        if ignore_tautomers:
+            return AMMValidator.smiles_check(
+                mapping[mapped_col],
+                mapping[ground_truth_col],
+                check_method,
+                ignore_aromaticity,
+            )
+        else:
+            return AMMValidator.smiles_check_tautomer(
+                mapping[mapped_col],
+                mapping[ground_truth_col],
+                check_method,
+                ignore_aromaticity,
+            )
 
     @staticmethod
     def validate_smiles(
@@ -166,6 +216,7 @@ class AMMValidator:
             ["rxn_mapper", "graphormer", "local_mapper"],
             ["rxn_mapper", "graphormer", "local_mapper", "rdt"],
         ],
+        ignore_tautomers=True
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
         Validates collections of mapped SMILES against their ground truths
@@ -212,6 +263,7 @@ class AMMValidator:
                     ground_truth_col,
                     check_method,
                     ignore_aromaticity,
+                    ignore_tautomers
                 )
                 for mapping in mappings
             )
