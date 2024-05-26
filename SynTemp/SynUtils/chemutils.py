@@ -421,4 +421,4 @@ def enumerate_tautomers(reaction_smiles: str) -> Optional[List[str]]:
 
     except Exception as e:
         print(f"An error occurred: {e}")
-        return reaction_smiles
+        return [reaction_smiles]

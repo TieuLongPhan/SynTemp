@@ -309,6 +309,7 @@ class AMMValidator:
                         ground_truth_col,
                         check_method,
                         ignore_aromaticity,
+                        ignore_tautomers
                     )
                     for mapping in data_ensemble
                 )
