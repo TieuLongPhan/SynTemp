@@ -165,44 +165,74 @@ if __name__ == '__main__':
     sys.path.append(str(root_dir))
     from SynTemp.SynUtils.utils import load_database, save_database
     import pandas as pd
-    all_data = []
-    for data_name in ['golden', 'natcomm', 'uspto_3k']:
-        df = pd.DataFrame(load_database(f'{root_dir}/Data/AAM/unbalance/{data_name}/{data_name}_aam_reactions.json.gz'))
-        df['ID'] = df.index
+    df = pd.read_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/USPTO_3K.csv')
+    df['GroundTruth'] = df['LocalMapper']
+    df['ID'] = df.index
+    df[['GroundTruth', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', index=False, sep=' ')
+    df[['RXNMapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', index=False,  sep=' ')
+    df[['GraphMapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', index=False,  sep=' ')
+    df[['LocalMapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/localmapper.smiles', index=False,  sep=' ')
+    df['CGRTool_rxnmapper'] = False
+    df['CGRTool_graphmapper'] = False
+    df['CGRTool_localmapper'] = False
+
+    rxnmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+
+    graphmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+
+    localmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark//localmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+
+    for i in rxnmapper_check['good_mapping']:
+        df.loc[int(i),'CGRTool_rxnmapper'] = True
+
+    for i in graphmapper_check['good_mapping']:
+        df.loc[int(i),'CGRTool_graphmapper'] = True
+
+    for i in localmapper_check['good_mapping']:
+        df.loc[int(i),'CGRTool_localmapper'] = True
+    
+    df.to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/uspto_3k_cgrtool_old.csv')
 
 
 
-        df[['ground_truth', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', index=False, sep=' ')
-        df[['rxn_mapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', index=False,  sep=' ')
-        df[['graphormer', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', index=False,  sep=' ')
-        df[['local_mapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/localmapper.smiles', index=False,  sep=' ')
-        df[['rdt', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/rdt.smiles', index=False,  sep=' ')
-        df['CGRTool_rxnmapper'] = False
-        df['CGRTool_graphmapper'] = False
-        df['CGRTool_localmapper'] = False
-        df['CGRTool_rdt'] = False
+    # all_data = []
+    # for data_name in ['golden', 'natcomm', 'uspto_3k']:
+    #     df = pd.DataFrame(load_database(f'{root_dir}/Data/AAM/unbalance/{data_name}/{data_name}_aam_reactions.json.gz'))
+    #     df['ID'] = df.index
 
-        rxnmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
 
-        graphmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
 
-        localmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark//localmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+    #     df[['ground_truth', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', index=False, sep=' ')
+    #     df[['rxn_mapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', index=False,  sep=' ')
+    #     df[['graphormer', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', index=False,  sep=' ')
+    #     df[['local_mapper', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/localmapper.smiles', index=False,  sep=' ')
+    #     df[['rdt', 'ID']].to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/rdt.smiles', index=False,  sep=' ')
+    #     df['CGRTool_rxnmapper'] = False
+    #     df['CGRTool_graphmapper'] = False
+    #     df['CGRTool_localmapper'] = False
+    #     df['CGRTool_rdt'] = False
 
-        rdt_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark//rdt.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+    #     rxnmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/rxnmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
 
-        for i in rxnmapper_check['good_mapping']:
-            df.loc[int(i),'CGRTool_rxnmapper'] = True
+    #     graphmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/graphmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
 
-        for i in graphmapper_check['good_mapping']:
-            df.loc[int(i),'CGRTool_graphmapper'] = True
+    #     localmapper_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark//localmapper.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
 
-        for i in localmapper_check['good_mapping']:
-            df.loc[int(i),'CGRTool_localmapper'] = True
+    #     rdt_check  = main(reference_file=f'{root_dir}/Data/AAM/cgrtool_benchmark/ref.smiles', generated_file=f'{root_dir}/Data/AAM/cgrtool_benchmark//rdt.smiles', log_file=None, id_tag='ID', archive_file=None, ignore_basic_stand=True)
+
+    #     for i in rxnmapper_check['good_mapping']:
+    #         df.loc[int(i),'CGRTool_rxnmapper'] = True
+
+    #     for i in graphmapper_check['good_mapping']:
+    #         df.loc[int(i),'CGRTool_graphmapper'] = True
+
+    #     for i in localmapper_check['good_mapping']:
+    #         df.loc[int(i),'CGRTool_localmapper'] = True
         
-        for i in rdt_check['good_mapping']:
-            df.loc[int(i),'CGRTool_localmapper'] = True
+    #     for i in rdt_check['good_mapping']:
+    #         df.loc[int(i),'CGRTool_localmapper'] = True
             
-        df = df.to_dict('records')
-        all_data.extend(df)
-    save_database(all_data, f'{root_dir}/Data/AAM/cgrtool_benchmark/cgrtool_check.json.gz')
+    #     df = df.to_dict('records')
+    #     all_data.extend(df)
+    # save_database(all_data, f'{root_dir}/Data/AAM/cgrtool_benchmark/cgrtool_check.json.gz')
     #df.to_csv(f'{root_dir}/Data/AAM/cgrtool_benchmark/golden_cgrtool_check.csv')
