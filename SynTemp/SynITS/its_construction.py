@@ -130,6 +130,7 @@ class ITSConstruction:
                 "aromatic": False,
                 "hcount": 0,
                 "charge": 0,
+                "neighbors": ['','']
             }
 
         return tuple(

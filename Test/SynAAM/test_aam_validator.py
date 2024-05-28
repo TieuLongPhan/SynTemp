@@ -34,6 +34,21 @@ class TestAMMValidator(unittest.TestCase):
                 *false_pair, check_method="RC", ignore_aromaticity=False
             )
         )
+    def test_smiles_check_tautomer(self):
+        ref = "[CH3:1][C:2](=[O:3])[OH:4].[CH3:5][CH2:6][OH:7]>>[CH3:1][C:2](=[O:3])[O:7][CH2:6][CH3:5].[OH2:4]"
+        mapped = "[CH3:1][C:2](=[O:3])[OH:4].[CH3:5][CH2:6][OH:7]>>[CH3:1][C:2](=[O:4])[O:7][CH2:6][CH3:5].[OH2:3]"
+
+        self.assertFalse(
+            AMMValidator.smiles_check(
+                mapped, ref, check_method="RC", ignore_aromaticity=False
+            )
+        )
+
+        self.assertTrue(
+            AMMValidator.smiles_check_tautomer(
+                mapped, ref, check_method="RC", ignore_aromaticity=True
+            )
+        )
 
     def test_validate_smiles_dataframe(self):
 
@@ -47,6 +62,7 @@ class TestAMMValidator(unittest.TestCase):
             verbose=0,
             ensemble=True,
             strategies=[["rxn_mapper", "graphormer", "local_mapper"]],
+            ignore_tautomers=False
         )
 
         print(pd.DataFrame(results)[["mapper", "accuracy", "success_rate"]])
