@@ -140,7 +140,9 @@ class MolToGraph:
                 in_ring=atom.IsInRing(),
                 explicit_valence=atom.GetExplicitValence(),
                 implicit_hcount=atom.GetNumImplicitHs(),
-                neighbors = sorted([neighbor.GetSymbol() for neighbor in atom.GetNeighbors()]),
+                neighbors=sorted(
+                    [neighbor.GetSymbol() for neighbor in atom.GetNeighbors()]
+                ),
             )
 
         for bond in mol.GetBonds():

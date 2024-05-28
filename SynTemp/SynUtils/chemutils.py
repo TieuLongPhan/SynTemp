@@ -395,7 +395,7 @@ def enumerate_tautomers(reaction_smiles: str) -> Optional[List[str]]:
             )
 
         # Initialize tautomer enumerator
-        
+
         enumerator = rdMolStandardize.TautomerEnumerator()
 
         # Enumerate tautomers for the reactants and canonicalize the products
@@ -415,10 +415,35 @@ def enumerate_tautomers(reaction_smiles: str) -> Optional[List[str]]:
         if len(rsmi_list) == 0:
             return [reaction_smiles]
         else:
-            #rsmi_list.remove(reaction_smiles)
+            # rsmi_list.remove(reaction_smiles)
             rsmi_list.insert(0, reaction_smiles)
             return rsmi_list
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return [reaction_smiles]
+
+
+def mapping_success_rate(list_mapping_data):
+    """
+    Calculate the success rate of entries containing atom mappings in a list of data strings.
+
+    Parameters:
+        list_mapping_in_data (list of str): List containing strings to be searched for atom mappings.
+
+    Returns:
+        float: The success rate of finding atom mappings in the list as a percentage.
+
+    Raises:
+        ValueError: If the input list is empty.
+    """
+    atom_map_pattern = re.compile(r":\d+")
+    if not list_mapping_data:
+        raise ValueError("The input list is empty, cannot calculate success rate.")
+
+    success = sum(
+        1 for entry in list_mapping_data if re.search(atom_map_pattern, entry)
+    )
+    rate = 100 * (success / len(list_mapping_data))
+
+    return round(rate, 2)

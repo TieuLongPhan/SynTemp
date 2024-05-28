@@ -119,7 +119,10 @@ class ChemicalReactionVisualizer:
         for key, reaction_str in input_dict.items():
             if key != id_col:
                 svg = ChemicalReactionVisualizer.visualize_reaction(
-                    reaction_str, img_size=img_size, highlight_by_reactant=True, show_atom_map = show_atom_map
+                    reaction_str,
+                    img_size=img_size,
+                    highlight_by_reactant=True,
+                    show_atom_map=show_atom_map,
                 )
                 svg_list.append(svg.data)
                 titles.append(key)

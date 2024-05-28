@@ -9,7 +9,7 @@ from SynTemp.SynITS.its_construction import ITSConstruction
 from SynTemp.SynITS.its_extraction import ITSExtraction
 from SynTemp.SynChemistry.mol_to_graph import MolToGraph
 from SynTemp.SynRule.rules_extraction import RuleExtraction
-from SynTemp.SynUtils.chemutils import enumerate_tautomers
+from SynTemp.SynUtils.chemutils import enumerate_tautomers, mapping_success_rate
 from itertools import combinations
 
 
@@ -114,7 +114,7 @@ class AMMValidator:
         except Exception as e:  # Catch more general exceptions
             print("An error occurred:", str(e))
             return False
-        
+
     def smiles_check_tautomer(
         mapped_smile: str,
         ground_truth: str,
@@ -147,7 +147,12 @@ class AMMValidator:
         """
         try:
             ground_truth_tautomers = enumerate_tautomers(ground_truth)
-            return any(AMMValidator.smiles_check(mapped_smile, t, check_method, ignore_aromaticity) for t in ground_truth_tautomers)
+            return any(
+                AMMValidator.smiles_check(
+                    mapped_smile, t, check_method, ignore_aromaticity
+                )
+                for t in ground_truth_tautomers
+            )
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
@@ -159,7 +164,7 @@ class AMMValidator:
         ground_truth_col: str,
         check_method: str = "RC",
         ignore_aromaticity: bool = False,
-        ignore_tautomers: bool = True
+        ignore_tautomers: bool = True,
     ) -> bool:
         """
         Checks the equivalence between the mapped and ground truth
@@ -216,7 +221,7 @@ class AMMValidator:
             ["rxn_mapper", "graphormer", "local_mapper"],
             ["rxn_mapper", "graphormer", "local_mapper", "rdt"],
         ],
-        ignore_tautomers=True
+        ignore_tautomers=True,
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
         Validates collections of mapped SMILES against their ground truths
@@ -263,19 +268,19 @@ class AMMValidator:
                     ground_truth_col,
                     check_method,
                     ignore_aromaticity,
-                    ignore_tautomers
+                    ignore_tautomers,
                 )
                 for mapping in mappings
             )
             accuracy = sum(results) / len(mappings) if mappings else 0
-
+            mapped_data = [value[mapped_col] for value in mappings]
             # Store the results for each mapper in the list
             validation_results.append(
                 {
                     "mapper": mapped_col,
-                    "accuracy": accuracy,
+                    "accuracy": round(100 * accuracy, 2),
                     "results": results,
-                    "success_rate": 100,
+                    "success_rate": mapping_success_rate(mapped_data),
                 }
             )
         if ensemble:
@@ -309,7 +314,7 @@ class AMMValidator:
                         ground_truth_col,
                         check_method,
                         ignore_aromaticity,
-                        ignore_tautomers
+                        ignore_tautomers,
                     )
                     for mapping in data_ensemble
                 )
@@ -317,9 +322,11 @@ class AMMValidator:
                 validation_results.append(
                     {
                         "mapper": f"ensemble_{key+1}",
-                        "accuracy": accuracy,
+                        "accuracy": round(100 * accuracy, 2),
                         "results": results,
-                        "success_rate": 100 * len(data_ensemble) / len(mappings),
+                        "success_rate": round(
+                            100 * len(data_ensemble) / len(mappings), 2
+                        ),
                     }
                 )
 
