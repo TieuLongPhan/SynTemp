@@ -11,12 +11,13 @@ from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
 if __name__ == "__main__":
     import logging
     import pandas as pd
+    folder_name = 'Hydrogen'
 
     # Set up logging
-    logging.basicConfig(filename=f'{root_dir}/Docs/Notebook/topk_accuracy.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+    logging.basicConfig(filename=f'{root_dir}/Data/DPO/USPTO_50K/Hydrogen/topk_accuracy_good.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
     # Load the database
-    database = load_database(f"{root_dir}/Data/DPO/uspto/demo_database.json.gz")
+    database = load_database(f"{root_dir}/Data/DPO/USPTO_50K/test.json.gz")
 
     # Set the parameters for the experiment
     top_k_values = [1, 3, 5, 10]
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     fw, bw = RuleBenchmark.reproduce_reactions(
         database=database,
         id_col="R-id",
-        rule_file_path=f"{root_dir}/Data/DPO/uspto/Rule",
+        rule_file_path=f"{root_dir}/Data/DPO/USPTO_50K/Hydrogen/Rules_good",
         original_rsmi_col="reactions",
         repeat_times=1,
         prior=False,
