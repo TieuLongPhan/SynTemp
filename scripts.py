@@ -15,9 +15,10 @@ def setup_logging(log_dir, log_level):
 
 def main(args):
     #root_dir = Path(__file__).parents[2]
-    logging.info("Start process....")
+    
     # Setup logging
     setup_logging(args.log_dir, args.log_level)
+    logging.info("Start process....")
     logging.info("Loading database....")
     # Load the database
     database = load_database(args.data_dir)[:]
