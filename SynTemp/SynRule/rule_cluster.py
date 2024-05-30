@@ -2,7 +2,6 @@ import networkx as nx
 from typing import List, Set, Dict, Any, Callable
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from operator import eq
-from SynTemp.SynUtils.graph_utils import check_graph_type, get_cycle_member_rings
 
 
 class RuleCluster:
@@ -92,35 +91,3 @@ class RuleCluster:
             graphs
         )  # Ensure clusters are updated based on the current graphs list
         return [self.graph_to_cluster[i] for i in range(len(graphs))]
-
-    def process_rules_clustering(
-        self, reaction_dicts: List[Dict[str, Any]], rule_column: str = "rules"
-    ) -> List[Dict[str, Any]]:
-        """
-        Processes clustering based on rules extracted from reaction dictionaries, specifically clustering ITS graphs.
-
-        Parameters:
-            reaction_dicts (List[Dict[str, Any]]): A list of dictionaries, each representing a reaction.
-            rule_column (str): The key in the dictionaries where the ITS graph is stored.
-
-        Returns:
-            List[Dict[str, Any]]: The updated list of reaction dictionaries, each augmented with a 'cluster' key indicating its cluster index.
-        """
-        # Extract ITS graphs from the reaction dictionaries
-        rules_graphs = [reaction[rule_column][2] for reaction in reaction_dicts]
-
-        # Cluster the ITS graphs and get cluster indices for each ITS graph
-        self.cluster_graphs(rules_graphs)
-        cluster_indices = self.get_cluster_indices(rules_graphs)
-
-        # Update the reaction dictionaries with cluster information
-        for i, reaction_dict in enumerate(reaction_dicts):
-            reaction_dict["naive_cluster"] = cluster_indices[i]
-            reaction_dict["Reaction Type"] = check_graph_type(
-                reaction_dict["GraphRules"][2]
-            )
-            reaction_dict["Rings"] = get_cycle_member_rings(
-                reaction_dict["GraphRules"][2]
-            )
-
-        return reaction_dicts

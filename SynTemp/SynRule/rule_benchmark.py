@@ -14,6 +14,7 @@ import multiprocessing
 import multiprocessing.pool
 import logging
 
+
 class RuleBenchmark:
     """
     The MØDModeling class encapsulates functionalities for reaction modeling using the MØD toolkit.
@@ -29,7 +30,7 @@ class RuleBenchmark:
         repeat_times: int = 1,
         use_specific_rules: bool = False,
         verbosity: int = 0,
-        job_timeout : int = 60,
+        job_timeout: int = 60,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -56,7 +57,7 @@ class RuleBenchmark:
             ("backward", updated_database_backward),
         ):
             for entry in updated_database:
-                logging.info(f'Process reaction {entry[original_rsmi_col]}')
+                logging.info(f"Process reaction {entry[original_rsmi_col]}")
                 entry["positive_reactions"] = []
                 entry["unrank"] = []
 
@@ -81,9 +82,7 @@ class RuleBenchmark:
                         .split(".")
                     )
 
-                    pool = multiprocessing.pool.ThreadPool(
-                        1
-                    )  
+                    pool = multiprocessing.pool.ThreadPool(1)
                     try:
                         async_result = pool.apply_async(
                             RuleEngine.perform_reaction,
@@ -99,8 +98,10 @@ class RuleBenchmark:
                             # Attempt to get the result within 60 seconds
                             reactions = async_result.get(job_timeout)
                         except multiprocessing.TimeoutError:
-                            reactions = [] 
-                            logging.error(f"Reaction processing timed out with rule {rule_file}")
+                            reactions = []
+                            logging.error(
+                                f"Reaction processing timed out with rule {rule_file}"
+                            )
                         finally:
                             # Properly close the pool and wait for all tasks to complete
                             pool.close()
