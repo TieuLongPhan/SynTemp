@@ -1,7 +1,6 @@
 from typing import List, Dict, Any
 import copy
 
-
 class SFFactory:
     """
     A factory class for processing chemical reaction data with a given scoring function.
@@ -46,5 +45,7 @@ class SFFactory:
                 item.pop(
                     col_name, None
                 )  # Optionally remove the original reactions list
+            else:
+                item["ranked_reactions"] = []
 
         return list_of_dicts

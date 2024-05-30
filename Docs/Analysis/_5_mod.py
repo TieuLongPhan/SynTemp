@@ -7,7 +7,6 @@ from SynTemp.SynUtils.utils import load_database
 from SynTemp.SynRule.rule_benchmark import RuleBenchmark
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
-
 if __name__ == "__main__":
     import logging
     import pandas as pd
@@ -17,7 +16,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename=f'{root_dir}/Data/DPO/USPTO_50K/Hydrogen/topk_accuracy_good.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
     # Load the database
-    database = load_database(f"{root_dir}/Data/DPO/USPTO_50K/test.json.gz")
+    database = load_database(f"{root_dir}/Data/DPO/USPTO_50K/test.json.gz")[:10]
 
     # Set the parameters for the experiment
     top_k_values = [1, 3, 5, 10]
@@ -34,11 +33,11 @@ if __name__ == "__main__":
     # Run benchmark for each scoring function and Top K
     fw, bw = RuleBenchmark.reproduce_reactions(
         database=database,
-        id_col="R-id",
-        rule_file_path=f"{root_dir}/Data/DPO/USPTO_50K/Hydrogen/Rules_good",
+        rule_class_col="R-id",
+        rule_file_path=f"{root_dir}/Data/DPO/USPTO_50K/Hydrogen/Rules",
         original_rsmi_col="reactions",
         repeat_times=1,
-        prior=False,
+        use_specific_rules=False,
     )
 
     for name, func in scoring_functions.items():
@@ -51,8 +50,8 @@ if __name__ == "__main__":
                 ignore_stero=True,
                 scoring_function=func,
             )
+            
             log_message = f"Top {k} accuracy for {name}: {accuracy}"
-            print(log_message)
             logging.info(log_message)
             
             # Append results to the list

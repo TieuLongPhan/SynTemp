@@ -120,7 +120,7 @@ class ChemicalGraphVisualizer:
                 node_color=node_colors,
                 node_size=node_size,
                 font_size=node_label_font_size,
-                #font_weight="semi-bold",
+                # font_weight="semi-bold",
             )
         else:
             nx.draw(
@@ -130,7 +130,7 @@ class ChemicalGraphVisualizer:
                 with_labels=False,
                 node_color=node_colors,
                 node_size=node_size,
-                #font_weight="bold",
+                # font_weight="bold",
             )
 
         # Get edge labels if needed
@@ -195,7 +195,7 @@ class ChemicalGraphVisualizer:
                 node_color=node_colors,
                 node_size=node_size,
                 font_size=node_label_font_size,
-                #font_weight="bold",
+                # font_weight="bold",
                 edge_color=edge_colors,
             )
         else:

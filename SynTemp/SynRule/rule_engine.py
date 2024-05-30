@@ -47,6 +47,7 @@ class RuleEngine:
         repeat_times: int = 1,
         prediction_type: str = "forward",
         print_results: bool = False,
+        verbosity: int = 0,
     ) -> List[str]:
         """
         Applies a specified reaction rule, loaded from a GML file, to a set of initial molecules represented by SMILES strings.
@@ -77,19 +78,10 @@ class RuleEngine:
         gml_content = load_gml_as_text(rule_file_path)
         reaction_rule = ruleGMLString(gml_content, invert=invert_rule)
 
-        # Define the reaction strategy
-        # universe = addUniverse(initial_molecules[0])
-        subsets = (
-            addSubset(initial_molecules)
-            # if len(initial_molecules) > 1
-            # else addSubset(initial_molecules[0])
-        )
-        # strategy = subsets >> repeat[repeat_times]([reaction_rule])
-
         # Initialize the derivation graph and execute the strategy
         dg = DG(graphDatabase=initial_molecules)
         # dg.build().execute(strategy, verbosity=8)
-        dg.build().apply(initial_molecules, reaction_rule)
+        dg.build().apply(initial_molecules, reaction_rule, verbosity=verbosity)
         # dg.build().execute(addSubset(initial_molecules) >> reaction_rule, verbosity=8)
         if print_results:
             dg.print()

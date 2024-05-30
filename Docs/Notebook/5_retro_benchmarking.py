@@ -33,13 +33,13 @@ if __name__ == "__main__":
     # Run benchmark for each scoring function and Top K
     fw, bw = RuleBenchmark.reproduce_reactions(
         database=database,
-        id_col="R-id",
+        rule_class_col="R-id",
         rule_file_path=f"{root_dir}/Data/DPO/uspto/Rule",
         original_rsmi_col="reactions",
         repeat_times=1,
-        prior=False,
+        use_specific_rules=False,
+        verbosity = 0
     )
-
     for name, func in scoring_functions.items():
         for k in top_k_values:
             accuracy = RuleBenchmark.TopKAccuracy(

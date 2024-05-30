@@ -9,7 +9,7 @@ from SynTemp.SynUtils.chemutils import (
 from SynTemp.SynRule.rule_engine import RuleEngine
 from SynTemp.SynChemistry.sf_factory import SFFactory
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
-
+from SynTemp.SynChemistry.reduce_reactions import ReduceReactions
 
 class RuleBenchmark:
     """
@@ -20,32 +20,28 @@ class RuleBenchmark:
     @staticmethod
     def reproduce_reactions(
         database: List[Dict],
-        id_col: str,
+        rule_class_col: str,
         rule_file_path: str,
         original_rsmi_col: str = "reactions",
         repeat_times: int = 1,
-        prior: bool = True,
+        use_specific_rules: bool = False,
+        verbosity: int = 0,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
-        Simulates reactions from a database of molecular structures in both forward and backward directions, categorizes
-        the reactions based on matching with the original reaction SMILES, and updates the database entries with the
-        results of these simulations.
-
-        The process involves interpreting the SMILES strings from the database entries, using them to simulate
-        reactions based on specified rules, and then updating the entries with the outcomes. This is done separately
-        for both forward and backward reaction directions, producing two updated databases.
+        Simulates chemical reactions for each entry in a molecular database, processing them in both forward
+        and backward directions. It categorizes reactions based on matching the original reaction SMILES string
+        and updates the database entries with the simulation results.
 
         Parameters:
-        - database (List[Dict]): A list of dictionaries representing the database entries to be processed.
-        - id_col (str): The key in the dictionaries used to identify the rule file for each entry.
-        - rule_file_path (str): The base path to the directory containing the rule files.
-        - original_rsmi_col (str, optional): The key in the dictionaries for the original reaction SMILES string. Defaults to 'reactions'.
-        - repeat_times (int, optional): The number of times to repeat the reaction simulation for each entry. Defaults to 1.
-        - prior (bool, optional): If True, uses specific rule files identified by 'id_col'. If False, uses all rule files in the directory.
+            database (List[Dict]): A list of dictionaries representing the entries to be processed.
+            rule_class_col (str): The key in the dictionaries identifying the rule file(s) for each entry.
+            rule_file_path (str): Path to the directory containing the rule files.
+            original_rsmi_col (str, optional): Key for the original reaction SMILES string in the dictionaries. Defaults to 'reactions'.
+            repeat_times (int, optional): The number of times to simulate the reaction for each entry. Defaults to 1.
+            use_specific_rules (bool, optional): If True, uses specific rule files identified by 'rule_class'. Otherwise, uses all rule files.
 
         Returns:
-        - Tuple[List[Dict], List[Dict]]: A tuple containing two lists of dictionaries, with the first list representing
-                                         the updated database for forward reactions and the second for backward reactions.
+            Tuple[List[Dict], List[Dict]]: Two lists of updated dictionaries for forward and backward reactions, respectively.
         """
         updated_database_forward = copy.deepcopy(database)
         updated_database_backward = copy.deepcopy(database)
@@ -56,11 +52,18 @@ class RuleBenchmark:
         ):
             for entry in updated_database:
                 entry["positive_reactions"] = []
-                # entry["negative_reactions"] = []
                 entry["unrank"] = []
 
-                if prior:
-                    rule_files = [f"{rule_file_path}/{entry[id_col]}.gml"]
+                # Determine the rule files to use
+                if use_specific_rules:
+                    rule_files = [
+                        f"{rule_file_path}/{rule}.gml"
+                        for rule in (
+                            entry[rule_class_col]
+                            if isinstance(entry[rule_class_col], list)
+                            else [entry[rule_class_col]]
+                        )
+                    ]
                 else:
                     rule_files = glob.glob(f"{rule_file_path}/*.gml")
 
@@ -78,12 +81,13 @@ class RuleBenchmark:
                         initial_smiles=initial_smiles_list,
                         repeat_times=repeat_times,
                         prediction_type=reaction_direction,
+                        verbosity=verbosity,
                     )
 
                     reactions = list(
                         set([standardize_rsmi(value) for value in reactions])
                     )
-                    matched_reactions, unmatched_reactions = categorize_reactions(
+                    matched_reactions, _ = categorize_reactions(
                         reactions, entry[original_rsmi_col]
                     )
 
@@ -97,7 +101,8 @@ class RuleBenchmark:
                     entry["positive_reactions"] = entry["positive_reactions"][0]
                 else:
                     entry["positive_reactions"] = None
-                entry["unrank"] = list(set(entry["unrank"]))
+                entry["unrank"] = ReduceReactions.process_list_of_rsmi(list(set(entry["unrank"])))
+                
 
         return updated_database_forward, updated_database_backward
 
@@ -107,7 +112,7 @@ class RuleBenchmark:
         ground_truth_key: str,
         rank_list_key: str,
         k: int,
-        ignore_stero: bool = False,
+        ignore_stero: bool = True,
         scoring_function: str = SFSimilarity(["FCFP6"]),
     ) -> float:
         """
@@ -133,12 +138,6 @@ class RuleBenchmark:
         """
         correct = 0
         total = len(list_of_dicts)
-
-        # if scoring_function == "Similarity":
-        #     list_of_dicts = SFSimilarity.process_list_of_dicts(
-        #         list_of_dicts, "unrank", list_fp
-        #     )
-
         factory = SFFactory(scoring_function=scoring_function)
         list_of_dicts = factory.process_list_of_dicts(list_of_dicts, "unrank")
         # Check if the required keys are present
