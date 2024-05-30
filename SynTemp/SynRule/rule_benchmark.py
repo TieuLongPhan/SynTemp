@@ -10,6 +10,9 @@ from SynTemp.SynRule.rule_engine import RuleEngine
 from SynTemp.SynChemistry.sf_factory import SFFactory
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.reduce_reactions import ReduceReactions
+import multiprocessing
+import multiprocessing.pool
+import logging
 
 class RuleBenchmark:
     """
@@ -26,6 +29,7 @@ class RuleBenchmark:
         repeat_times: int = 1,
         use_specific_rules: bool = False,
         verbosity: int = 0,
+        job_timeout : int = 60,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -39,6 +43,7 @@ class RuleBenchmark:
             original_rsmi_col (str, optional): Key for the original reaction SMILES string in the dictionaries. Defaults to 'reactions'.
             repeat_times (int, optional): The number of times to simulate the reaction for each entry. Defaults to 1.
             use_specific_rules (bool, optional): If True, uses specific rule files identified by 'rule_class'. Otherwise, uses all rule files.
+            job_timeout (int): Timeout
 
         Returns:
             Tuple[List[Dict], List[Dict]]: Two lists of updated dictionaries for forward and backward reactions, respectively.
@@ -51,6 +56,7 @@ class RuleBenchmark:
             ("backward", updated_database_backward),
         ):
             for entry in updated_database:
+                logging.info(f'Process reaction {entry[original_rsmi_col]}')
                 entry["positive_reactions"] = []
                 entry["unrank"] = []
 
@@ -75,15 +81,44 @@ class RuleBenchmark:
                         .split(".")
                     )
 
-                    # Process reactions for each rule file
-                    reactions = RuleEngine.perform_reaction(
-                        rule_file_path=rule_file,
-                        initial_smiles=initial_smiles_list,
-                        repeat_times=repeat_times,
-                        prediction_type=reaction_direction,
-                        verbosity=verbosity,
-                    )
+                    pool = multiprocessing.pool.ThreadPool(
+                        1
+                    )  
+                    try:
+                        async_result = pool.apply_async(
+                            RuleEngine.perform_reaction,
+                            (
+                                rule_file,
+                                initial_smiles_list,
+                                repeat_times,
+                                reaction_direction,
+                                verbosity,
+                            ),
+                        )
+                        try:
+                            # Attempt to get the result within 60 seconds
+                            reactions = async_result.get(job_timeout)
+                        except multiprocessing.TimeoutError:
+                            reactions = [] 
+                            logging.error(f"Reaction processing timed out with rule {rule_file}")
+                        finally:
+                            # Properly close the pool and wait for all tasks to complete
+                            pool.close()
+                            pool.join()
 
+                    except Exception as e:
+                        # Generic exception handling to catch any other errors
+                        logging.error(f"An error occurred: {e}")
+                        reactions = []
+
+                    # # Process reactions for each rule file
+                    # reactions = RuleEngine.perform_reaction(
+                    #     rule_file_path=rule_file,
+                    #     initial_smiles=initial_smiles_list,
+                    #     repeat_times=repeat_times,
+                    #     prediction_type=reaction_direction,
+                    #     verbosity=verbosity,
+                    # )
                     reactions = list(
                         set([standardize_rsmi(value) for value in reactions])
                     )
@@ -101,8 +136,9 @@ class RuleBenchmark:
                     entry["positive_reactions"] = entry["positive_reactions"][0]
                 else:
                     entry["positive_reactions"] = None
-                entry["unrank"] = ReduceReactions.process_list_of_rsmi(list(set(entry["unrank"])))
-                
+                entry["unrank"] = ReduceReactions.process_list_of_rsmi(
+                    list(set(entry["unrank"]))
+                )
 
         return updated_database_forward, updated_database_backward
 

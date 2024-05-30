@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 import copy
 
+
 class SFFactory:
     """
     A factory class for processing chemical reaction data with a given scoring function.

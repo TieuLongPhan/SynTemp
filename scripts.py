@@ -1,8 +1,9 @@
-from SynTemp.SynUtils.utils import load_database
+from SynTemp.SynUtils.utils import load_database, save_database
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
 from SynTemp.SynRule.rule_benchmark import RuleBenchmark
 import sys
+import os
 import argparse
 import logging
 import pandas as pd
@@ -14,13 +15,13 @@ def setup_logging(log_dir, log_level):
 
 def main(args):
     #root_dir = Path(__file__).parents[2]
-    
+    logging.info("Start process....")
     # Setup logging
     setup_logging(args.log_dir, args.log_level)
-    
+    logging.info("Loading database....")
     # Load the database
-    database = load_database(args.data_dir)[:10]
-    
+    database = load_database(args.data_dir)[:]
+    folder_path = os.path.dirname(args.data_dir)
     # Scoring functions dictionary
     scoring_functions = {
         'MaxFrag': SFMaxFrag(),
@@ -39,7 +40,13 @@ def main(args):
         original_rsmi_col=args.original_rsmi_col,
         repeat_times=1,
         use_specific_rules=args.use_specific_rules,
+        verbosity=0
     )
+    try:
+        save_database(fw, f'{folder_path}/fw_good.json.gz')
+        save_database(bw, f'{folder_path}/bw_good.json.gz')
+    except:
+        logging.error('Cannot save')
 
     results_list_fw = []
     logging.info("Forward Prediction Validation")
