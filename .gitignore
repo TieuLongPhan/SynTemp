@@ -4,7 +4,6 @@
 *.gml
 .pytest_cache
 __pycache__
-test.ipynb
 mod_test.py
 clean_code.ipynb
 *pdf

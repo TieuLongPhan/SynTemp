@@ -154,3 +154,22 @@ def run_shell_command(command="mod_post"):
         print("Error occurred while executing the command.")
         print("Error Code:", e.returncode)
         print("Error Message:", e.stderr)
+
+
+def create_unique_value_dict(original_dict):
+    """
+    Creates a dictionary where each unique value from the original dictionary
+    is mapped to the first key associated with that value.
+
+    Parameters:
+        original_dict (dict): The original dictionary with potentially duplicate values.
+
+    Returns:
+        dict: A new dictionary with unique values and their first corresponding keys.
+    """
+    new_dict = {}
+    for key, value in original_dict.items():
+        if value not in new_dict:
+            new_dict[value] = key
+
+    return new_dict
