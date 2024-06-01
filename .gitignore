@@ -1,5 +1,5 @@
 *.pyc
-*.pkl.gz
+
 *.DS_Store
 *.gml
 .pytest_cache
