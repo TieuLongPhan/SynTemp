@@ -144,7 +144,7 @@ class RuleCluster:
 
         # Construct templates using unique cluster IDs and corresponding graphs
         template = [
-            {"Cluster_id": key, "RC": graphs[value]}
+            {"Cluster_id": key, "RC": graphs[value], 'Parent': []}
             for key, value in unique_temp.items()
         ]
 

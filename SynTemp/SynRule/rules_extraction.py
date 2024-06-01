@@ -61,6 +61,7 @@ class RuleExtraction:
         Returns:
         - nx.Graph: The extracted subgraph.
         """
+        
         return G.subgraph(node_indices).copy()
 
     @staticmethod
@@ -83,19 +84,18 @@ class RuleExtraction:
         - Tuple: A tuple contains the subgraphs for the reactants, products, and ITS, representing the extracted rules.
         """
         reaction_center_nodes = RuleExtraction.find_unequal_order_edges(its_graph)
-
         if extend:
             reaction_center_nodes = RuleExtraction.find_nearest_neighbors(
                 its_graph, reaction_center_nodes, n_knn
             )
 
         rules_network = tuple(
-            RuleExtraction.extract_subgraph(graph, list(reaction_center_nodes))
+            RuleExtraction.extract_subgraph(graph, reaction_center_nodes)
             for graph in (reactants_graph, products_graph, its_graph)
         )
-
         rules_graph = rules_network[2]
-        rules_graph = RuleExtraction.remove_normal_egdes(rules_graph, "standard_order")
+        if n_knn == 0:
+            rules_graph = RuleExtraction.remove_normal_egdes(rules_graph, "standard_order")
         rules_network = (rules_network[0], rules_network[1], rules_graph)
         return rules_network
 
