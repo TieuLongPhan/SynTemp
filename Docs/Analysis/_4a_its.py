@@ -6,21 +6,8 @@ import sys
 import shutil
 from joblib import Parallel, delayed
 import tempfile
+import argparse
 
-root_dir = pathlib.Path(__file__).parents[2]
-sys.path.append(str(root_dir))
-import pandas as pd
-from SynTemp.SynUtils.utils import (
-    load_database,
-    save_database,
-    save_to_pickle,
-    load_from_pickle,
-)
-from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
-from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynITS.its_refinement import ITSRefinement
 
 
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:
@@ -65,7 +52,6 @@ def run_synitsg_pipeline(
     batch_size=1000,
     verbose=1,
     n_jobs=4,
-    check_valid=False,
     fix_hydrogen=True,
     save_dir=None,
     data_name="",
@@ -89,6 +75,17 @@ def run_synitsg_pipeline(
     Returns:
         list: List of processed ITS graph data.
     """
+    from SynTemp.SynUtils.utils import (
+        load_database,
+        save_database,
+        save_to_pickle,
+        load_from_pickle,
+    )
+    from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
+    from SynTemp.SynITS.its_extraction import ITSExtraction
+    from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
+
+
     logger = configure_logging(save_dir, verbose, data_name)
     logger.setLevel(logging.DEBUG if verbose > 1 else logging.INFO)
     logger.info(f"Processing data {data_name} with {n_jobs} cpus")
@@ -97,23 +94,6 @@ def run_synitsg_pipeline(
     if not mapper_name:
         mapper_name = ["rxn_mapper", "graphormer", "local_mapper"]
         logger.info("No mapper_name provided. Using default mappers.")
-    threshold = len(mapper_name) - 1
-    
-    if check_valid:
-        logger.info("Checking and filtering valid data.")
-        check_valid_data = AMMPostprocessor.parallel_postprocess(
-            data, mapper_name, threshold=len(mapper_name), n_jobs=n_jobs, verbose=verbose
-        )
-        valid_data = [
-            reaction for reaction in check_valid_data if reaction.get("Valid")
-        ]
-        unvalid_data = [
-            reaction for reaction in check_valid_data if not reaction.get("Valid")
-        ]
-        logger.info(
-            f"Valid data count: {len(valid_data)}, Invalid data count: {len(unvalid_data)}"
-        )
-        data = valid_data
 
     temp_dir = os.path.join(save_dir, "temp_batches") if save_dir else "temp_batches"
     os.makedirs(temp_dir, exist_ok=True)
@@ -197,29 +177,40 @@ def run_synitsg_pipeline(
     logger.info(f"Execution time: {elapsed_time:.2f} seconds")
     
 
+def main():
+    root_dir = pathlib.Path(__file__).parents[2]
+    sys.path.append(str(root_dir))
+    from SynTemp.SynUtils.utils import (
+        load_database,
+    )
+    
+    parser = argparse.ArgumentParser(description="Run the Synthetic ITS Graph pipeline.")
+    parser.add_argument("--mapper_name", nargs='+', default=["rxn_mapper", "graphormer", "local_mapper"], help="List of mapper names")
+    parser.add_argument("--batch_size", type=int, default=500, help="Batch size for processing")
+    parser.add_argument("--verbose", type=int, default=1, help="Verbosity level")
+    parser.add_argument("--n_jobs", type=int, default=4, help="Number of parallel jobs")
+    parser.add_argument("--fix_hydrogen", type=bool, default=False, help="Whether to fix hydrogen")
+    parser.add_argument("--data_name", type=str, default="", help="Name of the data")
+    parser.add_argument("--rule_folder", type=str, default="", help="Name of folder to store rules")
+
+    args = parser.parse_args()
+
+    data = load_database(os.path.join(root_dir, 'Data', 'DPO', args.data_name, 'train.json.gz'))
+
+    args.save_dir = os.path.join(root_dir, 'Data', 'DPO', args.data_name, args.rule_folder)
+    
+    run_synitsg_pipeline(
+        data=data,
+        mapper_name=args.mapper_name,
+        batch_size=args.batch_size,
+        verbose=args.verbose,
+        n_jobs=args.n_jobs,
+        fix_hydrogen=args.fix_hydrogen,
+        save_dir=args.save_dir,
+        data_name=args.data_name)
+
 
 if __name__ == "__main__":
-    mapper_name = ["rxn_mapper", "graphormer", "local_mapper"]
-    # folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
-    folder_name = "USPTO_50K"
-    #folder_name = "natcomm"
-    # save_dir = f"{root_dir}/Data/AAM/{folder_name}"
 
-    # data = load_database(
-    #     f"{root_dir}/Data/AAM/{folder_name}/{folder_name}_aam_reactions.json.gz"
-    # )[:]
-    data = load_database(f'{root_dir}/Data/DPO/USPTO_50K/train.json.gz')
-    save_dir = f"{root_dir}/Data/DPO/USPTO_50K/Non_hydrogen"
-    run_synitsg_pipeline(
-        data,
-        mapper_name,
-        batch_size=500,
-        verbose=1,
-        n_jobs=4,
-        check_valid=False,
-        curate_uncertain_mapping=False,
-        fix_hydrogen=False,
-        alignment=True,
-        save_dir=save_dir,
-        data_name=folder_name,
-    )
+    main()
+    

@@ -82,7 +82,7 @@ class RuleBenchmark:
                         .split(".")
                     )
 
-                    pool = multiprocessing.pool.ThreadPool(1)
+                    pool = multiprocessing.pool.Pool(1)
                     try:
                         async_result = pool.apply_async(
                             RuleEngine.perform_reaction,
@@ -97,16 +97,18 @@ class RuleBenchmark:
                         try:
                             # Attempt to get the result within 60 seconds
                             reactions = async_result.get(job_timeout)
+                            
                         except multiprocessing.TimeoutError:
                             reactions = []
                             logging.error(
                                 f"Reaction processing timed out with rule {rule_file}"
                             )
+                            pool.terminate()
                         finally:
-                            # Properly close the pool and wait for all tasks to complete
+                            # Ensure pool is properly closed in case of timeout or normal completion
+                            pool.terminate()
                             pool.close()
                             pool.join()
-
                     except Exception as e:
                         # Generic exception handling to catch any other errors
                         logging.error(f"An error occurred: {e}")

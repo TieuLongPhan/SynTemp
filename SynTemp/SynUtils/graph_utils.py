@@ -1,5 +1,6 @@
 import networkx as nx
-from typing import List
+import copy
+from typing import List, Dict, Any
 
 
 def is_acyclic_graph(G: nx.Graph) -> bool:
@@ -155,3 +156,68 @@ def load_gml_as_text(gml_file_path):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
+
+
+def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
+    """
+    Processes hierarchical data to assign child IDs based on parent-cluster relationships.
+    
+    Each node in the hierarchy should have a Cluster_id and optionally a Parent. 
+    This function will add a Child field to each node, which is a list of Cluster_ids
+    from the child nodes in the subsequent layer.
+
+    Args:
+    data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of dictionaries 
+                                       containing at least the keys 'Cluster_id' and 'Parent'.
+
+    Returns:
+    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing only 'Cluster_id',
+                                'Parent', and 'Child' keys.
+    """
+    data = copy.deepcopy(df)
+    # Initialize a dictionary to hold each node with its unique key as the combination of layer index and Cluster_id
+    node_dict = {}
+
+    # Process each layer to assign children based on the parent references
+    for layer_index, layer in enumerate(data):
+        for node in layer:
+            # Generate a unique identifier combining layer index with Cluster_id for internal mapping
+            unique_id = f"{layer_index}-{node['Cluster_id']}"
+            
+            # Initialize the list to hold the cluster_ids of child nodes
+            node['Child'] = []
+            
+            # Store the node in the dictionary with its unique identifier
+            node_dict[unique_id] = node
+
+    # Link children to their parents
+    for layer_index, layer in enumerate(data):
+        if layer_index == 0:
+            continue  # Skip the first layer as it has no parents
+
+        for node in layer:
+            # Normalize the Parent field to always be a list
+            if isinstance(node['Parent'], int):
+                node['Parent'] = [node['Parent']]
+            
+            # Handle the parent list
+            for parent_cluster_id in node['Parent']:
+                # Compute the parent's unique identifier from the previous layer
+                parent_unique_id = f"{layer_index-1}-{parent_cluster_id}"
+
+                # Link the child node's Cluster_id to the parent node's Child list
+                if parent_unique_id in node_dict:
+                    parent_node = node_dict[parent_unique_id]
+                    parent_node['Child'].append(node['Cluster_id'])
+                                                     
+
+    # Prepare the final data structure with only the required keys
+    for layer in data:
+        for node in layer:
+            # Retain only Cluster_id, Parent, and Child in each node
+            keys_to_keep = {'Cluster_id', 'Parent', 'Child'}
+            for key in list(node.keys()):
+                if key not in keys_to_keep:
+                    del node[key]
+
+    return data

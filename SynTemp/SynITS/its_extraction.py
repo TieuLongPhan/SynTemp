@@ -11,8 +11,8 @@ from SynTemp.SynRule.rules_extraction import RuleExtraction
 
 
 class ITSExtraction:
-    def __init__(self, threshold: int = 2):
-        self.threshold = threshold
+    def __init__(self):
+        pass
 
     @staticmethod
     def graph_from_smiles(smiles: str) -> nx.Graph:
@@ -68,7 +68,6 @@ class ITSExtraction:
         mapped_smiles: Dict[str, str],
         mapper_names: List[str],
         check_method="RC",  # or ITS
-        threshold: int = 2,
         id_column: str = "R-id",
         ignore_aromaticity: bool = False,
     ) -> Dict[str, any]:
@@ -81,14 +80,13 @@ class ITSExtraction:
         - mapped_smiles (Dict[str, str]): A dictionary where keys are mapper names and values are SMILES strings of reactions.
         - mapper_names (List[str]): A list of mapper names to be processed.
         - check_method (str): A method to check for isomorphism among the ITS graphs. Either 'RC' or 'ITS'. Defaults to 'RC'.
-        - threshold (int): A threshold value for the number of equivariant graphs. If the number of equivariant graphs equals this
-        threshold, the first ITS graph is assigned to the 'ISTGraph' key in the returned dictionary. Defaults to 3.
 
         Returns:
         - Dict[str, any]: A dictionary containing graph representations for each reaction (as tuples of reactants graph, products graph,
         and ITS graph), ITS graphs, and isomorphism results. Additionally, it includes either the first ITS graph or None under the
         'ISTGraph' key, depending on the equivalence of the number of equivariant graphs to the threshold.
         """
+        threshold = len(mapper_names) - 1
         graphs_by_map = {id_column: mapped_smiles.get(id_column, "N/A")}
         rules_by_map = {id_column: mapped_smiles.get(id_column, "N/A")}
         its_graphs = []
@@ -130,7 +128,6 @@ class ITSExtraction:
                 graphs_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_graphs.append(one_node_graph)
-        # threshold = len(its_graph)-1
         if check_method == "RC":
             _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
         elif check_method == "ITS":
@@ -161,7 +158,6 @@ class ITSExtraction:
     def parallel_process_smiles(
         mapped_smiles_list: List[Dict[str, str]],
         mapper_names: List[str],
-        threshold: int = 2,
         n_jobs: int = -1,
         verbose: int = 10,
         id_column: str = "R-id",
@@ -188,7 +184,6 @@ class ITSExtraction:
                 mapped_smiles,
                 mapper_names,
                 check_method,
-                threshold,
                 id_column,
                 ignore_aromaticity,
             )

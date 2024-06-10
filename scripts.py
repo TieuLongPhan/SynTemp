@@ -1,13 +1,14 @@
+import sys
+import os
+from pathlib import Path
+import argparse
+import logging
+from SynTemp.SynRule.rule_benchmark import RuleBenchmark
 from SynTemp.SynUtils.utils import load_database, save_database
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.sf_maxfrag import SFMaxFrag
-from SynTemp.SynRule.rule_benchmark import RuleBenchmark
-import sys
-import os
-import argparse
-import logging
 import pandas as pd
-from pathlib import Path
+
 def setup_logging(log_dir, log_level):
     logging.basicConfig(filename=log_dir,
                         level=getattr(logging, log_level),
@@ -16,13 +17,13 @@ def setup_logging(log_dir, log_level):
 def main(args):
     #root_dir = Path(__file__).parents[2]
     
+    
     # Setup logging
     setup_logging(args.log_dir, args.log_level)
     logging.info("Start process....")
     logging.info("Loading database....")
     # Load the database
-    database = load_database(args.data_dir)[:]
-    folder_path = os.path.dirname(args.data_dir)
+    database = load_database(args.data_dir)
     # Scoring functions dictionary
     scoring_functions = {
         'MaxFrag': SFMaxFrag(),
@@ -41,11 +42,12 @@ def main(args):
         original_rsmi_col=args.original_rsmi_col,
         repeat_times=1,
         use_specific_rules=args.use_specific_rules,
-        verbosity=0
+        verbosity=0,
+        job_timeout=5
     )
     try:
-        save_database(fw, f'{folder_path}/fw_good.json.gz')
-        save_database(bw, f'{folder_path}/bw_good.json.gz')
+        save_database(fw, f'{args.save_dir}/fw_good_{args.radius}.json.gz')
+        save_database(bw, f'{args.save_dir}/bw_good_{args.radius}.json.gz')
     except:
         logging.error('Cannot save')
 
@@ -86,8 +88,11 @@ if __name__ == "__main__":
     parser.add_argument('--original_rsmi_col', type=str, default='reactions', help='Column name in the database for the original SMILES notation of reactions.')
     parser.add_argument('--use_specific_rules', type=bool, default=False, help='Boolean to decide whether to use specific rules or not. Default is False.')
     parser.add_argument('--log_level', type=str, default='INFO', help='Logging level to use, options include DEBUG, INFO, WARNING, ERROR, CRITICAL.')
+    parser.add_argument('--save_dir', type=str, default='data/', help='Path to the save data dir.')
+    parser.add_argument('--radius', type=int, default=0, help='Radius of reaction center used' )
+
     args = parser.parse_args()
     main(args)
 
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/rules_good_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/Rules_good
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_good_r3_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R3/Rules_good --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 3
