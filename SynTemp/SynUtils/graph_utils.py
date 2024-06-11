@@ -161,13 +161,13 @@ def load_gml_as_text(gml_file_path):
 def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
     """
     Processes hierarchical data to assign child IDs based on parent-cluster relationships.
-    
-    Each node in the hierarchy should have a Cluster_id and optionally a Parent. 
+
+    Each node in the hierarchy should have a Cluster_id and optionally a Parent.
     This function will add a Child field to each node, which is a list of Cluster_ids
     from the child nodes in the subsequent layer.
 
     Args:
-    data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of dictionaries 
+    data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of dictionaries
                                        containing at least the keys 'Cluster_id' and 'Parent'.
 
     Returns:
@@ -183,10 +183,10 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
         for node in layer:
             # Generate a unique identifier combining layer index with Cluster_id for internal mapping
             unique_id = f"{layer_index}-{node['Cluster_id']}"
-            
+
             # Initialize the list to hold the cluster_ids of child nodes
-            node['Child'] = []
-            
+            node["Child"] = []
+
             # Store the node in the dictionary with its unique identifier
             node_dict[unique_id] = node
 
@@ -197,25 +197,24 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
 
         for node in layer:
             # Normalize the Parent field to always be a list
-            if isinstance(node['Parent'], int):
-                node['Parent'] = [node['Parent']]
-            
+            if isinstance(node["Parent"], int):
+                node["Parent"] = [node["Parent"]]
+
             # Handle the parent list
-            for parent_cluster_id in node['Parent']:
+            for parent_cluster_id in node["Parent"]:
                 # Compute the parent's unique identifier from the previous layer
                 parent_unique_id = f"{layer_index-1}-{parent_cluster_id}"
 
                 # Link the child node's Cluster_id to the parent node's Child list
                 if parent_unique_id in node_dict:
                     parent_node = node_dict[parent_unique_id]
-                    parent_node['Child'].append(node['Cluster_id'])
-                                                     
+                    parent_node["Child"].append(node["Cluster_id"])
 
     # Prepare the final data structure with only the required keys
     for layer in data:
         for node in layer:
             # Retain only Cluster_id, Parent, and Child in each node
-            keys_to_keep = {'Cluster_id', 'Parent', 'Child'}
+            keys_to_keep = {"Cluster_id", "Parent", "Child"}
             for key in list(node.keys()):
                 if key not in keys_to_keep:
                     del node[key]

@@ -1,0 +1,6 @@
+2024-06-10 11:15:16,713 - INFO - Processing data USPTO_50K with 4 cpus
+2024-06-10 11:24:55,797 - INFO - Combining and save data
+2024-06-10 11:24:55,797 - INFO - Number of correct mappers:34774
+2024-06-10 11:24:55,797 - INFO - Number of incorrect mappers:5238
+2024-06-10 11:24:55,797 - INFO - Number of uncertain hydrogen:0
+2024-06-10 11:25:25,645 - INFO - Execution time: 608.93 seconds

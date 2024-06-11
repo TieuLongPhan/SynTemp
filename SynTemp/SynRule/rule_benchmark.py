@@ -1,4 +1,5 @@
 import copy
+import os
 import glob
 from typing import List, Dict, Tuple
 from SynTemp.SynUtils.chemutils import (
@@ -6,7 +7,9 @@ from SynTemp.SynUtils.chemutils import (
     standardize_rsmi,
     remove_stereochemistry_from_reaction_smiles,
 )
+from SynTemp.SynUtils.utils import load_from_pickle
 from SynTemp.SynRule.rule_engine import RuleEngine
+from SynTemp.SynRule.hier_engine import HierEngine
 from SynTemp.SynChemistry.sf_factory import SFFactory
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.reduce_reactions import ReduceReactions
@@ -31,6 +34,8 @@ class RuleBenchmark:
         use_specific_rules: bool = False,
         verbosity: int = 0,
         job_timeout: int = 60,
+        hierarchical = False,
+        max_radius: int = 3,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -61,6 +66,13 @@ class RuleBenchmark:
                 entry["positive_reactions"] = []
                 entry["unrank"] = []
 
+                reaction_side_index = 0 if reaction_direction == "forward" else 1
+                initial_smiles_list = (
+                    entry[original_rsmi_col]
+                    .split(">>")[reaction_side_index]
+                    .split(".")
+                )
+
                 # Determine the rule files to use
                 if use_specific_rules:
                     rule_files = [
@@ -74,67 +86,80 @@ class RuleBenchmark:
                 else:
                     rule_files = glob.glob(f"{rule_file_path}/*.gml")
 
-                for rule_file in rule_files:
-                    reaction_side_index = 0 if reaction_direction == "forward" else 1
-                    initial_smiles_list = (
-                        entry[original_rsmi_col]
-                        .split(">>")[reaction_side_index]
-                        .split(".")
-                    )
-
-                    pool = multiprocessing.pool.Pool(1)
-                    try:
-                        async_result = pool.apply_async(
-                            RuleEngine.perform_reaction,
-                            (
-                                rule_file,
-                                initial_smiles_list,
-                                repeat_times,
-                                reaction_direction,
-                                verbosity,
-                            ),
-                        )
-                        try:
-                            # Attempt to get the result within 60 seconds
-                            reactions = async_result.get(job_timeout)
-                            
-                        except multiprocessing.TimeoutError:
-                            reactions = []
-                            logging.error(
-                                f"Reaction processing timed out with rule {rule_file}"
+                
+                    if hierarchical:
+                        root_rule_file_path = os.path.dirname(rule_file_path)
+                        hier_temp = load_from_pickle(f'{root_rule_file_path}/hier_rules.pkl.gz')
+                        reactions = HierEngine.hier_rule_apply(initial_smiles=initial_smiles_list, 
+                                                             hier_temp=hier_temp,rule_file_path=root_rule_file_path,
+                                                             max_radius = max_radius, prediction_type=reaction_direction)
+                        reactions = list(
+                                set([standardize_rsmi(value) for value in reactions])
                             )
-                            pool.terminate()
-                        finally:
-                            # Ensure pool is properly closed in case of timeout or normal completion
-                            pool.terminate()
-                            pool.close()
-                            pool.join()
-                    except Exception as e:
-                        # Generic exception handling to catch any other errors
-                        logging.error(f"An error occurred: {e}")
-                        reactions = []
+                        matched_reactions, _ = categorize_reactions(
+                                reactions, entry[original_rsmi_col]
+                            )
+                        if matched_reactions:
+                            entry["positive_reactions"] = matched_reactions
+                            # entry["negative_reactions"].extend(unmatched_reactions)
+                        entry["unrank"].extend(reactions)
+                        
+                    else:
+                        for rule_file in rule_files:    
+                            pool = multiprocessing.pool.Pool(1)
+                            try:
+                                async_result = pool.apply_async(
+                                    RuleEngine.perform_reaction,
+                                    (
+                                        rule_file,
+                                        initial_smiles_list,
+                                        repeat_times,
+                                        reaction_direction,
+                                        verbosity,
+                                    ),
+                                )
+                                try:
+                                    # Attempt to get the result within 60 seconds
+                                    reactions = async_result.get(job_timeout)
+                                    print(reactions)
+                                    
+                                except multiprocessing.TimeoutError:
+                                    reactions = []
+                                    logging.error(
+                                        f"Reaction processing timed out with rule {rule_file}"
+                                    )
+                                    pool.terminate()
+                                finally:
+                                    # Ensure pool is properly closed in case of timeout or normal completion
+                                    pool.terminate()
+                                    pool.close()
+                                    pool.join()
+                            except Exception as e:
+                                # Generic exception handling to catch any other errors
+                                logging.error(f"An error occurred: {e}")
+                                reactions = []
 
-                    # # Process reactions for each rule file
-                    # reactions = RuleEngine.perform_reaction(
-                    #     rule_file_path=rule_file,
-                    #     initial_smiles=initial_smiles_list,
-                    #     repeat_times=repeat_times,
-                    #     prediction_type=reaction_direction,
-                    #     verbosity=verbosity,
-                    # )
-                    reactions = list(
-                        set([standardize_rsmi(value) for value in reactions])
-                    )
-                    matched_reactions, _ = categorize_reactions(
-                        reactions, entry[original_rsmi_col]
-                    )
+                            # # Process reactions for each rule file
+                            # reactions = RuleEngine.perform_reaction(
+                            #     rule_file_path=rule_file,
+                            #     initial_smiles=initial_smiles_list,
+                            #     repeat_times=repeat_times,
+                            #     prediction_type=reaction_direction,
+                            #     verbosity=verbosity,
+                            # )
+                            reactions = list(
+                                set([standardize_rsmi(value) for value in reactions])
+                            )
+                            matched_reactions, _ = categorize_reactions(
+                                reactions, entry[original_rsmi_col]
+                            )
 
-                    # Accumulate reactions
-                    if matched_reactions:
-                        entry["positive_reactions"].extend(matched_reactions)
-                    # entry["negative_reactions"].extend(unmatched_reactions)
-                    entry["unrank"].extend(reactions)
-                entry["positive_reactions"] = list(set(entry["positive_reactions"]))
+                            # Accumulate reactions
+                            if matched_reactions:
+                                entry["positive_reactions"].extend(matched_reactions)
+                            # entry["negative_reactions"].extend(unmatched_reactions)
+                            entry["unrank"].extend(reactions)
+                        entry["positive_reactions"] = list(set(entry["positive_reactions"]))
                 if len(entry["positive_reactions"]) > 0:
                     entry["positive_reactions"] = entry["positive_reactions"][0]
                 else:

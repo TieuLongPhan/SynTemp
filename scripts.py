@@ -46,8 +46,8 @@ def main(args):
         job_timeout=5
     )
     try:
-        save_database(fw, f'{args.save_dir}/fw_good_{args.radius}.json.gz')
-        save_database(bw, f'{args.save_dir}/bw_good_{args.radius}.json.gz')
+        save_database(fw, f'{args.save_dir}/fw_{args.radius}.json.gz')
+        save_database(bw, f'{args.save_dir}/bw_{args.radius}.json.gz')
     except:
         logging.error('Cannot save')
 
@@ -95,4 +95,10 @@ if __name__ == "__main__":
     main(args)
 
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_good_r3_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R3/Rules_good --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 3
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 0
+
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R1/Rules --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 1
+
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 0
+
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 0

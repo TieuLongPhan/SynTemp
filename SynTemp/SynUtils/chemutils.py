@@ -447,3 +447,36 @@ def mapping_success_rate(list_mapping_data):
     rate = 100 * (success / len(list_mapping_data))
 
     return round(rate, 2)
+
+
+def generate_reaction_smiles(
+    temp_results: List[str], base_smiles: str, is_forward: bool = True
+) -> List[str]:
+    """
+    Constructs reaction SMILES strings from intermediate results using a base SMILES string, indicating whether the
+    process is a forward or backward reaction. This function iterates over a list of intermediate SMILES strings,
+    combines them with the base SMILES, and formats them into complete reaction SMILES strings.
+
+    Parameters:
+    - temp_results (List[str]): Intermediate SMILES strings resulting from partial reactions or combinations.
+    - base_smiles (str): The SMILES string representing the starting point of the reaction, either as reactants
+                        or products, depending on the reaction direction.
+    - is_forward (bool, optional): Flag to determine the direction of the reaction; 'True' for forward reactions
+                                where 'base_smiles' are reactants, and 'False' for backward reactions where
+                                'base_smiles' are products. Defaults to True.
+
+    Returns:
+    - List[str]: A list of complete reaction SMILES strings, formatted according to the specified reaction direction.
+    """
+    results = []
+    for comb in temp_results:
+        if comb:
+            print(comb)
+            joined_smiles = ".".join(comb)
+            reaction_smiles = (
+                f"{base_smiles}>>{joined_smiles}"
+                if is_forward
+                else f"{joined_smiles}>>{base_smiles}"
+            )
+            results.append(reaction_smiles)
+    return results

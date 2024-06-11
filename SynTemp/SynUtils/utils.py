@@ -1,9 +1,11 @@
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 import json
 import pickle
 import random
 import subprocess
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
 
 def save_database(database: list[dict], pathname: str = "./Data/database.json") -> None:
@@ -173,3 +175,52 @@ def create_unique_value_dict(original_dict):
             new_dict[value] = key
 
     return new_dict
+
+
+def train_val_test_split_df(
+    df: pd.DataFrame,
+    target: str,
+    train_size: float = 0.8,
+    val_size: float = 0.1,
+    test_size: float = 0.1,
+    random_state: int = 42,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Splits a DataFrame into train, validation, and test sets with stratification.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame to split.
+    - target (str): The name of the column to stratify by.
+    - train_size (float): Proportion of the dataset to include in the train split.
+    - val_size (float): Proportion of the dataset to include in the validation split.
+    - test_size (float): Proportion of the dataset to include in the test split.
+    - random_state (int): The seed used by the random number generator.
+
+    Returns:
+    - Tuple[pd.DataFrame, pd.UtilityModel, pd.DataFrame]: A tuple containing the training set, validation set, and test set as DataFrames.
+
+    Raises:
+    - AssertionError: If the sum of train_size, val_size, and test_size does not equal 1.
+    """
+    # Ensure the sizes sum to 1
+    assert (
+        train_size + val_size + test_size == 1
+    ), "The sum of train_size, val_size, and test_size must equal 1"
+
+    # Split the data into training and a temporary set
+    train_df, temp_df = train_test_split(
+        df, train_size=train_size, stratify=df[target], random_state=random_state
+    )
+
+    # Calculate the relative size of the test set from the remaining data
+    test_size_relative = test_size / (val_size + test_size)
+
+    # Further split the temporary set into validation and test sets
+    val_df, test_df = train_test_split(
+        temp_df,
+        train_size=1 - test_size_relative,
+        stratify=temp_df[target],
+        random_state=random_state,
+    )
+
+    return train_df, val_df, test_df

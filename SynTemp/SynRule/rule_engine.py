@@ -94,10 +94,10 @@ class RuleEngine:
         # Define a dictionary to map reaction types to their respective processing functions
         reaction_processing_map = {
             "forward": lambda smiles: RuleEngine.generate_reaction_smiles(
-                temp_results, ".".join(smiles), is_forward=True
+                temp_results, ".".join(initial_smiles), is_forward=True
             ),
             "backward": lambda smiles: RuleEngine.generate_reaction_smiles(
-                temp_results, ".".join(smiles), is_forward=False
+                temp_results, ".".join(initial_smiles), is_forward=False
             ),
         }
 
