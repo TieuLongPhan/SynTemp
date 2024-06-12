@@ -471,7 +471,6 @@ def generate_reaction_smiles(
     results = []
     for comb in temp_results:
         if comb:
-            print(comb)
             joined_smiles = ".".join(comb)
             reaction_smiles = (
                 f"{base_smiles}>>{joined_smiles}"

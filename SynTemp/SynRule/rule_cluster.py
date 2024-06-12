@@ -118,7 +118,8 @@ class RuleCluster:
 
     @staticmethod
     def get_templates(
-        graphs: List[nx.Graph],
+        graphs: List[List[nx.Graph]],
+        single_graphs: List[nx.Graph],
         graph_to_cluster_dict: Dict[int, int],
         max_index_template: int = 0,
     ) -> List[Dict[str, Any]]:
@@ -138,13 +139,17 @@ class RuleCluster:
             key: item + max_index_template
             for key, item in graph_to_cluster_dict.items()
         }
+        updated_graphs = []
+        for index, graph in enumerate(graphs):
+            updated_graph = (graph[0], graph[1], single_graphs[index])
+            updated_graphs.append(updated_graph)
 
         # Create a dictionary with unique values and their first corresponding keys
         unique_temp = create_unique_value_dict(temp_graph_to_cluster)
 
         # Construct templates using unique cluster IDs and corresponding graphs
         template = [
-            {"Cluster_id": key, "RC": graphs[value], 'Parent': []}
+            {"Cluster_id": key, "RC": updated_graphs[value], "Parent": []}
             for key, value in unique_temp.items()
         ]
 
@@ -171,11 +176,16 @@ class RuleCluster:
                 List[Dict[str, Any]]: Updated or newly created list of templates.
         """
         if templates is None:
+            single_graphs = [value[2] for value in graphs]
+
             # Perform clustering without predefined templates
             _, graph_to_cluster_dict = self.auto_cluster(
-                graphs, self.nodeMatch, self.edgeMatch
+                single_graphs, self.nodeMatch, self.edgeMatch
             )
-            templates = self.get_templates(graphs, graph_to_cluster_dict, 0)
+
+            templates = self.get_templates(
+                graphs, single_graphs, graph_to_cluster_dict, 0
+            )
             cluster_indices = [graph_to_cluster_dict.get(i) for i in range(len(graphs))]
         else:
             # Use existing templates to check graph clusters

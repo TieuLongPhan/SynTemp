@@ -61,7 +61,7 @@ class RuleExtraction:
         Returns:
         - nx.Graph: The extracted subgraph.
         """
-        
+
         return G.subgraph(node_indices).copy()
 
     @staticmethod
@@ -95,7 +95,9 @@ class RuleExtraction:
         )
         rules_graph = rules_network[2]
         if n_knn == 0:
-            rules_graph = RuleExtraction.remove_normal_egdes(rules_graph, "standard_order")
+            rules_graph = RuleExtraction.remove_normal_egdes(
+                rules_graph, "standard_order"
+            )
         rules_network = (rules_network[0], rules_network[1], rules_graph)
         return rules_network
 

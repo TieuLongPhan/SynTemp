@@ -94,11 +94,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(args)
 
+# cd Documents/Project/TACsy/SynTemp/
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 0
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 0
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R1 --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 1
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R1/Rules --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 1
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 0
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 0
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R1 --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 1
+    
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0
 
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Hydrogen/R0/Rules --save_dir ./Data/DPO/USPTO_50K/Hydrogen/Output --radius 0
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R1 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 1

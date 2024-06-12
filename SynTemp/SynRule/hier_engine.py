@@ -6,7 +6,11 @@ import logging
 import glob
 from mod import *
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
 class HierEngine:
 
     @staticmethod
@@ -26,7 +30,7 @@ class HierEngine:
             # Initialize the DG with the given initial molecules
             dg = DG(graphDatabase=initial_molecules)
             dg.build().apply(initial_molecules, reaction_rule)
-            #products = [vertex.graph.smiles for edge in dg.edges for vertex in edge.targets]
+            # products = [vertex.graph.smiles for edge in dg.edges for vertex in edge.targets]
             products = []
             for e in dg.edges:
                 productSmiles = [v.graph.smiles for v in e.targets]
@@ -37,8 +41,15 @@ class HierEngine:
             return []
 
     @staticmethod
-    def hier_child_level(initial_molecules: List[Any], rule_file_path: str, hier_temp: Dict[int, List[Dict[str, Any]]],
-                         radius: int, rule_id: int = 0, max_radius: int = 3, invert_rule: bool = False) -> List[Any]:
+    def hier_child_level(
+        initial_molecules: List[Any],
+        rule_file_path: str,
+        hier_temp: Dict[int, List[Dict[str, Any]]],
+        radius: int,
+        rule_id: int = 0,
+        max_radius: int = 3,
+        invert_rule: bool = False,
+    ) -> List[Any]:
         """
         Recursively apply hierarchical chemical reaction rules starting from a given reaction radius level.
 
@@ -55,25 +66,38 @@ class HierEngine:
             List[Any]: A flattened list of unique products from the applied hierarchical rules.
         """
         try:
-            rule_path = f'{rule_file_path}/R{radius}/{rule_id}.gml'
+            rule_path = f"{rule_file_path}/R{radius}/{rule_id}.gml"
             gml_content = load_gml_as_text(rule_path)
             reaction_rule = ruleGMLString(gml_content, invert=invert_rule)
             temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
-            
+
             if radius > max_radius - 1:
                 return temp_results
 
             if len(temp_results) < 2:
-                # print(len(temp_results))
-                # print(temp_results)
                 return temp_results
+
+            new_rule_ids = [
+                entry["Child"]
+                for entry in hier_temp[radius]
+                if entry["Cluster_id"] == rule_id
+            ][0]
             
-            new_rule_ids = [entry['Child'] for entry in hier_temp[radius] if entry['Cluster_id'] == rule_id][0]
+            results = []
             for entry in new_rule_ids:
-                result = HierEngine.hier_child_level(initial_molecules, rule_file_path, hier_temp, radius + 1, entry, max_radius, invert_rule)
+                result = HierEngine.hier_child_level(
+                    initial_molecules,
+                    rule_file_path,
+                    hier_temp,
+                    radius + 1,
+                    entry,
+                    max_radius,
+                    invert_rule,
+                )
                 if result:
-                    if len(result) < len(temp_results):
-                        return result
+                    results.extend(result)
+                    if len(result) <= len(temp_results):
+                       return result
             return temp_results
         except FileNotFoundError:
             logging.error(f"File not found: {rule_path}")
@@ -83,10 +107,15 @@ class HierEngine:
             return []
 
     @classmethod
-    def hier_rule_apply(cls, initial_smiles: List[Any], 
-                        hier_temp: Dict[int, List[Dict[str, Any]]], rule_file_path: str, 
-                        prediction_type: str = "forward", max_radius: int = 3,
-                        max_solutions : int = 10) -> List[List[Any]]:
+    def hier_rule_apply(
+        cls,
+        initial_smiles: List[Any],
+        hier_temp: Dict[int, List[Dict[str, Any]]],
+        rule_file_path: str,
+        prediction_type: str = "forward",
+        max_radius: int = 3,
+        max_solutions: int = 1000,
+    ) -> List[List[Any]]:
         """
         Apply hierarchical chemical reaction rules to a dataset of molecules based on their SMILES strings.
 
@@ -101,23 +130,37 @@ class HierEngine:
             List[List[Any]]: A list containing the results from applying the hierarchical rules to all entries, processed
             according to the reaction type.
         """
-        
-        initial_molecules = sorted((smiles(smile) for smile in initial_smiles), 
-                                   key=lambda molecule: molecule.numVertices)
+
+        initial_molecules = sorted(
+            (smiles(smile) for smile in initial_smiles),
+            key=lambda molecule: molecule.numVertices,
+        )
         invert_rule = prediction_type == "backward"
         rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
         temp_results = []
         for rule_file in rule_files:
-            result = cls.hier_child_level(initial_molecules, rule_file_path, hier_temp, radius=0, 
-                                             rule_id=int(rule_file.split('/')[-1].replace('.gml', '')), 
-                                             max_radius=max_radius, invert_rule=invert_rule) 
+            result = cls.hier_child_level(
+                initial_molecules,
+                rule_file_path,
+                hier_temp,
+                radius=0,
+                rule_id=int(rule_file.split("/")[-1].replace(".gml", "")),
+                max_radius=max_radius,
+                invert_rule=invert_rule,
+            )
             if len(result) < max_solutions:
-                print(len(result))
+                # print(len(result))
                 temp_results.extend(result)
 
         reaction_processing_map = {
-            "forward": lambda smiles: generate_reaction_smiles(temp_results, ".".join(smiles), is_forward=True),
-            "backward": lambda smiles: generate_reaction_smiles(temp_results, ".".join(smiles), is_forward=False)
+            "forward": lambda smiles: generate_reaction_smiles(
+                temp_results, ".".join(smiles), is_forward=True
+            ),
+            "backward": lambda smiles: generate_reaction_smiles(
+                temp_results, ".".join(smiles), is_forward=False
+            ),
         }
 
-        return reaction_processing_map.get(prediction_type, lambda x: [])(initial_smiles)
+        return reaction_processing_map.get(prediction_type, lambda x: [])(
+            initial_smiles
+        )

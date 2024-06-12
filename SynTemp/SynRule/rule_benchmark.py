@@ -34,8 +34,9 @@ class RuleBenchmark:
         use_specific_rules: bool = False,
         verbosity: int = 0,
         job_timeout: int = 60,
-        hierarchical = False,
+        hierarchical=False,
         max_radius: int = 3,
+        max_solutions: int = 100,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -68,9 +69,7 @@ class RuleBenchmark:
 
                 reaction_side_index = 0 if reaction_direction == "forward" else 1
                 initial_smiles_list = (
-                    entry[original_rsmi_col]
-                    .split(">>")[reaction_side_index]
-                    .split(".")
+                    entry[original_rsmi_col].split(">>")[reaction_side_index].split(".")
                 )
 
                 # Determine the rule files to use
@@ -86,26 +85,32 @@ class RuleBenchmark:
                 else:
                     rule_files = glob.glob(f"{rule_file_path}/*.gml")
 
-                
                     if hierarchical:
                         root_rule_file_path = os.path.dirname(rule_file_path)
-                        hier_temp = load_from_pickle(f'{root_rule_file_path}/hier_rules.pkl.gz')
-                        reactions = HierEngine.hier_rule_apply(initial_smiles=initial_smiles_list, 
-                                                             hier_temp=hier_temp,rule_file_path=root_rule_file_path,
-                                                             max_radius = max_radius, prediction_type=reaction_direction)
+                        hier_temp = load_from_pickle(
+                            f"{root_rule_file_path}/hier_rules.pkl.gz"
+                        )
+                        reactions = HierEngine.hier_rule_apply(
+                            initial_smiles=initial_smiles_list,
+                            hier_temp=hier_temp,
+                            rule_file_path=root_rule_file_path,
+                            max_radius=max_radius,
+                            prediction_type=reaction_direction,
+                            max_solutions = max_solutions,
+                        )
                         reactions = list(
-                                set([standardize_rsmi(value) for value in reactions])
-                            )
+                            set([standardize_rsmi(value) for value in reactions])
+                        )
                         matched_reactions, _ = categorize_reactions(
-                                reactions, entry[original_rsmi_col]
-                            )
+                            reactions, entry[original_rsmi_col]
+                        )
                         if matched_reactions:
                             entry["positive_reactions"] = matched_reactions
                             # entry["negative_reactions"].extend(unmatched_reactions)
                         entry["unrank"].extend(reactions)
-                        
+
                     else:
-                        for rule_file in rule_files:    
+                        for rule_file in rule_files:
                             pool = multiprocessing.pool.Pool(1)
                             try:
                                 async_result = pool.apply_async(
@@ -121,8 +126,7 @@ class RuleBenchmark:
                                 try:
                                     # Attempt to get the result within 60 seconds
                                     reactions = async_result.get(job_timeout)
-                                    print(reactions)
-                                    
+
                                 except multiprocessing.TimeoutError:
                                     reactions = []
                                     logging.error(
@@ -159,7 +163,9 @@ class RuleBenchmark:
                                 entry["positive_reactions"].extend(matched_reactions)
                             # entry["negative_reactions"].extend(unmatched_reactions)
                             entry["unrank"].extend(reactions)
-                        entry["positive_reactions"] = list(set(entry["positive_reactions"]))
+                        entry["positive_reactions"] = list(
+                            set(entry["positive_reactions"])
+                        )
                 if len(entry["positive_reactions"]) > 0:
                     entry["positive_reactions"] = entry["positive_reactions"][0]
                 else:
