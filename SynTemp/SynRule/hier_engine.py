@@ -12,7 +12,6 @@ logging.basicConfig(
 
 
 class HierEngine:
-
     @staticmethod
     def rule_apply(initial_molecules, reaction_rule):
         """
@@ -29,8 +28,8 @@ class HierEngine:
         try:
             # Initialize the DG with the given initial molecules
             dg = DG(graphDatabase=initial_molecules)
+            config.dg.doRuleIsomorphismDuringBinding = False
             dg.build().apply(initial_molecules, reaction_rule)
-            # products = [vertex.graph.smiles for edge in dg.edges for vertex in edge.targets]
             products = []
             for e in dg.edges:
                 productSmiles = [v.graph.smiles for v in e.targets]
@@ -68,7 +67,9 @@ class HierEngine:
         try:
             rule_path = f"{rule_file_path}/R{radius}/{rule_id}.gml"
             gml_content = load_gml_as_text(rule_path)
-            reaction_rule = ruleGMLString(gml_content, invert=invert_rule)
+            reaction_rule = ruleGMLString(gml_content, invert=invert_rule, add=False)
+
+            # temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
             temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
 
             if radius > max_radius - 1:
@@ -82,7 +83,7 @@ class HierEngine:
                 for entry in hier_temp[radius]
                 if entry["Cluster_id"] == rule_id
             ][0]
-            
+
             results = []
             for entry in new_rule_ids:
                 result = HierEngine.hier_child_level(
@@ -97,7 +98,7 @@ class HierEngine:
                 if result:
                     results.extend(result)
                     if len(result) <= len(temp_results):
-                       return result
+                        return result
             return temp_results
         except FileNotFoundError:
             logging.error(f"File not found: {rule_path}")
@@ -106,9 +107,8 @@ class HierEngine:
             logging.error(f"Error in processing at hier_child_level: {e}")
             return []
 
-    @classmethod
+    @staticmethod
     def hier_rule_apply(
-        cls,
         initial_smiles: List[Any],
         hier_temp: Dict[int, List[Dict[str, Any]]],
         rule_file_path: str,
@@ -125,6 +125,7 @@ class HierEngine:
             rule_file_path (str): Path to the directory containing rule files.
             prediction_type (str): Type of prediction, "forward" for forward reactions or "backward" for retrosynthesis.
             max_radius (int): Maximum radial depth for applying the rules.
+            max_solutions (int): maxinum solutions from one rule, if excess, ignore.
 
         Returns:
             List[List[Any]]: A list containing the results from applying the hierarchical rules to all entries, processed
@@ -132,14 +133,14 @@ class HierEngine:
         """
 
         initial_molecules = sorted(
-            (smiles(smile) for smile in initial_smiles),
+            (smiles(smile, add=False) for smile in initial_smiles),
             key=lambda molecule: molecule.numVertices,
         )
         invert_rule = prediction_type == "backward"
         rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
         temp_results = []
         for rule_file in rule_files:
-            result = cls.hier_child_level(
+            result = HierEngine.hier_child_level(
                 initial_molecules,
                 rule_file_path,
                 hier_temp,
@@ -148,8 +149,9 @@ class HierEngine:
                 max_radius=max_radius,
                 invert_rule=invert_rule,
             )
+            
+            
             if len(result) < max_solutions:
-                # print(len(result))
                 temp_results.extend(result)
 
         reaction_processing_map = {

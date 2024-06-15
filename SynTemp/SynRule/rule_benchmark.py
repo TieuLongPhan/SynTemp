@@ -13,8 +13,6 @@ from SynTemp.SynRule.hier_engine import HierEngine
 from SynTemp.SynChemistry.sf_factory import SFFactory
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
 from SynTemp.SynChemistry.reduce_reactions import ReduceReactions
-import multiprocessing
-import multiprocessing.pool
 import logging
 
 
@@ -33,7 +31,6 @@ class RuleBenchmark:
         repeat_times: int = 1,
         use_specific_rules: bool = False,
         verbosity: int = 0,
-        job_timeout: int = 60,
         hierarchical=False,
         max_radius: int = 3,
         max_solutions: int = 100,
@@ -96,7 +93,7 @@ class RuleBenchmark:
                             rule_file_path=root_rule_file_path,
                             max_radius=max_radius,
                             prediction_type=reaction_direction,
-                            max_solutions = max_solutions,
+                            max_solutions=max_solutions,
                         )
                         reactions = list(
                             set([standardize_rsmi(value) for value in reactions])
@@ -111,46 +108,13 @@ class RuleBenchmark:
 
                     else:
                         for rule_file in rule_files:
-                            pool = multiprocessing.pool.Pool(1)
-                            try:
-                                async_result = pool.apply_async(
-                                    RuleEngine.perform_reaction,
-                                    (
-                                        rule_file,
-                                        initial_smiles_list,
-                                        repeat_times,
-                                        reaction_direction,
-                                        verbosity,
-                                    ),
-                                )
-                                try:
-                                    # Attempt to get the result within 60 seconds
-                                    reactions = async_result.get(job_timeout)
-
-                                except multiprocessing.TimeoutError:
-                                    reactions = []
-                                    logging.error(
-                                        f"Reaction processing timed out with rule {rule_file}"
-                                    )
-                                    pool.terminate()
-                                finally:
-                                    # Ensure pool is properly closed in case of timeout or normal completion
-                                    pool.terminate()
-                                    pool.close()
-                                    pool.join()
-                            except Exception as e:
-                                # Generic exception handling to catch any other errors
-                                logging.error(f"An error occurred: {e}")
-                                reactions = []
-
-                            # # Process reactions for each rule file
-                            # reactions = RuleEngine.perform_reaction(
-                            #     rule_file_path=rule_file,
-                            #     initial_smiles=initial_smiles_list,
-                            #     repeat_times=repeat_times,
-                            #     prediction_type=reaction_direction,
-                            #     verbosity=verbosity,
-                            # )
+                            reactions = RuleEngine.perform_reaction(
+                                rule_file_path=rule_file,
+                                initial_smiles=initial_smiles_list,
+                                repeat_times=repeat_times,
+                                prediction_type=reaction_direction,
+                                verbosity=verbosity,
+                            )
                             reactions = list(
                                 set([standardize_rsmi(value) for value in reactions])
                             )

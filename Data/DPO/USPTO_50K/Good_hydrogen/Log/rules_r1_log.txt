@@ -1,0 +1,12 @@
+2024-06-14 13:59:51,371 - Start process....
+2024-06-14 13:59:51,371 - Loading database....
+2024-06-14 13:59:51,398 - Processing from 0 to 500
+2024-06-14 14:20:08,028 - Processing from 500 to 1000
+2024-06-14 14:40:02,293 - Processing from 1000 to 1500
+2024-06-14 15:00:26,106 - Processing from 1500 to 2000
+2024-06-14 15:18:28,295 - Processing from 2000 to 2500
+2024-06-14 15:35:51,468 - Processing from 2500 to 3000
+2024-06-14 15:52:53,865 - Processing from 3000 to 3500
+2024-06-14 16:22:24,942 - Processing from 3500 to 4000
+2024-06-14 16:54:20,943 - Processing from 4000 to 4500
+2024-06-14 17:25:48,388 - Processing from 4500 to 5000

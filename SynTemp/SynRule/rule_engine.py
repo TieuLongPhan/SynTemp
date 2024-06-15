@@ -68,23 +68,26 @@ class RuleEngine:
         invert_rule = prediction_type == "backward"
 
         # Convert SMILES strings to molecule objects, avoiding duplicate conversions
-        initial_molecules = [smiles(smile) for smile in set(initial_smiles)]
+        initial_molecules = [smiles(smile, add=False) for smile in set(initial_smiles)]
         initial_molecules = sorted(
             initial_molecules, key=lambda molecule: molecule.numVertices, reverse=False
         )
-        max_vertices = sum(molecule.numVertices for molecule in initial_molecules)
+        #max_vertices = sum(molecule.numVertices for molecule in initial_molecules)
 
         # Load the reaction rule from the GML file
         gml_content = load_gml_as_text(rule_file_path)
-        reaction_rule = ruleGMLString(gml_content, invert=invert_rule)
+        reaction_rule = ruleGMLString(gml_content, invert=invert_rule, add=False)
 
         # Initialize the derivation graph and execute the strategy
         dg = DG(graphDatabase=initial_molecules)
         # dg.build().execute(strategy, verbosity=8)
+        config.dg.doRuleIsomorphismDuringBinding = False
         dg.build().apply(initial_molecules, reaction_rule, verbosity=verbosity)
         # dg.build().execute(addSubset(initial_molecules) >> reaction_rule, verbosity=8)
         if print_results:
             dg.print()
+        # for e in es:
+        #     e.print()
 
         temp_results = []
         for e in dg.edges:
