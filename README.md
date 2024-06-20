@@ -4,7 +4,7 @@ Graph based Reaction Template Extraction
 ## Overview
 This repository is dedicated to the systematic extraction of reaction rules from chemical processes. The primary focus lies in the computational analysis and transformation of molecular reactions into a structured set of rules, facilitating a deeper understanding of reaction mechanisms and pathways.
 
-![screenshot](./Docs/Image/repo_fig.webp)
+![screenshot](./Docs/Image/template_extraction_example.pdf)
 
 ### Step 1: Reaction Representation
 The initial step involves the representation of chemical reactions, as illustrated below:
@@ -19,6 +19,9 @@ Utilizing the Atom-Atom Mapping (AAM) technique, we identify and map correspondi
 ### Step 3: Rules Extraction
 In the final step, we focus on extracting the underlying rules from the ITS graph. This involves identifying significant nodes and edges that represent the core transformation mechanisms within the reaction. The extracted rules provide a concise and quantifiable description of the reaction process, instrumental for further analysis and application in computational chemistry.
 ![Extracted Rules](./Docs/Image/rules.png)
+
+### Step 4: Rules Application
+![DPO](./Docs/Image/dpo_example.pdf)
 
 
 ## Table of Contents
