@@ -34,6 +34,8 @@ class RuleBenchmark:
         hierarchical=False,
         max_radius: int = 3,
         max_solutions: int = 100,
+        prune: bool = True,
+        prune_size: int = 1,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -94,10 +96,14 @@ class RuleBenchmark:
                             max_radius=max_radius,
                             prediction_type=reaction_direction,
                             max_solutions=max_solutions,
+                            prune=prune,
+                            prune_size=prune_size,
                         )
+                       
                         reactions = list(
                             set([standardize_rsmi(value) for value in reactions])
                         )
+                        
                         matched_reactions, _ = categorize_reactions(
                             reactions, entry[original_rsmi_col]
                         )
@@ -115,6 +121,7 @@ class RuleBenchmark:
                                 prediction_type=reaction_direction,
                                 verbosity=verbosity,
                             )
+                            print(reactions)
                             reactions = list(
                                 set([standardize_rsmi(value) for value in reactions])
                             )

@@ -3,7 +3,7 @@ import glob
 import copy
 from typing import Union, List, Dict
 from SynTemp.SynUtils.chemutils import standardize_rsmi
-from SynTemp.SynUtils.utils import run_shell_command, ensure_directory_exists
+from SynTemp.SynUtils.utils import run_shell_command
 from SynTemp.SynRule.rule_engine import RuleEngine
 
 

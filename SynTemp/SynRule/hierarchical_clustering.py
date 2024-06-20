@@ -1,7 +1,6 @@
 from typing import List, Any, Dict, Tuple
 import pandas as pd
 import copy
-from joblib import Parallel, delayed
 from SynTemp.SynRule.rules_extraction import RuleExtraction
 from SynTemp.SynRule.rule_cluster import RuleCluster
 from SynTemp.SynUtils.graph_utils import check_graph_type, get_cycle_member_rings

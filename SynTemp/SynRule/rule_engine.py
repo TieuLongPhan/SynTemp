@@ -72,7 +72,7 @@ class RuleEngine:
         initial_molecules = sorted(
             initial_molecules, key=lambda molecule: molecule.numVertices, reverse=False
         )
-        #max_vertices = sum(molecule.numVertices for molecule in initial_molecules)
+        # max_vertices = sum(molecule.numVertices for molecule in initial_molecules)
 
         # Load the reaction rule from the GML file
         gml_content = load_gml_as_text(rule_file_path)

@@ -1,12 +1,11 @@
 import unittest
 from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
 from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
 
 
 class TestAAMConsensus(unittest.TestCase):
     def setUp(self):
+        root_dir = Path(__file__).parents[2]
         self.working_dir = "./"
         self.rdt_jar_path = f"{root_dir}/Data/RDT_2.4.1.jar"
         self.mappers = ["local_mapper", "rxn_mapper", "graphormer", "rdt"]

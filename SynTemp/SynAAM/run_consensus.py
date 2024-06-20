@@ -100,7 +100,7 @@ def run_consensus_aam(
 
     # Split the data into batches
     batches = [
-        balanced_reactions[i : i + batch_size]
+        balanced_reactions[i: i + batch_size]
         for i in range(0, len(balanced_reactions), batch_size)
     ]
 

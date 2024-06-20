@@ -1,12 +1,12 @@
 import unittest
 from pathlib import Path
-
-root_dir = Path(__file__).parents[2]
 from SynTemp.SynAAM.rdt_wrapper import map_with_rdt, map_with_rdt_batch
 
 
 class TestRDT(unittest.TestCase):
+
     def setUp(self):
+        root_dir = Path(__file__).parents[2]
         self.working_dir = "./"
         self.rdt_jar_path = f"{root_dir}/Data/RDT_2.4.1.jar"
 

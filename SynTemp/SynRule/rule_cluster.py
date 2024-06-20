@@ -61,7 +61,7 @@ class RuleCluster:
             visited.add(i)
             graph_to_cluster[i] = len(clusters)
 
-            for j, graph_j in enumerate(graphs[i + 1 :], start=i + 1):
+            for j, graph_j in enumerate(graphs[i + 1:], start=i + 1):
                 if j not in visited and nx.is_isomorphic(
                     graph_i,
                     graph_j,

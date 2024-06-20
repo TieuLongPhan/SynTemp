@@ -2,7 +2,6 @@ from typing import List, Dict, Any
 import logging
 from SynTemp.SynUtils.graph_utils import load_gml_as_text
 from SynTemp.SynUtils.chemutils import generate_reaction_smiles
-import logging
 import glob
 from mod import *
 
@@ -48,34 +47,38 @@ class HierEngine:
         rule_id: int = 0,
         max_radius: int = 3,
         invert_rule: bool = False,
+        prune: bool = True,
+        prune_size: int = 1,
     ) -> List[Any]:
         """
         Recursively apply hierarchical chemical reaction rules starting from a given reaction radius level.
-
         Args:
-            initial_molecules (List[Any]): List of initial molecule structures.
-            rule_file_path (str): Path to the folder containing hierarchical reaction rules.
-            hier_temp (Dict[int, List[Dict[str, Any]]]): Hierarchical template dictating the application of rules.
-            radius (int): Current radius level for rule application.
-            rule_id (int, optional): Identifier for the specific rule to apply.
-            max_radius (int): Maximum radius to apply rules up to.
-            invert_rule (bool): Whether to invert the rule during application, depending on the reaction direction.
-
+            initial_molecules: List of initial molecule structures.
+            rule_file_path: Path to the folder containing hierarchical reaction rules.
+            hier_temp: Hierarchical template dictating the application of rules.
+            radius: Current radius level for rule application.
+            rule_id: Identifier for the specific rule to apply (optional).
+            max_radius: Maximum radius to apply rules up to.
+            invert_rule: Whether to invert the rule during application, depending on the reaction direction.
+            prune: Option to stop recursion and return early if fewer than `prune_size` results are produced.
+            prune_id: Threshold number of results below which pruning happens.
         Returns:
-            List[Any]: A flattened list of unique products from the applied hierarchical rules.
+            A flattened list of unique products from the applied hierarchical rules.
         """
         try:
             rule_path = f"{rule_file_path}/R{radius}/{rule_id}.gml"
             gml_content = load_gml_as_text(rule_path)
             reaction_rule = ruleGMLString(gml_content, invert=invert_rule, add=False)
 
-            # temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
             temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
 
-            if radius > max_radius - 1:
-                return temp_results
+            # if radius > max_radius - 1:
+            #     return temp_results
 
-            if len(temp_results) < 2:
+            # if prune and len(temp_results) < prune_size:
+            #     return temp_results
+
+            if radius > max_radius - 1 or (prune and len(temp_results) < prune_size):
                 return temp_results
 
             new_rule_ids = [
@@ -83,7 +86,6 @@ class HierEngine:
                 for entry in hier_temp[radius]
                 if entry["Cluster_id"] == rule_id
             ][0]
-
             results = []
             for entry in new_rule_ids:
                 result = HierEngine.hier_child_level(
@@ -97,9 +99,9 @@ class HierEngine:
                 )
                 if result:
                     results.extend(result)
-                    if len(result) <= len(temp_results):
-                        return result
-            return temp_results
+
+            return results
+
         except FileNotFoundError:
             logging.error(f"File not found: {rule_path}")
             return []
@@ -115,20 +117,22 @@ class HierEngine:
         prediction_type: str = "forward",
         max_radius: int = 3,
         max_solutions: int = 1000,
+        prune: bool = True,
+        prune_size: int = 1,
     ) -> List[List[Any]]:
         """
         Apply hierarchical chemical reaction rules to a dataset of molecules based on their SMILES strings.
-
         Args:
-            initial_smiles (List[str]): List of SMILES strings representing the molecules to be processed.
-            hier_temp (Dict[int, List[Dict[str, Any]]]): Hierarchical template for applying rules.
-            rule_file_path (str): Path to the directory containing rule files.
-            prediction_type (str): Type of prediction, "forward" for forward reactions or "backward" for retrosynthesis.
-            max_radius (int): Maximum radial depth for applying the rules.
-            max_solutions (int): maxinum solutions from one rule, if excess, ignore.
-
+            initial_smiles: List of SMILES strings representing the molecules to be processed.
+            hier_temp: Hierarchical template for applying rules.
+            rule_file_path: Path to the directory containing rule files.
+            prediction_type: Type of prediction, "forward" for forward reactions or "backward" for retrosynthesis.
+            max_radius: Maximum radial depth for applying the rules.
+            max_solutions: Maximum number of solutions to consider from one rule application.
+            prune: Option to stop recursion and return early based on the number of results.
+            prune_size: Threshold number of results below which pruning happens.
         Returns:
-            List[List[Any]]: A list containing the results from applying the hierarchical rules to all entries, processed
+            A list containing the results from applying the hierarchical rules to all entries, processed
             according to the reaction type.
         """
 
@@ -148,11 +152,13 @@ class HierEngine:
                 rule_id=int(rule_file.split("/")[-1].replace(".gml", "")),
                 max_radius=max_radius,
                 invert_rule=invert_rule,
+                prune=prune,
+                prune_size=prune_size,
             )
-            
-            
             if len(result) < max_solutions:
                 temp_results.extend(result)
+            else:
+                temp_results.extend(result[:max_solutions])
 
         reaction_processing_map = {
             "forward": lambda smiles: generate_reaction_smiles(

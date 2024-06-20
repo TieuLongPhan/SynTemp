@@ -54,7 +54,7 @@ def map_with_rxn_mapper_batch(
     )
 
     for i in range(0, total_reactions, batch_size):
-        current_batch = reaction_list[i : i + batch_size]
+        current_batch = reaction_list[i: i + batch_size]
         logger.info(
             f"Processing batch from index {i} to {min(i + batch_size, total_reactions)}."
         )

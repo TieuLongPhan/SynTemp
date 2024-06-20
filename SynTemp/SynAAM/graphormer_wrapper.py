@@ -51,7 +51,7 @@ def map_with_graphormer_batch(reaction_list: list, batch_size: int = 200) -> lis
     )
 
     for i in range(0, total_reactions, batch_size):
-        current_batch = reaction_list[i : i + batch_size]
+        current_batch = reaction_list[i: i + batch_size]
         logger.info(
             f"Processing batch from index {i} to {min(i + batch_size, total_reactions)}."
         )
@@ -68,5 +68,5 @@ def map_with_graphormer_batch(reaction_list: list, batch_size: int = 200) -> lis
                 mapped_rxns.append(reaction_smiles)
         logger.info(f"Successfully processed Internal Batch from {i} to {i+batch_size}")
 
-    logger.info(f"Completed mapping all reactions.")
+    logger.info("Completed mapping all reactions.")
     return mapped_rxns

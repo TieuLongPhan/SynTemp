@@ -72,8 +72,8 @@ def main(args):
         results_bw.extend(bw)
     try:
         if args.hierarchical:
-            save_database(results_fw, f'{args.save_dir}/fw_hier.json.gz')
-            save_database(results_bw, f'{args.save_dir}/bw_hier.json.gz')
+            save_database(results_fw, f'{args.save_dir}/fw_hier_{args.max_radius}.json.gz')
+            save_database(results_bw, f'{args.save_dir}/bw_hier_{args.max_radius}.json.gz')
         else:
             save_database(results_fw, f'{args.save_dir}/fw_{args.radius}.json.gz')
             save_database(results_bw, f'{args.save_dir}/bw_{args.radius}.json.gz')
@@ -143,6 +143,10 @@ if __name__ == "__main__":
 
 # python scripts.py --log_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R1 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 1
     
-# python scripts.py --log_dir Data/DPO/USPTO_50K/Good_hydrogen/Log/hier_rule_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0 --hierarchical True --max_solutions 10
+# python scripts.py --log_dir Data/DPO/USPTO_50K/Good_hydrogen/Log/hier_rule_0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
+    
+# python scripts.py --log_dir Data/DPO/USPTO_50K/Good_hydrogen/Log/hier_rule_1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0 --hierarchical True --max_radius 1 --max_solutions 1000
+    
+# python scripts.py --log_dir Data/DPO/USPTO_50K/Good_hydrogen/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0 --hierarchical True --max_radius 2 --max_solutions 1000
     
     

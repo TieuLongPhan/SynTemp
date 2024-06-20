@@ -1,0 +1,61 @@
+2024-06-14 17:32:07,913 - Start process....
+2024-06-14 17:32:07,913 - Loading database....
+2024-06-14 17:32:07,936 - Processing from 0 to 500
+2024-06-15 05:14:06,813 - Processing from 500 to 1000
+2024-06-15 16:47:08,320 - Processing from 1000 to 1500
+2024-06-16 03:40:25,161 - Processing from 1500 to 2000
+2024-06-16 14:17:55,868 - Processing from 2000 to 2500
+2024-06-16 23:56:39,721 - Processing from 2500 to 3000
+2024-06-17 08:57:55,646 - Processing from 3000 to 3500
+2024-06-17 19:08:55,311 - Processing from 3500 to 4000
+2024-06-18 04:09:39,559 - Processing from 4000 to 4500
+2024-06-18 13:09:10,956 - Processing from 4500 to 5000
+2024-06-18 22:01:05,195 - Processing from 5000 to 5500
+2024-06-18 22:03:15,197 - Forward Prediction Validation
+2024-06-18 22:03:19,533 - Top 1 accuracy for Random: 38.28
+2024-06-18 22:03:26,014 - Top 3 accuracy for Random: 58.36
+2024-06-18 22:03:33,435 - Top 5 accuracy for Random: 63.23
+2024-06-18 22:03:41,555 - Top 10 accuracy for Random: 66.47
+2024-06-18 22:03:51,266 - Top 1 accuracy for ECFP6: 49.58
+2024-06-18 22:04:03,137 - Top 3 accuracy for ECFP6: 63.47
+2024-06-18 22:04:15,869 - Top 5 accuracy for ECFP6: 65.75
+2024-06-18 22:04:29,507 - Top 10 accuracy for ECFP6: 66.75
+2024-06-18 22:04:52,009 - Top 1 accuracy for MACCS: 42.26
+2024-06-18 22:05:16,692 - Top 3 accuracy for MACCS: 58.76
+2024-06-18 22:05:42,272 - Top 5 accuracy for MACCS: 63.51
+2024-06-18 22:06:08,693 - Top 10 accuracy for MACCS: 66.55
+2024-06-18 22:06:31,659 - Top 1 accuracy for RDK7: 41.5
+2024-06-18 22:06:56,522 - Top 3 accuracy for RDK7: 60.46
+2024-06-18 22:07:22,419 - Top 5 accuracy for RDK7: 64.99
+2024-06-18 22:07:49,144 - Top 10 accuracy for RDK7: 66.63
+2024-06-18 22:07:49,158 - Backward Prediction Validation
+2024-06-18 22:07:53,596 - Top 1 accuracy for Random: 29.61
+2024-06-18 22:08:00,836 - Top 3 accuracy for Random: 55.14
+2024-06-18 22:08:09,623 - Top 5 accuracy for Random: 63.81
+2024-06-18 22:08:19,356 - Top 10 accuracy for Random: 66.83
+2024-06-18 22:08:30,607 - Top 1 accuracy for ECFP6: 37.41
+2024-06-18 22:08:44,784 - Top 3 accuracy for ECFP6: 61.22
+2024-06-18 22:09:00,404 - Top 5 accuracy for ECFP6: 65.79
+2024-06-18 22:09:16,979 - Top 10 accuracy for ECFP6: 66.99
+2024-06-18 22:09:44,466 - Top 1 accuracy for MACCS: 31.53
+2024-06-18 22:10:15,018 - Top 3 accuracy for MACCS: 57.66
+2024-06-18 22:10:46,903 - Top 5 accuracy for MACCS: 65.01
+2024-06-18 22:11:19,718 - Top 10 accuracy for MACCS: 66.91
+2024-06-18 22:11:47,513 - Top 1 accuracy for RDK7: 30.27
+2024-06-18 22:12:18,058 - Top 3 accuracy for RDK7: 55.06
+2024-06-18 22:12:50,046 - Top 5 accuracy for RDK7: 64.05
+2024-06-18 22:13:23,114 - Top 10 accuracy for RDK7: 66.93
+2024-06-18 22:13:23,119 - Forward Prediction Results Matrix:
+Top K             Top 1  Top 10  Top 3  Top 5
+Scoring Function                             
+ECFP6             49.58   66.75  63.47  65.75
+MACCS             42.26   66.55  58.76  63.51
+RDK7              41.50   66.63  60.46  64.99
+Random            38.28   66.47  58.36  63.23
+2024-06-18 22:13:23,121 - Backward Prediction Results Matrix:
+Top K             Top 1  Top 10  Top 3  Top 5
+Scoring Function                             
+ECFP6             37.41   66.99  61.22  65.79
+MACCS             31.53   66.91  57.66  65.01
+RDK7              30.27   66.93  55.06  64.05
+Random            29.61   66.83  55.14  63.81
