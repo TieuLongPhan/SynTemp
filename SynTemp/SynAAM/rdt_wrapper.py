@@ -85,7 +85,7 @@ def map_with_rdt_batch(
     total_reactions = len(reaction_list)
     # Split the reaction list into manageable sub-batches
     for i in range(0, total_reactions, batch_size):
-        current_batch = reaction_list[i: i + batch_size]
+        current_batch = reaction_list[i : i + batch_size]
         for reaction_smiles in current_batch:
             try:
                 mapped_rxn = map_with_rdt(reaction_smiles, rdt_jar_path, working_dir)

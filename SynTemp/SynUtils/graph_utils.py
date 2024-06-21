@@ -220,3 +220,109 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
                     del node[key]
 
     return data
+
+
+def check_explicit_hydrogen(graph: nx.Graph) -> tuple:
+    """
+    Counts the explicit hydrogen nodes in the given graph and collects their IDs.
+
+    Args:
+    graph (nx.Graph): The graph to inspect.
+
+    Returns:
+    tuple: A tuple containing the number of hydrogen nodes and a list of their node IDs.
+    """
+    hydrogen_nodes = [
+        node_id
+        for node_id, attr in graph.nodes(data=True)
+        if attr.get("element") == "H"
+    ]
+    return len(hydrogen_nodes), hydrogen_nodes
+
+
+def check_hcount_change(react_graph: nx.Graph, prod_graph: nx.Graph) -> int:
+    """
+    Computes the maximum change in hydrogen count ('hcount') between corresponding nodes
+    in the reactant and product graphs. It considers both hydrogen formation and breakage.
+
+    Args:
+    react_graph (nx.Graph): The graph representing reactants.
+    prod_graph (nx.Graph): The graph representing products.
+
+    Returns:
+    int: The maximum hydrogen change observed across all nodes.
+    """
+    # max_hydrogen_change = 0
+    hcount_break, _ = check_explicit_hydrogen(react_graph)
+    hcount_form, _ = check_explicit_hydrogen(prod_graph)
+
+    for node_id, attrs in react_graph.nodes(data=True):
+        react_hcount = attrs.get("hcount", 0)
+        if node_id in prod_graph:
+            prod_hcount = prod_graph.nodes[node_id].get("hcount", 0)
+        else:
+            prod_hcount = 0
+
+        if react_hcount >= prod_hcount:
+            hcount_break += react_hcount - prod_hcount
+        else:
+            hcount_form += prod_hcount - react_hcount
+
+        max_hydrogen_change = max(hcount_break, hcount_form)
+
+    return max_hydrogen_change
+
+
+def check_graph_connectivity(graph):
+    """
+    Check the connectivity of a graph.
+
+    Parameters:
+    - graph: a NetworkX graph object
+
+    Returns:
+    - A string indicating whether the graph is connected.
+    """
+
+    if nx.is_connected(graph):
+        return "Connected"
+    else:
+        return "Disconnected."
+
+
+def get_priority(
+    its_list, reaction_centers: List[Any], priority_ring: List[int] = [4, 6]
+) -> List[int]:
+    """
+    Filters reaction centers based on their connectivity and specific ring sizes.
+
+    Args:
+    - reaction_center_list (List[Any]): List of reaction centers to evaluate.
+    - priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
+
+    Returns:
+    - List[int]: Indices of reaction centers in the original list that are connected and contain priority ring sizes.
+    """
+    # Filter to include only connected reaction centers
+    # reaction_centers = [RuleExtraction.extract_reaction_rules(its_good[0]['ITSGraph'][0], its_good[0]['ITSGraph'][1], i)[2] for i in its_list]
+    connected_centers = []
+    connected_its_list = []
+    for key, value in enumerate(reaction_centers):
+        if check_graph_connectivity(value) == "Connected":
+            connected_centers.append(value)
+            connected_its_list.append(its_list[key])
+    cyclic = [get_cycle_member_rings(center) for center in connected_centers]
+
+    # Find indices of centers with priority ring sizes
+    index_priority = [
+        i
+        for i, rings in enumerate(cyclic)
+        if any(ring in priority_ring for ring in rings)
+    ]
+    connected_its_list = [
+        value for key, value in enumerate(connected_its_list) if key in index_priority
+    ]
+    connected_centers = [
+        value for key, value in enumerate(connected_centers) if key in index_priority
+    ]
+    return connected_its_list, connected_centers

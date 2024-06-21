@@ -99,11 +99,11 @@ class RuleBenchmark:
                             prune=prune,
                             prune_size=prune_size,
                         )
-                       
+
                         reactions = list(
                             set([standardize_rsmi(value) for value in reactions])
                         )
-                        
+
                         matched_reactions, _ = categorize_reactions(
                             reactions, entry[original_rsmi_col]
                         )

@@ -1,0 +1,173 @@
+2024-06-21 09:39:49 - INFO - Processing file Data/DPO/USPTO_50K.csv
+2024-06-21 09:39:49 - ERROR - Failed to load database, attempting to read CSV. Error: Expecting value: line 1 column 1 (char 0)
+2024-06-21 09:39:50 - INFO - Start Batch 1 | Size: 5000
+2024-06-21 09:39:53 - INFO - Run rule-based method.
+2024-06-21 09:39:54 - INFO - Input data contains 101 balanced reactions.
+2024-06-21 09:39:54 - INFO - Run rule-based method on 3215 reactions.
+2024-06-21 09:39:55 - INFO - Find maximum-common-substructure for 1700 reactions.
+2024-06-21 09:40:05 - INFO - MCS Progress 23.71% ETA 0:00:32
+2024-06-21 09:40:16 - INFO - MCS Progress 44.33% ETA 0:00:25
+2024-06-21 09:40:26 - INFO - MCS Progress 66.14% ETA 0:00:15
+2024-06-21 09:40:36 - INFO - MCS Progress 91.94% ETA 0:00:03
+2024-06-21 09:40:42 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:40:54 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:41:18 - INFO - Input data contains 3699 balanced reactions.
+2024-06-21 09:41:18 - INFO - Run rule-based method on 1298 reactions.
+2024-06-21 09:41:20 - INFO - DONE
+2024-06-21 09:41:20 - INFO - Completed batch 1
+2024-06-21 09:41:20 - INFO - Start Batch 2 | Size: 5000
+2024-06-21 09:41:23 - INFO - Run rule-based method.
+2024-06-21 09:41:24 - INFO - Input data contains 119 balanced reactions.
+2024-06-21 09:41:24 - INFO - Run rule-based method on 3225 reactions.
+2024-06-21 09:41:25 - INFO - Find maximum-common-substructure for 1673 reactions.
+2024-06-21 09:41:35 - INFO - MCS Progress 22.49% ETA 0:00:34
+2024-06-21 09:41:46 - INFO - MCS Progress 44.35% ETA 0:00:25
+2024-06-21 09:41:56 - INFO - MCS Progress 66.69% ETA 0:00:15
+2024-06-21 09:42:06 - INFO - MCS Progress 91.95% ETA 0:00:03
+2024-06-21 09:42:10 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:42:23 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:43:02 - INFO - Input data contains 3708 balanced reactions.
+2024-06-21 09:43:02 - INFO - Run rule-based method on 1291 reactions.
+2024-06-21 09:43:06 - INFO - DONE
+2024-06-21 09:43:06 - INFO - Completed batch 2
+2024-06-21 09:43:06 - INFO - Start Batch 3 | Size: 5000
+2024-06-21 09:43:09 - INFO - Run rule-based method.
+2024-06-21 09:43:11 - INFO - Input data contains 112 balanced reactions.
+2024-06-21 09:43:11 - INFO - Run rule-based method on 3292 reactions.
+2024-06-21 09:43:12 - INFO - Find maximum-common-substructure for 1623 reactions.
+2024-06-21 09:43:22 - INFO - MCS Progress 17.44% ETA 0:00:47
+2024-06-21 09:43:33 - INFO - MCS Progress 35.00% ETA 0:00:37
+2024-06-21 09:43:43 - INFO - MCS Progress 51.10% ETA 0:00:29
+2024-06-21 09:43:53 - INFO - MCS Progress 67.84% ETA 0:00:19
+2024-06-21 09:44:03 - INFO - MCS Progress 89.11% ETA 0:00:06
+2024-06-21 09:44:10 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:44:24 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:45:04 - INFO - Input data contains 3770 balanced reactions.
+2024-06-21 09:45:04 - INFO - Run rule-based method on 1226 reactions.
+2024-06-21 09:45:08 - INFO - DONE
+2024-06-21 09:45:08 - INFO - Completed batch 3
+2024-06-21 09:45:08 - INFO - Start Batch 4 | Size: 5000
+2024-06-21 09:45:11 - INFO - Run rule-based method.
+2024-06-21 09:45:13 - INFO - Input data contains 102 balanced reactions.
+2024-06-21 09:45:13 - INFO - Run rule-based method on 3268 reactions.
+2024-06-21 09:45:14 - INFO - Find maximum-common-substructure for 1656 reactions.
+2024-06-21 09:45:24 - INFO - MCS Progress 18.38% ETA 0:00:44
+2024-06-21 09:45:35 - INFO - MCS Progress 34.16% ETA 0:00:38
+2024-06-21 09:45:45 - INFO - MCS Progress 52.76% ETA 0:00:27
+2024-06-21 09:45:55 - INFO - MCS Progress 69.10% ETA 0:00:17
+2024-06-21 09:46:05 - INFO - MCS Progress 89.55% ETA 0:00:05
+2024-06-21 09:46:12 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:46:30 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:47:09 - INFO - Input data contains 3727 balanced reactions.
+2024-06-21 09:47:09 - INFO - Run rule-based method on 1271 reactions.
+2024-06-21 09:47:12 - INFO - DONE
+2024-06-21 09:47:12 - INFO - Completed batch 4
+2024-06-21 09:47:12 - INFO - Start Batch 5 | Size: 5000
+2024-06-21 09:47:16 - INFO - Run rule-based method.
+2024-06-21 09:47:18 - INFO - Input data contains 102 balanced reactions.
+2024-06-21 09:47:18 - INFO - Run rule-based method on 3187 reactions.
+2024-06-21 09:47:20 - INFO - Find maximum-common-substructure for 1728 reactions.
+2024-06-21 09:47:31 - INFO - MCS Progress 15.84% ETA 0:00:56
+2024-06-21 09:47:41 - INFO - MCS Progress 34.43% ETA 0:00:39
+2024-06-21 09:47:51 - INFO - MCS Progress 53.26% ETA 0:00:26
+2024-06-21 09:48:01 - INFO - MCS Progress 72.09% ETA 0:00:15
+2024-06-21 09:48:11 - INFO - MCS Progress 92.92% ETA 0:00:03
+2024-06-21 09:48:17 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:48:35 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:49:16 - INFO - Input data contains 3647 balanced reactions.
+2024-06-21 09:49:16 - INFO - Run rule-based method on 1347 reactions.
+2024-06-21 09:49:20 - INFO - DONE
+2024-06-21 09:49:20 - INFO - Completed batch 5
+2024-06-21 09:49:20 - INFO - Start Batch 6 | Size: 5000
+2024-06-21 09:49:24 - INFO - Run rule-based method.
+2024-06-21 09:49:26 - INFO - Input data contains 112 balanced reactions.
+2024-06-21 09:49:26 - INFO - Run rule-based method on 3231 reactions.
+2024-06-21 09:49:28 - INFO - Find maximum-common-substructure for 1672 reactions.
+2024-06-21 09:49:38 - INFO - MCS Progress 16.69% ETA 0:00:52
+2024-06-21 09:49:49 - INFO - MCS Progress 34.95% ETA 0:00:40
+2024-06-21 09:49:59 - INFO - MCS Progress 54.88% ETA 0:00:26
+2024-06-21 09:50:10 - INFO - MCS Progress 73.46% ETA 0:00:15
+2024-06-21 09:50:20 - INFO - MCS Progress 92.84% ETA 0:00:03
+2024-06-21 09:50:26 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:50:41 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:51:22 - INFO - Input data contains 3684 balanced reactions.
+2024-06-21 09:51:22 - INFO - Run rule-based method on 1314 reactions.
+2024-06-21 09:51:26 - INFO - DONE
+2024-06-21 09:51:26 - INFO - Completed batch 6
+2024-06-21 09:51:26 - INFO - Start Batch 7 | Size: 5000
+2024-06-21 09:51:31 - INFO - Run rule-based method.
+2024-06-21 09:51:33 - INFO - Input data contains 114 balanced reactions.
+2024-06-21 09:51:33 - INFO - Run rule-based method on 3190 reactions.
+2024-06-21 09:51:35 - INFO - Find maximum-common-substructure for 1715 reactions.
+2024-06-21 09:51:45 - INFO - MCS Progress 15.34% ETA 0:00:56
+2024-06-21 09:51:56 - INFO - MCS Progress 34.13% ETA 0:00:40
+2024-06-21 09:52:07 - INFO - MCS Progress 52.01% ETA 0:00:29
+2024-06-21 09:52:17 - INFO - MCS Progress 71.97% ETA 0:00:16
+2024-06-21 09:52:27 - INFO - MCS Progress 91.80% ETA 0:00:04
+2024-06-21 09:52:33 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:52:47 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:53:23 - INFO - Input data contains 3686 balanced reactions.
+2024-06-21 09:53:23 - INFO - Run rule-based method on 1312 reactions.
+2024-06-21 09:53:27 - INFO - DONE
+2024-06-21 09:53:27 - INFO - Completed batch 7
+2024-06-21 09:53:27 - INFO - Start Batch 8 | Size: 5000
+2024-06-21 09:53:31 - INFO - Run rule-based method.
+2024-06-21 09:53:33 - INFO - Input data contains 112 balanced reactions.
+2024-06-21 09:53:33 - INFO - Run rule-based method on 3200 reactions.
+2024-06-21 09:53:35 - INFO - Find maximum-common-substructure for 1708 reactions.
+2024-06-21 09:53:46 - INFO - MCS Progress 14.85% ETA 0:01:03
+2024-06-21 09:53:56 - INFO - MCS Progress 32.73% ETA 0:00:43
+2024-06-21 09:54:07 - INFO - MCS Progress 49.28% ETA 0:00:32
+2024-06-21 09:54:17 - INFO - MCS Progress 66.88% ETA 0:00:20
+2024-06-21 09:54:27 - INFO - MCS Progress 87.69% ETA 0:00:07
+2024-06-21 09:54:35 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:54:50 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:55:25 - INFO - Input data contains 3649 balanced reactions.
+2024-06-21 09:55:25 - INFO - Run rule-based method on 1350 reactions.
+2024-06-21 09:55:29 - INFO - DONE
+2024-06-21 09:55:29 - INFO - Completed batch 8
+2024-06-21 09:55:29 - INFO - Start Batch 9 | Size: 5000
+2024-06-21 09:55:32 - INFO - Run rule-based method.
+2024-06-21 09:55:34 - INFO - Input data contains 102 balanced reactions.
+2024-06-21 09:55:34 - INFO - Run rule-based method on 3210 reactions.
+2024-06-21 09:55:35 - INFO - Find maximum-common-substructure for 1710 reactions.
+2024-06-21 09:55:45 - INFO - MCS Progress 16.71% ETA 0:00:50
+2024-06-21 09:55:56 - INFO - MCS Progress 33.82% ETA 0:00:39
+2024-06-21 09:56:06 - INFO - MCS Progress 50.66% ETA 0:00:29
+2024-06-21 09:56:16 - INFO - MCS Progress 67.47% ETA 0:00:19
+2024-06-21 09:56:26 - INFO - MCS Progress 84.46% ETA 0:00:09
+2024-06-21 09:56:37 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:56:53 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:57:34 - INFO - Input data contains 3684 balanced reactions.
+2024-06-21 09:57:34 - INFO - Run rule-based method on 1315 reactions.
+2024-06-21 09:57:38 - INFO - DONE
+2024-06-21 09:57:38 - INFO - Completed batch 9
+2024-06-21 09:57:38 - INFO - Start Batch 10 | Size: 5000
+2024-06-21 09:57:42 - INFO - Run rule-based method.
+2024-06-21 09:57:44 - INFO - Input data contains 100 balanced reactions.
+2024-06-21 09:57:44 - INFO - Run rule-based method on 3253 reactions.
+2024-06-21 09:57:45 - INFO - Find maximum-common-substructure for 1670 reactions.
+2024-06-21 09:57:56 - INFO - MCS Progress 16.15% ETA 0:00:56
+2024-06-21 09:58:07 - INFO - MCS Progress 33.83% ETA 0:00:41
+2024-06-21 09:58:17 - INFO - MCS Progress 48.04% ETA 0:00:33
+2024-06-21 09:58:27 - INFO - MCS Progress 66.85% ETA 0:00:20
+2024-06-21 09:58:37 - INFO - MCS Progress 88.08% ETA 0:00:06
+2024-06-21 09:58:45 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:59:00 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:59:37 - INFO - Input data contains 3708 balanced reactions.
+2024-06-21 09:59:37 - INFO - Run rule-based method on 1289 reactions.
+2024-06-21 09:59:41 - INFO - DONE
+2024-06-21 09:59:41 - INFO - Completed batch 10
+2024-06-21 09:59:41 - INFO - Start Batch 11 | Size: 16
+2024-06-21 09:59:41 - INFO - Run rule-based method.
+2024-06-21 09:59:41 - INFO - Input data contains 0 balanced reactions.
+2024-06-21 09:59:41 - INFO - Run rule-based method on 9 reactions.
+2024-06-21 09:59:41 - INFO - Find maximum-common-substructure for 7 reactions.
+2024-06-21 09:59:42 - INFO - Impute missing compounds from MCS.
+2024-06-21 09:59:42 - INFO - Run rule-based method again to fix remaining non-carbon imbalance.
+2024-06-21 09:59:42 - INFO - Input data contains 10 balanced reactions.
+2024-06-21 09:59:42 - INFO - Run rule-based method on 6 reactions.
+2024-06-21 09:59:43 - INFO - DONE
+2024-06-21 09:59:43 - INFO - Completed batch 11
+2024-06-21 09:59:43 - INFO - Reactions balanced and saved successfully.
+2024-06-21 09:59:43 - INFO - Processing complete.

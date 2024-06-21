@@ -70,6 +70,7 @@ class ITSExtraction:
         check_method="RC",  # or ITS
         id_column: str = "R-id",
         ignore_aromaticity: bool = False,
+        confident_mapper: str = "graphormer",
     ) -> Dict[str, any]:
         """
         Processes mapped SMILES strings representing chemical reactions by constructing graph representations for reactants and products,
@@ -149,8 +150,8 @@ class ITSExtraction:
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:
             # Update the target dictionary based on the determined conditions
-            target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
-            target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
+            target_dict["ITSGraph"] = graphs_by_map.get(confident_mapper, None)
+            target_dict["GraphRules"] = rules_by_map.get(confident_mapper, None)
 
         return graphs_by_map_correct, graphs_by_map_incorrect
 
@@ -164,6 +165,7 @@ class ITSExtraction:
         check_method="RC",
         export_full=False,
         ignore_aromaticity: bool = False,
+        confident_mapper: str = "graphormer",
     ) -> List[Dict[str, any],]:
         """
         Processes a list of mapped SMILES strings in parallel.
@@ -186,6 +188,7 @@ class ITSExtraction:
                 check_method,
                 id_column,
                 ignore_aromaticity,
+                confident_mapper,
             )
             for mapped_smiles in mapped_smiles_list
         )

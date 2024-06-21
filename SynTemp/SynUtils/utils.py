@@ -224,3 +224,16 @@ def train_val_test_split_df(
     )
 
     return train_df, val_df, test_df
+
+
+def modify_smiles(smiles):
+    """
+    Modify the input SMILES string by replacing '.[HH]' with '[H][H]'.
+
+    Args:
+    smiles (str): The input SMILES string representing a chemical reaction.
+
+    Returns:
+    str: The modified SMILES string.
+    """
+    return smiles.replace("[HH]", "[H][H]")

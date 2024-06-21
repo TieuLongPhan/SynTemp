@@ -172,6 +172,7 @@ def mol_from_smiles(smiles: str) -> Optional[Chem.Mol]:
         raise ValueError(f"Invalid SMILES string: {smiles}")
     return mol
 
+
 def remove_hydrogen(mol, atom_index):
     edited_mol = Chem.RWMol(mol)
     atom = edited_mol.GetAtomWithIdx(atom_index)
@@ -180,17 +181,19 @@ def remove_hydrogen(mol, atom_index):
         atom.SetNumExplicitHs(atom.GetNumExplicitHs() - 1)
     return edited_mol.GetMol()
 
+
 # Process a single component of the molecule
 def process_component(component):
     for atom_index in range(component.GetNumAtoms()):
         try:
             test_mol = remove_hydrogen(component, atom_index)
             rdmolops.SanitizeMol(test_mol)
-            print('Fuck')
+            print("Fuck")
             return test_mol
         except Exception:
             continue
     return None
+
 
 def filter_valid_molecules(smiles_list: List[str]) -> List[Chem.Mol]:
     """
@@ -207,7 +210,7 @@ def filter_valid_molecules(smiles_list: List[str]) -> List[Chem.Mol]:
         try:
             mol = Chem.MolFromSmiles(smiles)
         except:
-            mol = Chem.MolFromSmiles(smiles, sanitize = False)
+            mol = Chem.MolFromSmiles(smiles, sanitize=False)
             mol = process_component(mol)
         if mol:  # Check if the molecule is valid
             valid_molecules.append(mol)
