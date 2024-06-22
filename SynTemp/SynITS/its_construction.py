@@ -10,6 +10,7 @@ class ITSConstruction:
         H: nx.Graph,
         ignore_aromaticity: bool = False,
         attributes_defaults: Dict[str, Any] = None,
+        balance_its : bool = True,
     ) -> nx.Graph:
         """
         Creates a Combined Graph Representation (CGR) from two input graphs G and H.
@@ -27,10 +28,12 @@ class ITSConstruction:
         - nx.Graph: The Combined Graph Representation as a new graph instance.
         """
         # Create a null graph from a copy of G to preserve attributes
-        if len(G.nodes()) > len(H.nodes()):
-            ITS = deepcopy(H)
-        else:
+        # Choose the graph with more nodes or the graph H depending on the 'balance_its' flag
+        if (balance_its and len(G.nodes()) <= len(H.nodes())) or (not balance_its and len(G.nodes()) >= len(H.nodes())):
             ITS = deepcopy(G)
+        else:
+            ITS = deepcopy(H)
+
         ITS.remove_edges_from(list(ITS.edges()))
 
         # Initialize a dictionary to hold node types
@@ -56,38 +59,6 @@ class ITSConstruction:
         ITS = ITSConstruction.add_edges_to_ITS(ITS, G, H, ignore_aromaticity)
 
         return ITS
-
-    # @staticmethod
-    # def ITSGraph(G: nx.Graph, H: nx.Graph, ignore_aromaticity: bool = False, attributes_defaults: Dict[str, Any] = None) -> nx.Graph:
-    #     """
-    #     Creates a Combined Graph Representation (CGR) from two input graphs G and H by merging their nodes and edges.
-    #     Nodes preserve their attributes, and edges are labeled based on their presence in G and/or H.
-
-    #     Parameters:
-    #     - G (nx.Graph): The first input graph.
-    #     - H (nx.Graph): The second input graph.
-    #     - ignore_aromaticity (bool, optional): If True, aromaticity in the graphs is ignored. Defaults to False.
-    #     - attributes_defaults (Dict[str, Any], optional): Default attributes for nodes not present in either G or H.
-
-    #     Returns:
-    #     - nx.Graph: The Combined Graph Representation as a new graph instance.
-    #     """
-    #     # Use the smaller graph as the base for ITS
-    #     ITS = deepcopy(H if len(G.nodes()) > len(H.nodes()) else G)
-    #     ITS.clear_edges()  # Remove all edges while retaining nodes and their attributes
-
-    #     # Iterate over nodes in ITS and get attributes from G and H, or set defaults
-    #     for node in ITS:
-    #         attributes_in_G = ITSConstruction.get_node_attributes_with_defaults(G, node, attributes_defaults) if node in G else None
-    #         attributes_in_H = ITSConstruction.get_node_attributes_with_defaults(H, node, attributes_defaults) if node in H else None
-
-    #         # Combine attributes from G and H or use defaults
-    #         ITS.nodes[node]['typesGH'] = (attributes_in_G, attributes_in_H)
-
-    #     # Add edges from G and H with special labeling for unique edges
-    #     ITS = ITSConstruction.add_edges_to_ITS(ITS, G, H, ignore_aromaticity)
-
-    #     return ITS
 
     @staticmethod
     def get_node_attribute(graph: nx.Graph, node: int, attribute: str, default):

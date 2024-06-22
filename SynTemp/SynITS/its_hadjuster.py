@@ -12,6 +12,7 @@ from SynTemp.SynUtils.graph_utils import (
 )
 from SynTemp.SynITS.its_extraction import ITSExtraction
 
+import logging
 
 class ITSHAdjuster:
 
@@ -37,8 +38,10 @@ class ITSHAdjuster:
         """
         graphs = deepcopy(graph_data)
         react_graph, prod_graph, its = graphs[column]
+        logging.error(graphs)
 
         hcount_change = check_hcount_change(react_graph, prod_graph)
+        print(hcount_change)
         if hcount_change == 0:
             graph_data = ITSHAdjuster.update_graph_data(
                 graphs, react_graph, prod_graph, its
@@ -249,19 +252,21 @@ class ITSHAdjuster:
         prod_explicit_h, _ = check_explicit_hydrogen(prod_graph_copy)
         hydrogen_nodes_form, hydrogen_nodes_break = [], []
         if react_explicit_h <= prod_explicit_h:
-            max_index = max_index = max(
-                max(react_graph_copy.nodes, default=0),
-                max(prod_graph_copy.nodes, default=0),
-            )
+            # max_index = max_index = max(
+            #     max(react_graph_copy.nodes, default=0),
+            #     max(prod_graph_copy.nodes, default=0),
+            # )
+            max_index = max(react_graph_copy.nodes, default=0)
             for node_id in react_graph_copy.nodes:
                 try:
                     hcount_diff = react_graph_copy.nodes[node_id].get(
                         "hcount", 0
                     ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
                 except:
-                    hcount_diff = react_graph_copy.nodes[node_id].get(
-                        "hcount", 0
-                    ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
+                    # hcount_diff = react_graph_copy.nodes[node_id].get(
+                    #     "hcount", 0
+                    # ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
+                    pass
                 if hcount_diff > 0:
                     hydrogen_nodes_break.extend([node_id] * hcount_diff)
                 elif hcount_diff < 0:
@@ -275,9 +280,10 @@ class ITSHAdjuster:
                     ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
 
                 except:
-                    hcount_diff = react_graph_copy.nodes[node_id].get(
-                        "hcount", 0
-                    ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
+                #     hcount_diff = react_graph_copy.nodes[node_id].get(
+                #         "hcount", 0
+                #     ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
+                    pass
                 if hcount_diff > 0:
                     hydrogen_nodes_break.extend([node_id] * hcount_diff)
                 elif hcount_diff < 0:
