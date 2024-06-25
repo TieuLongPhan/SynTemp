@@ -26,11 +26,12 @@ def main():
                                 edge_attribute=args.edge_attribute,
                                 max_radius=args.max_radius)
 
-    reaction_dicts, templates = hcl.fit(data, 'ITSGraph', templates=None, update_template=True, root_sample=100)
+    reaction_dicts, templates, hier_templates = hcl.fit(data, 'ITSGraph', templates=None, update_template=True, root_sample=100)
     
     save_to_pickle(reaction_dicts, f"{root_dir}/Data/DPO/{args.folder_name}/cluster.pkl.gz")
 
     save_to_pickle(templates, f"{root_dir}/Data/DPO/{args.folder_name}/templates.pkl.gz")
+    save_to_pickle(hier_templates, f"{root_dir}/Data/DPO/{args.folder_name}/hier_rules.pkl.gz")
 
 if __name__ == "__main__":
 

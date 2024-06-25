@@ -1,6 +1,10 @@
 from pathlib import Path
 import argparse
 import logging
+import sys
+root_dir = Path(__file__).parents[2]
+sys.path.append(root_dir)
+print(root_dir)
 from SynTemp.SynRule.rule_benchmark import RuleBenchmark
 from SynTemp.SynUtils.utils import load_database, save_database
 from SynTemp.SynChemistry.sf_similarity import SFSimilarity
@@ -37,7 +41,7 @@ def main(args):
     logger.info("Start process....")
     logger.info("Loading database....")
     # Load the database
-    database = load_database(args.data_dir)[:]
+    database = load_database(args.data_dir)[:100]
     # Scoring functions dictionary
     scoring_functions = {
         'Random': SFRandom(),
@@ -149,4 +153,6 @@ if __name__ == "__main__":
     
 # python scripts.py --log_dir Data/DPO/USPTO_50K/Good_hydrogen/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Good_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Good_hydrogen/Output --radius 0 --hierarchical True --max_radius 2 --max_solutions 1000
     
+
+#python scripts.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_balance/test.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
     

@@ -1,6 +1,6 @@
 import networkx as nx
 import copy
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
 
 def is_acyclic_graph(G: nx.Graph) -> bool:
@@ -171,23 +171,16 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
                                        containing at least the keys 'Cluster_id' and 'Parent'.
 
     Returns:
-    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing only 'Cluster_id',
-                                'Parent', and 'Child' keys.
+    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing 'Cluster_id', 
+                                'Percentage', 'Parent', and 'Child' keys.
     """
     data = copy.deepcopy(df)
-    # Initialize a dictionary to hold each node with its unique key as the combination of layer index and Cluster_id
     node_dict = {}
 
-    # Process each layer to assign children based on the parent references
     for layer_index, layer in enumerate(data):
         for node in layer:
-            # Generate a unique identifier combining layer index with Cluster_id for internal mapping
             unique_id = f"{layer_index}-{node['Cluster_id']}"
-
-            # Initialize the list to hold the cluster_ids of child nodes
-            node["Child"] = []
-
-            # Store the node in the dictionary with its unique identifier
+            node['Child'] = []  # Initialize the Child list
             node_dict[unique_id] = node
 
     # Link children to their parents
@@ -196,25 +189,17 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
             continue  # Skip the first layer as it has no parents
 
         for node in layer:
-            # Normalize the Parent field to always be a list
-            if isinstance(node["Parent"], int):
-                node["Parent"] = [node["Parent"]]
+            parents = node.get('Parent', [])
+            parents = [parents] if isinstance(parents, int) else parents  # Ensure parents is always a list
 
-            # Handle the parent list
-            for parent_cluster_id in node["Parent"]:
-                # Compute the parent's unique identifier from the previous layer
-                parent_unique_id = f"{layer_index-1}-{parent_cluster_id}"
-
-                # Link the child node's Cluster_id to the parent node's Child list
+            for parent_cluster_id in parents:
+                parent_unique_id = f"{layer_index - 1}-{parent_cluster_id}"
                 if parent_unique_id in node_dict:
-                    parent_node = node_dict[parent_unique_id]
-                    parent_node["Child"].append(node["Cluster_id"])
+                    node_dict[parent_unique_id]['Child'].append(node['Cluster_id'])
 
-    # Prepare the final data structure with only the required keys
     for layer in data:
         for node in layer:
-            # Retain only Cluster_id, Parent, and Child in each node
-            keys_to_keep = {"Cluster_id", "Parent", "Child"}
+            keys_to_keep = {"Cluster_id", "Parent", "Child", "Percentage"}
             for key in list(node.keys()):
                 if key not in keys_to_keep:
                     del node[key]
@@ -290,39 +275,91 @@ def check_graph_connectivity(graph):
         return "Disconnected."
 
 
+# def get_priority(
+#     its_list, reaction_centers: List[Any], priority_ring: List[int] = [4, 6]
+# ) -> List[int]:
+#     """
+#     Filters reaction centers based on their connectivity and specific ring sizes.
+
+#     Args:
+#     - reaction_center_list (List[Any]): List of reaction centers to evaluate.
+#     - priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
+
+#     Returns:
+#     - List[int]: Indices of reaction centers in the original list that are connected and contain priority ring sizes.
+#     """
+#     # Filter to include only connected reaction centers
+#     # reaction_centers = [RuleExtraction.extract_reaction_rules(its_good[0]['ITSGraph'][0], its_good[0]['ITSGraph'][1], i)[2] for i in its_list]
+#     connected_centers = []
+#     connected_its_list = []
+#     for key, value in enumerate(reaction_centers):
+#         if check_graph_connectivity(value) == "Connected":
+#             connected_centers.append(value)
+#             connected_its_list.append(its_list[key])
+#     cyclic = [get_cycle_member_rings(center) for center in connected_centers]
+
+#     # Find indices of centers with priority ring sizes
+#     index_priority = [
+#         i
+#         for i, rings in enumerate(cyclic)
+#         if any(ring in priority_ring for ring in rings)
+#     ]
+#     connected_its_list = [
+#         value for key, value in enumerate(connected_its_list) if key in index_priority
+#     ]
+#     connected_centers = [
+#         value for key, value in enumerate(connected_centers) if key in index_priority
+#     ]
+#     return connected_its_list, connected_centers
+    
 def get_priority(
-    its_list, reaction_centers: List[Any], priority_ring: List[int] = [4, 6]
-) -> List[int]:
+    its_list: List[Any], 
+    reaction_centers: List[Any], 
+    priority_ring: List[int] = [4, 5, 6],  # Standard priority rings
+    priority_pair: List[int] = [3, 5],  # Special priority requiring both rings
+    not_priority_ring: List[int] = [3]  # Non-priority ring that disqualifies alone
+) -> Tuple[List[Any], List[Any]]:
     """
-    Filters reaction centers based on their connectivity and specific ring sizes.
+    Filters reaction centers based on their connectivity and specific ring sizes,
+    including those with both rings in the priority pair, and excluding those with non-priority ring sizes,
+    unless a specific pair condition is met (e.g., 3 must appear with 5).
 
     Args:
-    - reaction_center_list (List[Any]): List of reaction centers to evaluate.
-    - priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
+        its_list (List[Any]): List of identifiers for the reaction centers.
+        reaction_centers (List[Any]): List of reaction centers to evaluate.
+        priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
+        priority_pair (List[int], optional): List of two ring sizes that must both appear together to qualify. Defaults to [3, 5].
+        not_priority_ring (List[int], optional): List of ring sizes that disqualify a center unless paired appropriately. Defaults to [3].
 
     Returns:
-    - List[int]: Indices of reaction centers in the original list that are connected and contain priority ring sizes.
+        Tuple[List[Any], List[Any]]: Tuple containing two lists:
+            - The first list contains the identifiers from its_list that meet all criteria.
+            - The second list contains the corresponding reaction centers that meet the criteria.
     """
+    priority_set = set(priority_ring)
+    not_priority_set = set(not_priority_ring)
+    priority_pair_set = set(priority_pair)
+
     # Filter to include only connected reaction centers
-    # reaction_centers = [RuleExtraction.extract_reaction_rules(its_good[0]['ITSGraph'][0], its_good[0]['ITSGraph'][1], i)[2] for i in its_list]
     connected_centers = []
     connected_its_list = []
-    for key, value in enumerate(reaction_centers):
-        if check_graph_connectivity(value) == "Connected":
-            connected_centers.append(value)
-            connected_its_list.append(its_list[key])
+    for index, center in enumerate(reaction_centers):
+        if check_graph_connectivity(center) == "Connected":
+            connected_centers.append(center)
+            connected_its_list.append(its_list[index])
+    
     cyclic = [get_cycle_member_rings(center) for center in connected_centers]
+    # Filter indices based on priority and non-priority ring sizes
+    final_indices = []
+    for i, rings in enumerate(cyclic):
+        ring_set = set(rings)
+        # Check for priority conditions and special conditions for non-priority rings
+        if ((ring_set.intersection(priority_set) or (priority_pair_set <= ring_set)) and
+            not (ring_set.intersection(not_priority_set) and not (5 in ring_set and 3 in ring_set))):
+            final_indices.append(i)
 
-    # Find indices of centers with priority ring sizes
-    index_priority = [
-        i
-        for i, rings in enumerate(cyclic)
-        if any(ring in priority_ring for ring in rings)
-    ]
-    connected_its_list = [
-        value for key, value in enumerate(connected_its_list) if key in index_priority
-    ]
-    connected_centers = [
-        value for key, value in enumerate(connected_centers) if key in index_priority
-    ]
-    return connected_its_list, connected_centers
+    # Retrieve final lists based on filtered indices
+    final_its_list = [connected_its_list[i] for i in final_indices]
+    final_centers = [connected_centers[i] for i in final_indices]
+    
+    return final_its_list, final_centers

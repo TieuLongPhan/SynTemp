@@ -36,6 +36,7 @@ class RuleBenchmark:
         max_solutions: int = 100,
         prune: bool = True,
         prune_size: int = 1,
+        templates_threshold: int = 0.00
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -98,6 +99,7 @@ class RuleBenchmark:
                             max_solutions=max_solutions,
                             prune=prune,
                             prune_size=prune_size,
+                            templates_threshold = templates_threshold
                         )
 
                         reactions = list(

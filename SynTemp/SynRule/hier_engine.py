@@ -119,6 +119,7 @@ class HierEngine:
         max_solutions: int = 1000,
         prune: bool = True,
         prune_size: int = 1,
+        templates_threshold: int = 0.00
     ) -> List[List[Any]]:
         """
         Apply hierarchical chemical reaction rules to a dataset of molecules based on their SMILES strings.
@@ -141,7 +142,19 @@ class HierEngine:
             key=lambda molecule: molecule.numVertices,
         )
         invert_rule = prediction_type == "backward"
-        rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
+
+        hier_0 = [value for value in hier_temp[0] if value['Percentage'] >= templates_threshold]
+        hier_0_id = [value['Cluster_id'] for value in hier_0]
+
+        # Create a list of file patterns to search for, using each Cluster_id
+        file_patterns = [f"{rule_file_path}/R0/{a}.gml" for a in hier_0_id]
+
+        # Use glob.glob to find all files that match the patterns in the list
+        rule_files = []
+        for pattern in file_patterns:
+            rule_files.extend(glob.glob(pattern))
+
+        #rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
         temp_results = []
         for rule_file in rule_files:
             result = HierEngine.hier_child_level(

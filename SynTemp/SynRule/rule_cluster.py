@@ -18,11 +18,23 @@ class RuleCluster:
     ):
         """
         Initializes the NaiveClusterer with customization options for node and edge matching functions.
+        This class is designed to facilitate clustering of graph nodes and edges based on specified attributes
+        and their matching criteria.
 
         Parameters:
             node_label_names (List[str]): A list of node attribute names to be considered for matching.
-            node_label_default (List[Any]): Default values for node attributes, aligned with `node_label_names`.
-            edge_attribute (str): The name of the edge attribute to be considered for matching.
+                Each attribute name corresponds to a property of the nodes in the graph.
+                Default is ["element", "aromatic", "charge"].
+            node_label_default (List[Any]): Default values for each of the node attributes specified in
+                `node_label_names`. These are used where node attributes are missing. The length and order
+                of this list should match `node_label_names`.
+                Default is ["*", False, 0].
+            edge_attribute (str): The name of the edge attribute to consider for matching edges.
+                This attribute is used to assess edge similarity.
+                Default is "order".
+
+        Raises:
+            ValueError: If the lengths of `node_label_names` and `node_label_default` do not match.
         """
 
         self.nodeLabelNames: List[str] = node_label_names
@@ -35,6 +47,36 @@ class RuleCluster:
             self.nodeLabelNames, self.nodeLabelDefault, self.nodeLabelOperator
         )
         self.edgeMatch: Callable = generic_edge_match(self.edgeAttribute, 1, eq)
+
+    @staticmethod
+    def calculate_cluster_percentages(input_dict: dict) -> dict:
+        """
+        Calculates the percentage of times each cluster ID appears in the input dictionary
+        and returns a new dictionary with cluster IDs as keys and their percentages as values,
+        sorted by these percentages in descending order.
+
+        Parameters:
+            input_dict (dict): A dictionary where keys are indices or identifiers
+                            and values are cluster IDs (integers).
+
+        Returns:
+            dict: A dictionary mapping each cluster ID to the percentage of its appearance,
+                sorted by percentage in descending order.
+        """
+        total_count = len(input_dict)
+        cluster_count = {}
+
+        # Count occurrences of each cluster ID
+        for cluster_id in input_dict.values():
+            cluster_count[cluster_id] = cluster_count.get(cluster_id, 0) + 1
+
+        # Calculate percentage for each cluster ID
+        cluster_percentages = {cluster_id: round((count / total_count) * 100,2) for cluster_id, count in cluster_count.items()}
+
+        # Sort the percentages dictionary by percentage in descending order
+        sorted_percentages = dict(sorted(cluster_percentages.items(), key=lambda item: item[1], reverse=True))
+
+        return sorted_percentages
 
     @staticmethod
     def auto_cluster(
@@ -116,23 +158,65 @@ class RuleCluster:
 
         return results
 
+    # @staticmethod
+    # def get_templates(
+    #     graphs: List[List[nx.Graph]],
+    #     single_graphs: List[nx.Graph],
+    #     graph_to_cluster_dict: Dict[int, int],
+    #     max_index_template: int = 0,
+    # ) -> List[Dict[str, Any]]:
+    #     """
+    #     Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index.
+
+    #     Parameters:
+    #         graphs (List[nx.Graph]): A list of graph objects from which templates are derived.
+    #         graph_to_cluster_dict (Dict[int, int]): A dictionary mapping graph indices to cluster IDs.
+    #         max_index_template (int): The maximum index used to offset cluster IDs.
+
+    #     Returns:
+    #         List[Dict[str, Any]]: A list of dictionaries each representing a template with a 'Cluster_id' and the associated graph ('RC').
+    #     """
+    #     # Adjust cluster IDs based on the maximum template index
+    #     temp_graph_to_cluster = {
+    #         key: item + max_index_template
+    #         for key, item in graph_to_cluster_dict.items()
+    #     }
+    #     updated_graphs = []
+    #     for index, graph in enumerate(graphs):
+    #         updated_graph = (graph[0], graph[1], single_graphs[index])
+    #         updated_graphs.append(updated_graph)
+
+    #     # Create a dictionary with unique values and their first corresponding keys
+    #     unique_temp = create_unique_value_dict(temp_graph_to_cluster)
+
+    #     # Construct templates using unique cluster IDs and corresponding graphs
+    #     template = [
+    #         {"Cluster_id": key, "RC": updated_graphs[value], "Parent": []}
+    #         for key, value in unique_temp.items()
+    #     ]
+
+    #     return template
+    
     @staticmethod
     def get_templates(
         graphs: List[List[nx.Graph]],
         single_graphs: List[nx.Graph],
         graph_to_cluster_dict: Dict[int, int],
-        max_index_template: int = 0,
+        sorted_templates: Dict[int, float],
+        max_index_template: int = 0
     ) -> List[Dict[str, Any]]:
         """
-        Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index.
+        Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index and incorporating percentage values.
 
         Parameters:
-            graphs (List[nx.Graph]): A list of graph objects from which templates are derived.
+            graphs (List[List[nx.Graph]]): A list of graph object pairs from which templates are derived.
+            single_graphs (List[nx.Graph]): A list of individual graph objects for additional data association.
             graph_to_cluster_dict (Dict[int, int]): A dictionary mapping graph indices to cluster IDs.
+            sorted_templates (Dict[int, float]): A dictionary mapping cluster IDs to percentage values.
             max_index_template (int): The maximum index used to offset cluster IDs.
 
         Returns:
-            List[Dict[str, Any]]: A list of dictionaries each representing a template with a 'Cluster_id' and the associated graph ('RC').
+            List[Dict[str, Any]]: A list of dictionaries each representing a template with a 'Cluster_id', the associated graph ('RC'), and a 'percentage'.
         """
         # Adjust cluster IDs based on the maximum template index
         temp_graph_to_cluster = {
@@ -147,9 +231,14 @@ class RuleCluster:
         # Create a dictionary with unique values and their first corresponding keys
         unique_temp = create_unique_value_dict(temp_graph_to_cluster)
 
-        # Construct templates using unique cluster IDs and corresponding graphs
+        # Construct templates using unique cluster IDs, corresponding graphs, and percentage data
         template = [
-            {"Cluster_id": key, "RC": updated_graphs[value], "Parent": []}
+            {
+                "Cluster_id": key,
+                "RC": updated_graphs[value],
+                "Parent": [],
+                "Percentage": sorted_templates.get(key, 0)  # Default to 0 if key not found
+            }
             for key, value in unique_temp.items()
         ]
 
@@ -166,7 +255,7 @@ class RuleCluster:
         potentially using provided templates for clustering, or generating new templates.
 
         Parameters:
-            graphs (List[nx.Graph]): A list of NetworkX graph objects to determine cluster indices for.
+            graphs (List[nx.Graph, nx.Graph, nx.Graph]): A list of NetworkX graph objects to determine cluster indices for.
             templates (Optional[List[Dict[str, Any]]]): Optional list of templates used for clustering.
             update_template (bool) : Update new template or not
 
@@ -182,11 +271,13 @@ class RuleCluster:
             _, graph_to_cluster_dict = self.auto_cluster(
                 single_graphs, self.nodeMatch, self.edgeMatch
             )
-
+            sorted_templates = RuleCluster.calculate_cluster_percentages(graph_to_cluster_dict)
             templates = self.get_templates(
-                graphs, single_graphs, graph_to_cluster_dict, 0
+                graphs, single_graphs, graph_to_cluster_dict, sorted_templates, 0
             )
-            cluster_indices = [graph_to_cluster_dict.get(i) for i in range(len(graphs))]
+            # Assuming 'graphs' is a list of graphs and you are mapping each graph to a cluster ID
+            cluster_indices = [graph_to_cluster_dict.get(i, None) for i in range(len(graphs))]
+
         else:
             # Use existing templates to check graph clusters
             cluster_indices = RuleCluster.library_check(graphs, templates)
