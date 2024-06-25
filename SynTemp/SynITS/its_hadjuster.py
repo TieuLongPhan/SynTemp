@@ -14,6 +14,7 @@ from SynTemp.SynITS.its_extraction import ITSExtraction
 
 import logging
 
+
 class ITSHAdjuster:
 
     @staticmethod
@@ -22,7 +23,7 @@ class ITSHAdjuster:
         column: str,
         return_all: bool = False,
         ignore_aromaticity: bool = False,
-        balance_its : bool = True,
+        balance_its: bool = True,
     ) -> Dict:
         """
         Processes a single dictionary containing graph information by applying modifications based on hcount changes.
@@ -47,11 +48,23 @@ class ITSHAdjuster:
             )
         elif hcount_change < 5:
             graph_data = ITSHAdjuster.process_multiple_hydrogens(
-                graphs, react_graph, prod_graph, its, ignore_aromaticity, return_all, balance_its
+                graphs,
+                react_graph,
+                prod_graph,
+                its,
+                ignore_aromaticity,
+                return_all,
+                balance_its,
             )
         else:
             graph_data = ITSHAdjuster.process_high_hcount_change(
-                graphs, react_graph, prod_graph, its, ignore_aromaticity, return_all, balance_its
+                graphs,
+                react_graph,
+                prod_graph,
+                its,
+                ignore_aromaticity,
+                return_all,
+                balance_its,
             )
 
         return graph_data
@@ -76,7 +89,13 @@ class ITSHAdjuster:
 
     @staticmethod
     def process_multiple_hydrogens(
-        graph_data, react_graph, prod_graph, its, ignore_aromaticity, return_all, balance_its,
+        graph_data,
+        react_graph,
+        prod_graph,
+        its,
+        ignore_aromaticity,
+        return_all,
+        balance_its,
     ):
         """
         Handles cases with hydrogen count changes between 2 and 4, inclusive.
@@ -92,7 +111,9 @@ class ITSHAdjuster:
             react_graph, prod_graph
         )
         its_list = [
-            ITSConstruction.ITSGraph(i[0], i[1], ignore_aromaticity, balance_its=balance_its)
+            ITSConstruction.ITSGraph(
+                i[0], i[1], ignore_aromaticity, balance_its=balance_its
+            )
             for i in combinations_solution
         ]
         _, equivariant = ITSExtraction.check_equivariant_graph(its_list)
@@ -103,14 +124,25 @@ class ITSHAdjuster:
             )
         else:
             graph_data = ITSHAdjuster.process_high_hcount_change(
-                graph_data, react_graph, prod_graph, its, ignore_aromaticity, return_all, balance_its
+                graph_data,
+                react_graph,
+                prod_graph,
+                its,
+                ignore_aromaticity,
+                return_all,
+                balance_its,
             )
         return graph_data
 
     @staticmethod
     def process_high_hcount_change(
-        graph_data, react_graph, prod_graph, its, ignore_aromaticity, return_all,
-        balance_its : bool = True,
+        graph_data,
+        react_graph,
+        prod_graph,
+        its,
+        ignore_aromaticity,
+        return_all,
+        balance_its: bool = True,
     ):
         """
         Handles cases with hydrogen count changes of 5 or more.
@@ -126,7 +158,9 @@ class ITSHAdjuster:
             react_graph, prod_graph
         )
         its_list = [
-            ITSConstruction.ITSGraph(i[0], i[1], ignore_aromaticity, balance_its=balance_its)
+            ITSConstruction.ITSGraph(
+                i[0], i[1], ignore_aromaticity, balance_its=balance_its
+            )
             for i in combinations_solution
         ]
         reaction_centers = [
@@ -158,7 +192,7 @@ class ITSHAdjuster:
         verbose: int,
         return_all: bool = False,
         ignore_aromaticity: bool = False,
-        balance_its : bool = True,
+        balance_its: bool = True,
     ) -> List[Dict]:
         """
         Processes a list of dictionaries containing graph information in parallel.
@@ -250,14 +284,18 @@ class ITSHAdjuster:
         react_graph_copy = deepcopy(react_graph)
         prod_graph_copy = deepcopy(prod_graph)
         react_explicit_h, _ = check_explicit_hydrogen(react_graph_copy)
-        prod_explicit_h, _ =  check_explicit_hydrogen(prod_graph_copy)
+        prod_explicit_h, _ = check_explicit_hydrogen(prod_graph_copy)
         hydrogen_nodes_form, hydrogen_nodes_break = [], []
-       
-        primary_graph = react_graph_copy if react_explicit_h <= prod_explicit_h else prod_graph_copy
+
+        primary_graph = (
+            react_graph_copy if react_explicit_h <= prod_explicit_h else prod_graph_copy
+        )
         for node_id in primary_graph.nodes:
             try:
                 # Calculate the difference in hydrogen counts
-                hcount_diff = react_graph_copy.nodes[node_id].get("hcount", 0) - prod_graph_copy.nodes[node_id].get("hcount", 0)
+                hcount_diff = react_graph_copy.nodes[node_id].get(
+                    "hcount", 0
+                ) - prod_graph_copy.nodes[node_id].get("hcount", 0)
             except KeyError:
                 # Handle cases where node_id does not exist in opposite_graph
                 continue
@@ -268,19 +306,27 @@ class ITSHAdjuster:
             elif hcount_diff < 0:
                 hydrogen_nodes_form.extend([node_id] * -hcount_diff)
 
-
-        max_index = max(max(react_graph_copy.nodes, default=0), max(prod_graph_copy.nodes, default=0))        
+        max_index = max(
+            max(react_graph_copy.nodes, default=0),
+            max(prod_graph_copy.nodes, default=0),
+        )
         permutations = list(
             itertools.permutations(
-                range(max_index + 1 - react_explicit_h, max_index + 1 + len(hydrogen_nodes_form)-react_explicit_h)
+                range(
+                    max_index + 1 - react_explicit_h,
+                    max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
+                )
             )
         )
         permutations_seed = list(
             itertools.permutations(
-                range(max_index + 1 - prod_explicit_h, max_index + 1 + len(hydrogen_nodes_break) - prod_explicit_h)
+                range(
+                    max_index + 1 - prod_explicit_h,
+                    max_index + 1 + len(hydrogen_nodes_break) - prod_explicit_h,
+                )
             )
         )[0]
-       
+
         updated_graphs = []
         for permutation in permutations:
             current_react_graph, current_prod_graph = deepcopy(

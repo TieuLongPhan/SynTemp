@@ -1,0 +1,6 @@
+2024-06-25 15:43:57,335 - INFO - Processing data USPTO_balance with 4 cpus
+2024-06-25 15:52:07,139 - INFO - Combining and save data
+2024-06-25 15:52:07,139 - INFO - Number of correct mappers:34600
+2024-06-25 15:52:07,139 - INFO - Number of incorrect mappers:5412
+2024-06-25 15:52:07,139 - INFO - Number of uncertain hydrogen:0
+2024-06-25 15:52:36,522 - INFO - Execution time: 519.19 seconds

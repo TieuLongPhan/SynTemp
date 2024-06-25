@@ -207,11 +207,11 @@ def filter_valid_molecules(smiles_list: List[str]) -> List[Chem.Mol]:
     """
     valid_molecules = []
     for smiles in smiles_list:
-        try:
-            mol = Chem.MolFromSmiles(smiles)
-        except:
-            mol = Chem.MolFromSmiles(smiles, sanitize=False)
-            mol = process_component(mol)
+        # try:
+        mol = Chem.MolFromSmiles(smiles)
+        # except:
+        #     mol = Chem.MolFromSmiles(smiles, sanitize=False)
+        #     mol = process_component(mol)
         if mol:  # Check if the molecule is valid
             valid_molecules.append(mol)
     return valid_molecules
@@ -235,19 +235,23 @@ def standardize_rsmi(rsmi: str, stereo: bool = False) -> str:
     reactants, products = rsmi.split(">>")
     reactant_molecules = filter_valid_molecules(reactants.split("."))
     product_molecules = filter_valid_molecules(products.split("."))
-
-    standardized_reactants = ".".join(
-        sorted(
-            Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in reactant_molecules
+    if reactant_molecules and product_molecules:
+        standardized_reactants = ".".join(
+            sorted(
+                Chem.MolToSmiles(mol, isomericSmiles=stereo)
+                for mol in reactant_molecules
+            )
         )
-    )
-    standardized_products = ".".join(
-        sorted(
-            Chem.MolToSmiles(mol, isomericSmiles=stereo) for mol in product_molecules
+        standardized_products = ".".join(
+            sorted(
+                Chem.MolToSmiles(mol, isomericSmiles=stereo)
+                for mol in product_molecules
+            )
         )
-    )
 
-    return f"{standardized_reactants}>>{standardized_products}"
+        return f"{standardized_reactants}>>{standardized_products}"
+    else:
+        return None
 
 
 def categorize_reactions(

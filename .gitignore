@@ -16,3 +16,4 @@ aam_reactions.json.gz
 *.tar.gz
 *pkl.gz
 *json.gz
+*txt

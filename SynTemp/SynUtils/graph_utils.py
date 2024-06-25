@@ -171,7 +171,7 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
                                        containing at least the keys 'Cluster_id' and 'Parent'.
 
     Returns:
-    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing 'Cluster_id', 
+    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing 'Cluster_id',
                                 'Percentage', 'Parent', and 'Child' keys.
     """
     data = copy.deepcopy(df)
@@ -180,7 +180,7 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
     for layer_index, layer in enumerate(data):
         for node in layer:
             unique_id = f"{layer_index}-{node['Cluster_id']}"
-            node['Child'] = []  # Initialize the Child list
+            node["Child"] = []  # Initialize the Child list
             node_dict[unique_id] = node
 
     # Link children to their parents
@@ -189,13 +189,15 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
             continue  # Skip the first layer as it has no parents
 
         for node in layer:
-            parents = node.get('Parent', [])
-            parents = [parents] if isinstance(parents, int) else parents  # Ensure parents is always a list
+            parents = node.get("Parent", [])
+            parents = (
+                [parents] if isinstance(parents, int) else parents
+            )  # Ensure parents is always a list
 
             for parent_cluster_id in parents:
                 parent_unique_id = f"{layer_index - 1}-{parent_cluster_id}"
                 if parent_unique_id in node_dict:
-                    node_dict[parent_unique_id]['Child'].append(node['Cluster_id'])
+                    node_dict[parent_unique_id]["Child"].append(node["Cluster_id"])
 
     for layer in data:
         for node in layer:
@@ -311,13 +313,14 @@ def check_graph_connectivity(graph):
 #         value for key, value in enumerate(connected_centers) if key in index_priority
 #     ]
 #     return connected_its_list, connected_centers
-    
+
+
 def get_priority(
-    its_list: List[Any], 
-    reaction_centers: List[Any], 
+    its_list: List[Any],
+    reaction_centers: List[Any],
     priority_ring: List[int] = [4, 5, 6],  # Standard priority rings
     priority_pair: List[int] = [3, 5],  # Special priority requiring both rings
-    not_priority_ring: List[int] = [3]  # Non-priority ring that disqualifies alone
+    not_priority_ring: List[int] = [3],  # Non-priority ring that disqualifies alone
 ) -> Tuple[List[Any], List[Any]]:
     """
     Filters reaction centers based on their connectivity and specific ring sizes,
@@ -347,19 +350,23 @@ def get_priority(
         if check_graph_connectivity(center) == "Connected":
             connected_centers.append(center)
             connected_its_list.append(its_list[index])
-    
+
     cyclic = [get_cycle_member_rings(center) for center in connected_centers]
     # Filter indices based on priority and non-priority ring sizes
     final_indices = []
     for i, rings in enumerate(cyclic):
         ring_set = set(rings)
         # Check for priority conditions and special conditions for non-priority rings
-        if ((ring_set.intersection(priority_set) or (priority_pair_set <= ring_set)) and
-            not (ring_set.intersection(not_priority_set) and not (5 in ring_set and 3 in ring_set))):
+        if (
+            ring_set.intersection(priority_set) or (priority_pair_set <= ring_set)
+        ) and not (
+            ring_set.intersection(not_priority_set)
+            and not (5 in ring_set and 3 in ring_set)
+        ):
             final_indices.append(i)
 
     # Retrieve final lists based on filtered indices
     final_its_list = [connected_its_list[i] for i in final_indices]
     final_centers = [connected_centers[i] for i in final_indices]
-    
+
     return final_its_list, final_centers

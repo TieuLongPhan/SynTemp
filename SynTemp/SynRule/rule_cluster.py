@@ -71,10 +71,15 @@ class RuleCluster:
             cluster_count[cluster_id] = cluster_count.get(cluster_id, 0) + 1
 
         # Calculate percentage for each cluster ID
-        cluster_percentages = {cluster_id: round((count / total_count) * 100,2) for cluster_id, count in cluster_count.items()}
+        cluster_percentages = {
+            cluster_id: round((count / total_count) * 100, 2)
+            for cluster_id, count in cluster_count.items()
+        }
 
         # Sort the percentages dictionary by percentage in descending order
-        sorted_percentages = dict(sorted(cluster_percentages.items(), key=lambda item: item[1], reverse=True))
+        sorted_percentages = dict(
+            sorted(cluster_percentages.items(), key=lambda item: item[1], reverse=True)
+        )
 
         return sorted_percentages
 
@@ -196,14 +201,14 @@ class RuleCluster:
     #     ]
 
     #     return template
-    
+
     @staticmethod
     def get_templates(
         graphs: List[List[nx.Graph]],
         single_graphs: List[nx.Graph],
         graph_to_cluster_dict: Dict[int, int],
         sorted_templates: Dict[int, float],
-        max_index_template: int = 0
+        max_index_template: int = 0,
     ) -> List[Dict[str, Any]]:
         """
         Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index and incorporating percentage values.
@@ -237,7 +242,9 @@ class RuleCluster:
                 "Cluster_id": key,
                 "RC": updated_graphs[value],
                 "Parent": [],
-                "Percentage": sorted_templates.get(key, 0)  # Default to 0 if key not found
+                "Percentage": sorted_templates.get(
+                    key, 0
+                ),  # Default to 0 if key not found
             }
             for key, value in unique_temp.items()
         ]
@@ -271,12 +278,16 @@ class RuleCluster:
             _, graph_to_cluster_dict = self.auto_cluster(
                 single_graphs, self.nodeMatch, self.edgeMatch
             )
-            sorted_templates = RuleCluster.calculate_cluster_percentages(graph_to_cluster_dict)
+            sorted_templates = RuleCluster.calculate_cluster_percentages(
+                graph_to_cluster_dict
+            )
             templates = self.get_templates(
                 graphs, single_graphs, graph_to_cluster_dict, sorted_templates, 0
             )
             # Assuming 'graphs' is a list of graphs and you are mapping each graph to a cluster ID
-            cluster_indices = [graph_to_cluster_dict.get(i, None) for i in range(len(graphs))]
+            cluster_indices = [
+                graph_to_cluster_dict.get(i, None) for i in range(len(graphs))
+            ]
 
         else:
             # Use existing templates to check graph clusters

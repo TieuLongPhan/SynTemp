@@ -3,12 +3,17 @@ import pandas as pd
 import copy
 from SynTemp.SynRule.rules_extraction import RuleExtraction
 from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynUtils.graph_utils import check_graph_type, get_cycle_member_rings, add_child_ids
+from SynTemp.SynUtils.graph_utils import (
+    check_graph_type,
+    get_cycle_member_rings,
+    add_child_ids,
+)
 import logging
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
+
 
 class HierarchicalClustering(RuleCluster):
     def __init__(
@@ -158,18 +163,22 @@ class HierarchicalClustering(RuleCluster):
             ]
             new_templates = [
                 {
-                    "Cluster_id": template["Cluster_id"] + max_index_template if key !=None else None,
+                    "Cluster_id": (
+                        template["Cluster_id"] + max_index_template
+                        if key != None
+                        else None
+                    ),
                     "RC": template["RC"],
                     "Parent": key,
-                    'Percentage': template["Percentage"]
+                    "Percentage": template["Percentage"],
                 }
                 for template in new_templates
             ]
             max_index_template += len(new_templates)
             templates.extend(new_templates)
-            
+
             for i, j in enumerate(index_dict[key]):
-                if key !=None:
+                if key != None:
                     cluster_indices_all[j] = cluster_indices_batch[i]
                 else:
                     cluster_indices_all[j] = None

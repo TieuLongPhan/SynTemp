@@ -1,19 +1,17 @@
-from pathlib import Path
+import pathlib
 import argparse
 import logging
 import sys
-root_dir = Path(__file__).parents[2]
-sys.path.append(root_dir)
-print(root_dir)
-from SynTemp.SynRule.rule_benchmark import RuleBenchmark
-from SynTemp.SynUtils.utils import load_database, save_database
-from SynTemp.SynChemistry.sf_similarity import SFSimilarity
-from SynTemp.SynChemistry.sf_random import SFRandom
-import pandas as pd
+
+# from SynTemp.SynRule.rule_benchmark import RuleBenchmark
+# from SynTemp.SynUtils.utils import load_database, save_database
+# from SynTemp.SynChemistry.sf_similarity import SFSimilarity
+# from SynTemp.SynChemistry.sf_random import SFRandom
+# import pandas as pd
 
 
 def setup_logging(log_dir, log_level):
-    log_path = Path(log_dir)
+    log_path = pathlib.Path(log_dir)
     log_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure directory exists
     
     # Create a custom logger
@@ -34,14 +32,20 @@ def setup_logging(log_dir, log_level):
     return logger  # Return the logger instance if you want to use it later
 
 def main(args):
-    #root_dir = Path(__file__).parents[2]
+    #root_dir = pathlib.Path(__file__).parents[1]
+    #sys.path.append(root_dir)
+    from SynTemp.SynRule.rule_benchmark import RuleBenchmark
+    from SynTemp.SynUtils.utils import load_database, save_database
+    from SynTemp.SynChemistry.sf_similarity import SFSimilarity
+    from SynTemp.SynChemistry.sf_random import SFRandom
+    import pandas as pd
 
     # Setup logging
     logger = setup_logging(args.log_dir, args.log_level)
     logger.info("Start process....")
     logger.info("Loading database....")
     # Load the database
-    database = load_database(args.data_dir)[:100]
+    database = load_database(args.data_dir)
     # Scoring functions dictionary
     scoring_functions = {
         'Random': SFRandom(),
@@ -131,7 +135,7 @@ if __name__ == "__main__":
     main(args)
 
 # cd Documents/Project/TACsy/SynTemp/
-# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 0
+# python scripts.py --log_dir ./Data/DPO/USPTO_50K/Com/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R0 --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 0
 
 # python scripts.py --log_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_50K/test.json.gz --rule_file_path ./Data/DPO/USPTO_50K/Non_hydrogen/R1 --save_dir ./Data/DPO/USPTO_50K/Non_hydrogen/Output --radius 1
     
@@ -156,3 +160,41 @@ if __name__ == "__main__":
 
 #python scripts.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_balance/test.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
     
+############
+
+# python scripts/retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R1 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 1
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r2_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R2 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 2
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r3_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R3 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 3
+    
+############
+# python retro.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_1_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R1 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 1 --hierarchical True --max_radius 1 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R2 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 2 --hierarchical True --max_radius 2 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Complete/Log/hier_rule_3_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 3 --hierarchical True --max_radius 3 --max_solutions 1000
+    
+############
+    
+# python scripts/retro.py --log_dir ./Data/DPO/USPTO_balance/Raw/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Raw/R0 --save_dir ./Data/DPO/USPTO_balance/Raw/Output --radius 0
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Raw/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Raw/R1 --save_dir ./Data/DPO/USPTO_balance/Raw/Output --radius 1
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Raw/Log/rules_r2_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Raw/R2 --save_dir ./Data/DPO/USPTO_balance/Raw/Output --radius 2
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Raw/Log/rules_r3_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Raw/R3 --save_dir ./Data/DPO/USPTO_balance/Raw/Output --radius 3
+
+
+############
+# python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R0 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_1_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R1 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 1 --hierarchical True --max_radius 1 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R2 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 2 --hierarchical True --max_radius 2 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_3_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R0 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 3 --hierarchical True --max_radius 3 --max_solutions 1000

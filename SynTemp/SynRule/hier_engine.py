@@ -72,12 +72,6 @@ class HierEngine:
 
             temp_results = HierEngine.rule_apply(initial_molecules, reaction_rule)
 
-            # if radius > max_radius - 1:
-            #     return temp_results
-
-            # if prune and len(temp_results) < prune_size:
-            #     return temp_results
-
             if radius > max_radius - 1 or (prune and len(temp_results) < prune_size):
                 return temp_results
 
@@ -119,7 +113,7 @@ class HierEngine:
         max_solutions: int = 1000,
         prune: bool = True,
         prune_size: int = 1,
-        templates_threshold: int = 0.00
+        templates_threshold: int = 0.00,
     ) -> List[List[Any]]:
         """
         Apply hierarchical chemical reaction rules to a dataset of molecules based on their SMILES strings.
@@ -142,9 +136,14 @@ class HierEngine:
             key=lambda molecule: molecule.numVertices,
         )
         invert_rule = prediction_type == "backward"
+        forward_rule = prediction_type == "forward"
 
-        hier_0 = [value for value in hier_temp[0] if value['Percentage'] >= templates_threshold]
-        hier_0_id = [value['Cluster_id'] for value in hier_0]
+        hier_0 = [
+            value
+            for value in hier_temp[0]
+            if value["Percentage"] >= templates_threshold
+        ]
+        hier_0_id = [value["Cluster_id"] for value in hier_0]
 
         # Create a list of file patterns to search for, using each Cluster_id
         file_patterns = [f"{rule_file_path}/R0/{a}.gml" for a in hier_0_id]
@@ -154,9 +153,11 @@ class HierEngine:
         for pattern in file_patterns:
             rule_files.extend(glob.glob(pattern))
 
-        #rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
+        # rule_files = glob.glob(f"{rule_file_path}/R0/*.gml")
         temp_results = []
+        result_temp = {}
         for rule_file in rule_files:
+            rule_id = rule_file.split("/")[-1].split(".")[0]
             result = HierEngine.hier_child_level(
                 initial_molecules,
                 rule_file_path,
@@ -168,10 +169,16 @@ class HierEngine:
                 prune=prune,
                 prune_size=prune_size,
             )
-            if len(result) < max_solutions:
-                temp_results.extend(result)
-            else:
-                temp_results.extend(result[:max_solutions])
+
+            if len(result) > 0:
+                rsmi_result = generate_reaction_smiles(
+                    result, ".".join(initial_smiles), is_forward=forward_rule
+                )
+                result_temp[rule_id] = rsmi_result
+                if len(result) < max_solutions:
+                    temp_results.extend(result)
+                else:
+                    temp_results.extend(result[:max_solutions])
 
         reaction_processing_map = {
             "forward": lambda smiles: generate_reaction_smiles(
@@ -182,6 +189,7 @@ class HierEngine:
             ),
         }
 
-        return reaction_processing_map.get(prediction_type, lambda x: [])(
-            initial_smiles
+        return (
+            reaction_processing_map.get(prediction_type, lambda x: [])(initial_smiles),
+            result_temp,
         )

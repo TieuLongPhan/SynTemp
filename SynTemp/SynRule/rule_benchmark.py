@@ -36,7 +36,7 @@ class RuleBenchmark:
         max_solutions: int = 100,
         prune: bool = True,
         prune_size: int = 1,
-        templates_threshold: int = 0.00
+        templates_threshold: int = 0.00,
     ) -> Tuple[List[Dict], List[Dict]]:
         """
         Simulates chemical reactions for each entry in a molecular database, processing them in both forward
@@ -66,6 +66,7 @@ class RuleBenchmark:
                 logging.info(f"Process reaction {entry[original_rsmi_col]}")
                 entry["positive_reactions"] = []
                 entry["unrank"] = []
+                entry["unrank_raw"] = []
 
                 reaction_side_index = 0 if reaction_direction == "forward" else 1
                 initial_smiles_list = (
@@ -90,7 +91,8 @@ class RuleBenchmark:
                         hier_temp = load_from_pickle(
                             f"{root_rule_file_path}/hier_rules.pkl.gz"
                         )
-                        reactions = HierEngine.hier_rule_apply(
+
+                        reactions, result_temp = HierEngine.hier_rule_apply(
                             initial_smiles=initial_smiles_list,
                             hier_temp=hier_temp,
                             rule_file_path=root_rule_file_path,
@@ -99,12 +101,23 @@ class RuleBenchmark:
                             max_solutions=max_solutions,
                             prune=prune,
                             prune_size=prune_size,
-                            templates_threshold = templates_threshold
+                            templates_threshold=templates_threshold,
                         )
 
-                        reactions = list(
-                            set([standardize_rsmi(value) for value in reactions])
-                        )
+                        reactions = {standardize_rsmi(rxn) for rxn in reactions if rxn}
+                        reactions = [rxn for rxn in reactions if rxn is not None]
+
+                        for key, values in result_temp.items():
+                            standardized_reactions = {
+                                standardize_rsmi(value) for value in values if value
+                            }
+                            standardized_reactions = [
+                                rxn for rxn in standardized_reactions if rxn is not None
+                            ]
+                            reduced_reactions = ReduceReactions.process_list_of_rsmi(
+                                standardized_reactions
+                            )
+                            result_temp[key] = reduced_reactions
 
                         matched_reactions, _ = categorize_reactions(
                             reactions, entry[original_rsmi_col]
@@ -113,20 +126,33 @@ class RuleBenchmark:
                             entry["positive_reactions"] = matched_reactions
                             # entry["negative_reactions"].extend(unmatched_reactions)
                         entry["unrank"].extend(reactions)
+                        entry["unrank_raw"].append(result_temp)
 
                     else:
                         for rule_file in rule_files:
-                            reactions = RuleEngine.perform_reaction(
-                                rule_file_path=rule_file,
-                                initial_smiles=initial_smiles_list,
-                                repeat_times=repeat_times,
-                                prediction_type=reaction_direction,
-                                verbosity=verbosity,
-                            )
-                            print(reactions)
-                            reactions = list(
-                                set([standardize_rsmi(value) for value in reactions])
-                            )
+                            try:
+                                reactions = RuleEngine.perform_reaction(
+                                    rule_file_path=rule_file,
+                                    initial_smiles=initial_smiles_list,
+                                    repeat_times=repeat_times,
+                                    prediction_type=reaction_direction,
+                                    verbosity=verbosity,
+                                )
+                            except FileNotFoundError as fnf_error:
+                                reactions = []
+                                logging.error(
+                                    f"File not found: {rule_file} - {fnf_error} for {initial_smiles_list}"
+                                )
+                            except Exception as e:
+                                reactions = []
+                                logging.error(
+                                    f"Error processing file {rule_file}: {e} for {initial_smiles_list}"
+                                )
+                            reactions = {
+                                standardize_rsmi(rxn) for rxn in reactions if rxn
+                            }
+                            reactions = [rxn for rxn in reactions if rxn is not None]
+
                             matched_reactions, _ = categorize_reactions(
                                 reactions, entry[original_rsmi_col]
                             )
@@ -134,7 +160,6 @@ class RuleBenchmark:
                             # Accumulate reactions
                             if matched_reactions:
                                 entry["positive_reactions"].extend(matched_reactions)
-                            # entry["negative_reactions"].extend(unmatched_reactions)
                             entry["unrank"].extend(reactions)
                         entry["positive_reactions"] = list(
                             set(entry["positive_reactions"])
@@ -146,7 +171,6 @@ class RuleBenchmark:
                 entry["unrank"] = ReduceReactions.process_list_of_rsmi(
                     list(set(entry["unrank"]))
                 )
-
         return updated_database_forward, updated_database_backward
 
     @staticmethod

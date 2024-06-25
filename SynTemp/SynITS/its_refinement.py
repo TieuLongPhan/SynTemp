@@ -47,11 +47,16 @@ class ITSRefinement:
 
         for mapper in mapper_types:
             graph_data = {column: input_graph.get(mapper)}
-            
+
             if graph_data[column]:
                 try:
-                    _, _,  rc = RuleExtraction.extract_reaction_rules(graph_data[column][0], graph_data[column][1], 
-                                                                      graph_data[column][2], extend=False, n_knn=1)
+                    _, _, rc = RuleExtraction.extract_reaction_rules(
+                        graph_data[column][0],
+                        graph_data[column][1],
+                        graph_data[column][2],
+                        extend=False,
+                        n_knn=1,
+                    )
                     if len(rc.edges) > 20:
                         return None
                     processed_data, type_of_graph = (

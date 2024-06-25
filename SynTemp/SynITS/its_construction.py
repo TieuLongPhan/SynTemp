@@ -10,7 +10,7 @@ class ITSConstruction:
         H: nx.Graph,
         ignore_aromaticity: bool = False,
         attributes_defaults: Dict[str, Any] = None,
-        balance_its : bool = True,
+        balance_its: bool = True,
     ) -> nx.Graph:
         """
         Creates a Combined Graph Representation (CGR) from two input graphs G and H.
@@ -29,7 +29,9 @@ class ITSConstruction:
         """
         # Create a null graph from a copy of G to preserve attributes
         # Choose the graph with more nodes or the graph H depending on the 'balance_its' flag
-        if (balance_its and len(G.nodes()) <= len(H.nodes())) or (not balance_its and len(G.nodes()) >= len(H.nodes())):
+        if (balance_its and len(G.nodes()) <= len(H.nodes())) or (
+            not balance_its and len(G.nodes()) >= len(H.nodes())
+        ):
             ITS = deepcopy(G)
         else:
             ITS = deepcopy(H)
