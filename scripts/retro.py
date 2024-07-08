@@ -162,7 +162,7 @@ if __name__ == "__main__":
     
 ############
 
-# python scripts/retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0
+# python retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R0 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 0
     
 # python retro.py --log_dir ./Data/DPO/USPTO_balance/Complete/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Complete/R1 --save_dir ./Data/DPO/USPTO_balance/Complete/Output --radius 1
     
@@ -198,3 +198,24 @@ if __name__ == "__main__":
 # python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R2 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 2 --hierarchical True --max_radius 2 --max_solutions 1000
     
 # python retro.py --log_dir Data/DPO/USPTO_balance/Expand/Log/hier_rule_3_log.txt --data_dir ./Data/DPO/USPTO_balance/val.json.gz --rule_file_path ./Data/DPO/USPTO_balance/Expand/R0 --save_dir ./Data/DPO/USPTO_balance/Expand/Output --radius 3 --hierarchical True --max_radius 3 --max_solutions 1000
+
+
+############
+# python retro.py --log_dir Data/DPO/USPTO_unbalance/Complete/Log/hier_rule_0_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Complete/R0 --save_dir ./Data/DPO/USPTO_unbalance/Complete/Output --radius 0 --hierarchical True --max_radius 0 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_unbalance/Complete/Log/hier_rule_1_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Complete/R1 --save_dir ./Data/DPO/USPTO_unbalance/Complete/Output --radius 1 --hierarchical True --max_radius 1 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_unbalance/Complete/Log/hier_rule_2_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Complete/R2 --save_dir ./Data/DPO/USPTO_unbalance/Complete/Output --radius 2 --hierarchical True --max_radius 2 --max_solutions 1000
+    
+# python retro.py --log_dir Data/DPO/USPTO_unbalance/Complete/Log/hier_rule_3_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Complete/R0 --save_dir ./Data/DPO/USPTO_unbalance/Complete/Output --radius 3 --hierarchical True --max_radius 3 --max_solutions 1000
+
+
+############
+    
+# python scripts/retro.py --log_dir ./Data/DPO/USPTO_unbalance/Raw/Log/rules_r0_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Raw/R0 --save_dir ./Data/DPO/USPTO_unbalance/Raw/Output --radius 0
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_unbalance/Raw/Log/rules_r1_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Raw/R1 --save_dir ./Data/DPO/USPTO_unbalance/Raw/Output --radius 1
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_unbalance/Raw/Log/rules_r2_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Raw/R2 --save_dir ./Data/DPO/USPTO_unbalance/Raw/Output --radius 2
+    
+# python retro.py --log_dir ./Data/DPO/USPTO_unbalance/Raw/Log/rules_r3_log.txt --data_dir ./Data/DPO/USPTO_unbalance/val.json.gz --rule_file_path ./Data/DPO/USPTO_unbalance/Raw/R3 --save_dir ./Data/DPO/USPTO_unbalance/Raw/Output --radius 3

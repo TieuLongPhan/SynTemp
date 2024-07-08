@@ -139,7 +139,7 @@ def run_synitsg_pipeline(
     # Combine saved batch data
     its_correct, its_incorrect, all_uncertain_hydrogen = [], [], []
     for i in range(num_batches):
-
+        print(i)
         its_correct.extend(
             load_from_pickle(os.path.join(temp_dir, f"batch_correct_{i}.pkl"))
         )
@@ -194,7 +194,7 @@ def main():
 
     args = parser.parse_args()
 
-    data = load_database(os.path.join(root_dir, 'Data', 'DPO', args.data_name, 'train.json.gz'))
+    data = load_database(os.path.join(root_dir, 'Data', 'DPO', args.data_name, 'train.json.gz'))[:]
 
     args.save_dir = os.path.join(root_dir, 'Data', 'DPO', args.data_name, args.rule_folder)
     run_synitsg_pipeline(

@@ -18,7 +18,9 @@ def main():
 
     args = parser.parse_args()
     data_path = f"{root_dir}/Data/DPO/{args.folder_name}/{args.data_name}"
-
+    print("***")
+    print(data_path)
+    print("***")
     data = load_from_pickle(data_path)
 
     hcl = HierarchicalClustering(node_label_names=args.node_label_names,
