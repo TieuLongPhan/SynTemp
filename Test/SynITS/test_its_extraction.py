@@ -63,18 +63,16 @@ class TestITSExtraction(unittest.TestCase):
         self.assertEqual(classified, [(0, 1), (0, 2)])  # matching pairs
 
     def test_process_mapped_smiles(self):
-        graphs_by_map_correct, _ = (
-            ITSExtraction.process_mapped_smiles(
-                self.mapped_smiles_list[0], self.mapper_names, 
-            )
+        graphs_by_map_correct, _ = ITSExtraction.process_mapped_smiles(
+            self.mapped_smiles_list[0],
+            self.mapper_names,
         )
         self.assertIsNotNone(graphs_by_map_correct["ITSGraph"])
         self.assertIsNotNone(graphs_by_map_correct["GraphRules"])
 
-
     def test_parallel_process_smiles(self):
         # Measure execution time with a single job
-       
+
         results, results_wrong = ITSExtraction.parallel_process_smiles(
             self.mapped_smiles_list, self.mapper_names, n_jobs=2, verbose=0
         )
@@ -85,7 +83,6 @@ class TestITSExtraction(unittest.TestCase):
 
         # Inequivalent AAM
         self.assertEqual(results_wrong[0]["equivariant"], 0)
-        
 
 
 if __name__ == "__main__":

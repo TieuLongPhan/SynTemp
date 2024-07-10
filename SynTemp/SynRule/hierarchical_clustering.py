@@ -206,8 +206,7 @@ class HierarchicalClustering(RuleCluster):
         try:
             reaction_dicts = copy.deepcopy(original_reaction_dicts)
             its_graphs = [value[its_column] for value in reaction_dicts]
-            # if templates:
-
+            
             logging.info("Processing with templates")
             logging.info("Parent level")
             cluster_indices_0, templates_0 = self.process_level(

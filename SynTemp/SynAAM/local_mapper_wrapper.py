@@ -62,7 +62,7 @@ def map_with_local_mapper_batch(reaction_list, batch_size=200, job_timeout=None)
     pool = Pool(processes=1)  # Initialize the pool outside the loop
     try:
         for i in range(0, max_size, batch_size):
-            current_batch = reaction_list[i : i + batch_size]
+            current_batch = reaction_list[i: i + batch_size]
             try:
                 async_result = pool.apply_async(map_with_local_mapper, (current_batch,))
                 results = async_result.get(job_timeout)
@@ -85,8 +85,8 @@ def map_with_local_mapper_batch(reaction_list, batch_size=200, job_timeout=None)
                             fallback_pool.terminate()
                             fallback_pool.join()
                             logger.error(
-                                f"Timeout: Individual reaction processing"
-                                + "exceeded limits for {reaction}."
+                                "Timeout: Individual reaction processing"
+                                + f"exceeded limits for {reaction}."
                             )
                             results_all.append(reaction)
                 logger.info(

@@ -81,11 +81,11 @@ class AAMConsensus:
                     getattr(mapper_module, f"map_with_{mapper_name}"),
                     getattr(mapper_module, f"map_with_{mapper_name}_batch"),
                 )
-            except ImportError as e:
+            except ImportError as _:
                 continue  # Try the next path in the list
 
         # If all attempts fail, re-raise the last ImportError
-        raise ImportError(f"Could not import any module for {mapper_name}") from e
+        raise ImportError(f"Could not import any module for {mapper_name}")
 
     def single_consensus(
         self,
