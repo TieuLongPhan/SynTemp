@@ -98,11 +98,15 @@ def run_synitsg_pipeline(
         mapper_name = ["rxn_mapper", "graphormer", "local_mapper"]
         logger.info("No mapper_name provided. Using default mappers.")
     threshold = len(mapper_name) - 1
-    
+
     if check_valid:
         logger.info("Checking and filtering valid data.")
         check_valid_data = AMMPostprocessor.parallel_postprocess(
-            data, mapper_name, threshold=len(mapper_name), n_jobs=n_jobs, verbose=verbose
+            data,
+            mapper_name,
+            threshold=len(mapper_name),
+            n_jobs=n_jobs,
+            verbose=verbose,
         )
         valid_data = [
             reaction for reaction in check_valid_data if reaction.get("Valid")
@@ -175,7 +179,6 @@ def run_synitsg_pipeline(
     # Clean up temporary files
     shutil.rmtree(temp_dir)
 
-   
     # Save final combined results
     logger.info(f"Combining and save data")
     if save_dir:
@@ -195,20 +198,19 @@ def run_synitsg_pipeline(
 
     elapsed_time = time.time() - start_time
     logger.info(f"Execution time: {elapsed_time:.2f} seconds")
-    
 
 
 if __name__ == "__main__":
     mapper_name = ["rxn_mapper", "graphormer", "local_mapper"]
     # folder_names = ['uspto', 'jaworski', 'golden', 'ecoli']
     folder_name = "USPTO_50K"
-    #folder_name = "natcomm"
+    # folder_name = "natcomm"
     # save_dir = f"{root_dir}/Data/AAM/{folder_name}"
 
     # data = load_database(
     #     f"{root_dir}/Data/AAM/{folder_name}/{folder_name}_aam_reactions.json.gz"
     # )[:]
-    data = load_database(f'{root_dir}/Data/DPO/USPTO_50K/train.json.gz')
+    data = load_database(f"{root_dir}/Data/DPO/USPTO_50K/train.json.gz")
     save_dir = f"{root_dir}/Data/DPO/USPTO_50K/Non_hydrogen"
     run_synitsg_pipeline(
         data,

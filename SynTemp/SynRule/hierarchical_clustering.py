@@ -20,12 +20,9 @@ class HierarchicalClustering(RuleCluster):
         self,
         node_label_names: List[str] = [
             "element",
-            "aromatic",
-            "hcount",
             "charge",
-            "typesGH",
         ],
-        node_label_default: List[Any] = ["*", False, 0, 0, ()],
+        node_label_default: List[Any] = ["*", 0],
         edge_attribute: str = "order",
         max_radius: int = 3,
     ):
@@ -49,16 +46,21 @@ class HierarchicalClustering(RuleCluster):
         graphs: List[Any], class_labels: List[int]
     ) -> Tuple[Dict[int, List[Any]], Dict[int, List[int]]]:
         """
-        Splits a list of graphs and their indices into separate lists based on the provided class labels.
+        Splits a list of graphs and their indices into separate lists based on the 
+        provided class labels.
 
-        Args:
-            graphs (List[Any]): The list of graphs to be split.
-            class_labels (List[int]): The list containing class labels corresponding to each graph.
+        Parameters:
+        - graphs (List[Any]): The list of graphs to be split.
+        - class_labels (List[int]): The list containing class labels corresponding to each 
+        graph.
 
         Returns:
-            Tuple[Dict[int, List[Any]], Dict[int, List[int]]]: A tuple containing two dictionaries:
-                1. A dictionary where keys are class labels and values are lists of graphs corresponding to each class.
-                2. A dictionary where keys are class labels and values are lists of indices corresponding to each class.
+        - Tuple[Dict[int, List[Any]], Dict[int, List[int]]]: A tuple containing two 
+        dictionaries:
+            1. A dictionary where keys are class labels and values are lists of graphs 
+            corresponding to each class.
+            2. A dictionary where keys are class labels and values are lists of indices 
+            corresponding to each class.
         """
         if len(graphs) != len(class_labels):
             raise ValueError(
@@ -87,19 +89,24 @@ class HierarchicalClustering(RuleCluster):
         update_template: bool,
     ) -> Tuple[Dict, Dict]:
         """
-        Processes a level in a graph by extracting rules from the input graphs and clustering them.
+        Processes a level in a graph by extracting rules from the input graphs and 
+        clustering them.
 
-        Args:
-            its_graphs (List[Any]): A list of input graphs to process.
-            k (int): The number of nearest neighbors to consider in the k-NN algorithm for rule extraction.
-            nodeLabelNames (List[str]): A list of labels for the nodes in the graph.
-            nodeCountDefault (Any): The default value for node labels if no label is specified.
-            edgeAttribute (str): The attribute name of the edges used in rule extraction.
-            templates (Dict): A dictionary of templates used for clustering rules.
-            update_template (bool): A flag to determine whether to update the templates after clustering.
+        Parameters:
+        - its_graphs (List[Any]): A list of input graphs to process.
+        - k (int): The number of nearest neighbors to consider in the k-NN algorithm for 
+        rule extraction.
+        - nodeLabelNames (List[str]): A list of labels for the nodes in the graph.
+        - nodeCountDefault (Any): The default value for node labels if no label is 
+        specified.
+        - edgeAttribute (str): The attribute name of the edges used in rule extraction.
+        - templates (Dict): A dictionary of templates used for clustering rules.
+        - update_template (bool): A flag to determine whether to update the templates 
+        after clustering.
 
         Returns:
-            Tuple[Dict, Dict]: A tuple containing the mapping of graphs to clusters and the potentially updated templates.
+        - Tuple[Dict, Dict]: A tuple containing the mapping of graphs to clusters and the 
+        potentially updated templates.
         """
         logging.info(f"Processing templates with {k}:")
         rc_graphs = [
@@ -128,17 +135,21 @@ class HierarchicalClustering(RuleCluster):
         update_template=False,
     ):
         """
-        Process graphs by clusters, updating templates and indices based on the specified node label names.
+        Process graphs by clusters, updating templates and indices based on the specified 
+        node label names.
 
-        Args:
+        Parameters:
         - graphs (list): A list of graph structures to be processed.
         - indices (list): A list of indices representing cluster identifications.
-        - node_label_names (list): A list of node label names used in the graph processing.
+        - node_label_names (list): A list of node label names used in the graph 
+        processing.
 
         Returns:
         - tuple:
-            - templates (list): A list of template dictionaries generated during processing.
-            - cluster_indices_all (list): Updated list of all cluster indices after processing.
+            - templates (list): A list of template dictionaries generated during 
+            processing.
+            - cluster_indices_all (list): Updated list of all cluster indices after 
+            processing.
         """
         graph_dict, index_dict = self.split_graphs_by_class_and_indices(
             parent_graphs, parent_cluster_indices
@@ -197,16 +208,16 @@ class HierarchicalClustering(RuleCluster):
         Fit the hierarchical clustering model to the data.
 
         Parameters:
-            original_reaction_dicts (List[Dict[str, Any]]): List of reaction dictionaries.
-            its_column (str): Column name for the ITS graph.
+        - original_reaction_dicts (List[Dict[str, Any]]): List of reaction dictionaries.
+        - its_column (str): Column name for the ITS graph.
 
         Returns:
-            List[Dict[str, Any]]: Updated reaction dictionaries with clustering information.
+        - List[Dict[str, Any]]: Updated reaction dictionaries with clustering information.
         """
         try:
             reaction_dicts = copy.deepcopy(original_reaction_dicts)
             its_graphs = [value[its_column] for value in reaction_dicts]
-            
+
             logging.info("Processing with templates")
             logging.info("Parent level")
             cluster_indices_0, templates_0 = self.process_level(

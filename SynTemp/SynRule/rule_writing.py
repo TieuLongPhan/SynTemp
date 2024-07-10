@@ -32,13 +32,14 @@ class RuleWriting:
         graph: nx.Graph, section: str, changed_node_ids: List
     ) -> str:
         """
-        Convert a NetworkX graph to a GML string representation, focusing on nodes for the 'context' section
-        and on nodes and edges for the 'left' or 'right' sections.
+        Convert a NetworkX graph to a GML string representation, focusing on nodes for the
+        'context' section and on nodes and edges for the 'left' or 'right' sections.
 
-        Args:
-        graph (nx.Graph): The NetworkX graph to be converted.
-        section (str): The section name in the GML output, typically "left", "right", or "context".
-        changed_node_ids (List): list of nodes change attribute
+        Parameters:
+        - graph (nx.Graph): The NetworkX graph to be converted.
+        - section (str): The section name in the GML output, typically "left", "right", or
+        "context".
+        - changed_node_ids (List): list of nodes change attribute
 
         Returns:
         str: The GML string representation of the graph for the specified section.
@@ -73,16 +74,17 @@ class RuleWriting:
         L: nx.Graph, R: nx.Graph, K: nx.Graph, rule_name: str, changed_node_ids: List
     ) -> str:
         """
-        Generate a GML string representation for a chemical rule, including its left, context, and right graphs.
+        Generate a GML string representation for a chemical rule, including its left,
+        context, and right graphs.
 
-        Args:
-        L (nx.Graph): The left graph.
-        R (nx.Graph): The right graph.
-        K (nx.Graph): The context graph.
-        rule_name (str): The name of the rule.
+        Parameters:
+        - L (nx.Graph): The left graph.
+        - R (nx.Graph): The right graph.
+        - K (nx.Graph): The context graph.
+        - rule_name (str): The name of the rule.
 
         Returns:
-        str: The GML string representation of the rule.
+        - str: The GML string representation of the rule.
         """
         gml_str = "rule [\n"
         gml_str += f'   ruleID "{rule_name}"\n'
@@ -101,14 +103,17 @@ class RuleWriting:
         attributes: List[str] = ["charge"],
     ) -> Dict[str, str]:
         """
-        Process a dictionary of graph rules to generate GML strings for each rule, with an option to reindex nodes and edges.
+        Process a dictionary of graph rules to generate GML strings for each rule, with an
+        option to reindex nodes and edges.
 
-        Args:
-        graph_rules (Dict[str, Tuple[nx.Graph, nx.Graph, nx.Graph]]): A dictionary mapping rule names to tuples of (L, R, K) graphs.
-        reindex (bool): If true, reindex node IDs based on the L graph sequence.
+        Parameters:
+        - graph_rules (Dict[str, Tuple[nx.Graph, nx.Graph, nx.Graph]]): A dictionary
+        mapping rule names to tuples of (L, R, K) graphs.
+        - reindex (bool): If true, reindex node IDs based on the L graph sequence.
 
         Returns:
-        Dict[str, str]: A dictionary mapping rule names to their GML string representations.
+        - Dict[str, str]: A dictionary mapping rule names to their GML string
+        representations.
         """
 
         rule_name = graph_rules[id_column]
@@ -140,20 +145,25 @@ class RuleWriting:
         attributes: List[str] = ["charge"],
     ) -> List[str]:
         """
-        Automatically extract and process a list of graph rules, optionally saving the results to files.
+        Automatically extract and process a list of graph rules, optionally saving the
+        results to files.
 
-        Args:
-            data_dicts (List[Dict]): A list of dictionaries, each representing a rule with its associated graphs.
-            id_column (str): The dictionary key where the rule ID is stored.
-            n_jobs (int): The number of concurrent jobs to run.
-            verbose (int): The verbosity level of the job execution.
-            rule_column (str): The key in the dictionary that maps to the tuple of (L, R, K) graphs.
-            reindex (bool): If True, reindex node IDs based on the L graph sequence.
-            save_path (Optional[str]): The directory path where the GML files will be saved. If None, files are not saved.
-            attributes
+        Parameters:
+        - data_dicts (List[Dict]): A list of dictionaries, each representing a rule with
+        its associated graphs.
+        - id_column (str): The dictionary key where the rule ID is stored.
+        - n_jobs (int): The number of concurrent jobs to run.
+        - verbose (int): The verbosity level of the job execution.
+        - rule_column (str): The key in the dictionary that maps to the tuple
+        of (L, R, K) graphs.
+        - reindex (bool): If True, reindex node IDs based on the L graph sequence.
+        - save_path (Optional[str]): The directory path where the GML files will be saved.
+        If None, files are not saved.
+
+        - attributes: list of attributes want to include
 
         Returns:
-            List[str]: A list of GML string representations for each rule.
+        - List[str]: A list of GML string representations for each rule.
         """
         results = Parallel(n_jobs=n_jobs, verbose=verbose)(
             delayed(cls.process_graph_rules)(
@@ -201,11 +211,9 @@ class RuleWriting:
             if node in graph2:
                 # Check each specified attribute for changes
                 for attr in attributes:
-                    # Get the attribute value for the node in both graphs, defaulting to None if the attribute is missing
                     value1 = graph1.nodes[node].get(attr, None)
                     value2 = graph2.nodes[node].get(attr, None)
 
-                    # If there's a change in the attribute value, record the node and move to the next one
                     if value1 != value2:
                         changed_nodes.append(node)
                         break

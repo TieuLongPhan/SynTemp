@@ -17,24 +17,24 @@ class RuleCluster:
         edge_attribute: str = "order",
     ):
         """
-        Initializes the NaiveClusterer with customization options for node and edge matching functions.
-        This class is designed to facilitate clustering of graph nodes and edges based on specified attributes
-        and their matching criteria.
+        Initializes the NaiveClusterer with customization options for node and edge
+        matching functions. This class is designed to facilitate clustering of graph nodes
+        and edges based on specified attributes and their matching criteria.
 
         Parameters:
-            node_label_names (List[str]): A list of node attribute names to be considered for matching.
-                Each attribute name corresponds to a property of the nodes in the graph.
-                Default is ["element", "aromatic", "charge"].
-            node_label_default (List[Any]): Default values for each of the node attributes specified in
-                `node_label_names`. These are used where node attributes are missing. The length and order
-                of this list should match `node_label_names`.
-                Default is ["*", False, 0].
-            edge_attribute (str): The name of the edge attribute to consider for matching edges.
-                This attribute is used to assess edge similarity.
-                Default is "order".
+        - node_label_names (List[str]): A list of node attribute names to be considered
+        for matching. Each attribute name corresponds to a property of the nodes in the
+        graph. Default is ["element", "aromatic", "charge"].
+        - node_label_default (List[Any]): Default values for each of the node attributes
+        specified in `node_label_names`. These are used where node attributes are missing.
+        The length and order of this list should match `node_label_names`.
+        Default is ["*", False, 0].
+        - edge_attribute (str): The name of the edge attribute to consider for matching
+        edges. This attribute is used to assess edge similarity. Default is "order".
 
         Raises:
-            ValueError: If the lengths of `node_label_names` and `node_label_default` do not match.
+        - ValueError: If the lengths of `node_label_names` and `node_label_default` do not
+        match.
         """
 
         self.nodeLabelNames: List[str] = node_label_names
@@ -52,16 +52,16 @@ class RuleCluster:
     def calculate_cluster_percentages(input_dict: dict) -> dict:
         """
         Calculates the percentage of times each cluster ID appears in the input dictionary
-        and returns a new dictionary with cluster IDs as keys and their percentages as values,
-        sorted by these percentages in descending order.
+        and returns a new dictionary with cluster IDs as keys and their percentages as
+        values, sorted by these percentages in descending order.
 
         Parameters:
-            input_dict (dict): A dictionary where keys are indices or identifiers
-                            and values are cluster IDs (integers).
+        - input_dict (dict): A dictionary where keys are indices or identifiers and values
+        are cluster IDs (integers).
 
         Returns:
-            dict: A dictionary mapping each cluster ID to the percentage of its appearance,
-                sorted by percentage in descending order.
+        - dict: A dictionary mapping each cluster ID to the percentage of its appearance,
+        sorted by percentage in descending order.
         """
         total_count = len(input_dict)
         cluster_count = {}
@@ -88,13 +88,15 @@ class RuleCluster:
         graphs: List[nx.Graph], nodeMatch=None, edgeMatch=None
     ) -> List[Set[int]]:
         """
-        Clusters the graphs based on isomorphism, using the predefined node and edge match functions.
+        Clusters the graphs based on isomorphism, using the predefined node and edge match
+        functions.
 
         Parameters:
-            graphs (List[nx.Graph]): A list of NetworkX graph objects to be clustered.
+        - graphs (List[nx.Graph]): A list of NetworkX graph objects to be clustered.
 
         Returns:
-            List[Set[int]]: A list of sets, where each set contains the indices of graphs in the same cluster.
+        - List[Set[int]]: A list of sets, where each set contains the indices of graphs in
+        the same cluster.
         """
         visited: Set[int] = set()
         clusters = []
@@ -131,18 +133,22 @@ class RuleCluster:
         edgeMatch: Optional[callable] = None,
     ) -> List[Any]:
         """
-        Matches each graph in the provided list against a set of template graphs to identify corresponding clusters,
-        and avoids further processing for a graph once a match is found.
+        Matches each graph in the provided list against a set of template graphs to
+        identify corresponding clusters, and avoids further processing for a graph once a
+        match is found.
 
         Parameters:
-            graphs (List[nx.Graph]): A list of NetworkX graph objects to be checked.
-            templates (List[Dict[str, Any]]): A list of dictionaries, each containing a template graph ('RC') and associated cluster ID ('ClusterId').
-            nodeMatch (callable, optional): A function to match nodes between graphs. Defaults to None.
-            edgeMatch (callable, optional): A function to match edges between
-            graphs. Defaults to Other.
+        - graphs (List[nx.Graph]): A list of NetworkX graph objects to be checked.
+        - templates (List[Dict[str, Any]]): A list of dictionaries, each containing a
+        template graph ('RC') and associated cluster ID ('ClusterId').
+        - nodeMatch (callable, optional): A function to match nodes between graphs.
+        Defaults to None.
+        - edgeMatch (callable, optional): A function to match edges between
+        - graphs. Defaults to Other.
 
         Returns:
-            List[Any]: A list containing the 'ClusterId' for each graph in 'graphs' if a match is found; otherwise, 'Undefined' for graphs without a match.
+        - List[Any]: A list containing the 'ClusterId' for each graph in 'graphs' if a
+        match is found; otherwise, 'Undefined' for graphs without a match.
         """
         results = []
 
@@ -163,45 +169,6 @@ class RuleCluster:
 
         return results
 
-    # @staticmethod
-    # def get_templates(
-    #     graphs: List[List[nx.Graph]],
-    #     single_graphs: List[nx.Graph],
-    #     graph_to_cluster_dict: Dict[int, int],
-    #     max_index_template: int = 0,
-    # ) -> List[Dict[str, Any]]:
-    #     """
-    #     Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index.
-
-    #     Parameters:
-    #         graphs (List[nx.Graph]): A list of graph objects from which templates are derived.
-    #         graph_to_cluster_dict (Dict[int, int]): A dictionary mapping graph indices to cluster IDs.
-    #         max_index_template (int): The maximum index used to offset cluster IDs.
-
-    #     Returns:
-    #         List[Dict[str, Any]]: A list of dictionaries each representing a template with a 'Cluster_id' and the associated graph ('RC').
-    #     """
-    #     # Adjust cluster IDs based on the maximum template index
-    #     temp_graph_to_cluster = {
-    #         key: item + max_index_template
-    #         for key, item in graph_to_cluster_dict.items()
-    #     }
-    #     updated_graphs = []
-    #     for index, graph in enumerate(graphs):
-    #         updated_graph = (graph[0], graph[1], single_graphs[index])
-    #         updated_graphs.append(updated_graph)
-
-    #     # Create a dictionary with unique values and their first corresponding keys
-    #     unique_temp = create_unique_value_dict(temp_graph_to_cluster)
-
-    #     # Construct templates using unique cluster IDs and corresponding graphs
-    #     template = [
-    #         {"Cluster_id": key, "RC": updated_graphs[value], "Parent": []}
-    #         for key, value in unique_temp.items()
-    #     ]
-
-    #     return template
-
     @staticmethod
     def get_templates(
         graphs: List[List[nx.Graph]],
@@ -211,17 +178,23 @@ class RuleCluster:
         max_index_template: int = 0,
     ) -> List[Dict[str, Any]]:
         """
-        Generates a list of templates from graphs based on cluster mappings, offsetting cluster indices by a maximum template index and incorporating percentage values.
+        Generates a list of templates from graphs based on cluster mappings, offsetting
+        cluster indices by a maximum template index and incorporating percentage values.
 
         Parameters:
-            graphs (List[List[nx.Graph]]): A list of graph object pairs from which templates are derived.
-            single_graphs (List[nx.Graph]): A list of individual graph objects for additional data association.
-            graph_to_cluster_dict (Dict[int, int]): A dictionary mapping graph indices to cluster IDs.
-            sorted_templates (Dict[int, float]): A dictionary mapping cluster IDs to percentage values.
-            max_index_template (int): The maximum index used to offset cluster IDs.
+        - graphs (List[List[nx.Graph]]): A list of graph object pairs from which
+        templates are derived.
+        - single_graphs (List[nx.Graph]): A list of individual graph objects for
+        additional data association.
+        - graph_to_cluster_dict (Dict[int, int]): A dictionary mapping graph indices to
+        cluster IDs.
+        - sorted_templates (Dict[int, float]): A dictionary mapping cluster IDs to
+        percentage values.
+        - max_index_template (int): The maximum index used to offset cluster IDs.
 
         Returns:
-            List[Dict[str, Any]]: A list of dictionaries each representing a template with a 'Cluster_id', the associated graph ('RC'), and a 'percentage'.
+        - List[Dict[str, Any]]: A list of dictionaries each representing a template with a
+        'Cluster_id', the associated graph ('RC'), and a 'percentage'.
         """
         # Adjust cluster IDs based on the maximum template index
         temp_graph_to_cluster = {
@@ -236,7 +209,6 @@ class RuleCluster:
         # Create a dictionary with unique values and their first corresponding keys
         unique_temp = create_unique_value_dict(temp_graph_to_cluster)
 
-        # Construct templates using unique cluster IDs, corresponding graphs, and percentage data
         template = [
             {
                 "Cluster_id": key,
@@ -262,14 +234,17 @@ class RuleCluster:
         potentially using provided templates for clustering, or generating new templates.
 
         Parameters:
-            graphs (List[nx.Graph, nx.Graph, nx.Graph]): A list of NetworkX graph objects to determine cluster indices for.
-            templates (Optional[List[Dict[str, Any]]]): Optional list of templates used for clustering.
-            update_template (bool) : Update new template or not
+        - graphs (List[nx.Graph, nx.Graph, nx.Graph]): A list of NetworkX graph objects to
+        determine cluster indices for.
+        - templates (Optional[List[Dict[str, Any]]]): Optional list of templates used for
+        clustering.
+        - update_template (bool) : Update new template or not
 
         Returns:
-            tuple:
-                List[int]: The list of cluster indices for each graph, aligned with the order of the input list.
-                List[Dict[str, Any]]: Updated or newly created list of templates.
+        - tuple:
+            - List[int]: The list of cluster indices for each graph, aligned with the
+            order of the input list.
+            - List[Dict[str, Any]]: Updated or newly created list of templates.
         """
         if templates is None:
             single_graphs = [value[2] for value in graphs]
@@ -284,7 +259,7 @@ class RuleCluster:
             templates = self.get_templates(
                 graphs, single_graphs, graph_to_cluster_dict, sorted_templates, 0
             )
-            # Assuming 'graphs' is a list of graphs and you are mapping each graph to a cluster ID
+
             cluster_indices = [
                 graph_to_cluster_dict.get(i, None) for i in range(len(graphs))
             ]

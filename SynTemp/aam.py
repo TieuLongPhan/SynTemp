@@ -2,7 +2,7 @@ from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
 from SynTemp.SynITS.its_extraction import ITSExtraction
 
 
-def run_aam(data, mapper_types):
+def run_aam(data, mapper_types, rsmi_column="reactions"):
     """
     Executes the atom mapping consensus algorithm on provided data using specified mapper types.
 
@@ -16,7 +16,7 @@ def run_aam(data, mapper_types):
     aam = AAMConsensus(data, mappers=mapper_types)
     results = aam.batch_consensus(
         data,
-        rsmi_column="record",
+        rsmi_column=rsmi_column,
         batch_size=len(data),
         job_timeout=None,
         safe_mode=False,

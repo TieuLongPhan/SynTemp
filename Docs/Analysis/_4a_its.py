@@ -9,7 +9,6 @@ import tempfile
 import argparse
 
 
-
 def configure_logging(save_dir: str, verbose: int, data_name: str) -> logging.Logger:
     """
     Configures logging to a file and console with configurable verbosity.
@@ -84,7 +83,6 @@ def run_synitsg_pipeline(
     from SynTemp.SynITS.its_extraction import ITSExtraction
     from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
 
-
     logger = configure_logging(save_dir, verbose, data_name)
     logger.setLevel(logging.DEBUG if verbose > 1 else logging.INFO)
     logger.info(f"Processing data {data_name} with {n_jobs} cpus")
@@ -154,7 +152,6 @@ def run_synitsg_pipeline(
     # Clean up temporary files
     shutil.rmtree(temp_dir)
 
-   
     # Save final combined results
     logger.info(f"Combining and save data")
     if save_dir:
@@ -174,7 +171,7 @@ def run_synitsg_pipeline(
 
     elapsed_time = time.time() - start_time
     logger.info(f"Execution time: {elapsed_time:.2f} seconds")
-    
+
 
 def main():
     root_dir = pathlib.Path(__file__).parents[2]
@@ -182,21 +179,38 @@ def main():
     from SynTemp.SynUtils.utils import (
         load_database,
     )
-    
-    parser = argparse.ArgumentParser(description="Run the Synthetic ITS Graph pipeline.")
-    parser.add_argument("--mapper_name", nargs='+', default=["rxn_mapper", "graphormer", "local_mapper"], help="List of mapper names")
-    parser.add_argument("--batch_size", type=int, default=500, help="Batch size for processing")
+
+    parser = argparse.ArgumentParser(
+        description="Run the Synthetic ITS Graph pipeline."
+    )
+    parser.add_argument(
+        "--mapper_name",
+        nargs="+",
+        default=["rxn_mapper", "graphormer", "local_mapper"],
+        help="List of mapper names",
+    )
+    parser.add_argument(
+        "--batch_size", type=int, default=500, help="Batch size for processing"
+    )
     parser.add_argument("--verbose", type=int, default=1, help="Verbosity level")
     parser.add_argument("--n_jobs", type=int, default=4, help="Number of parallel jobs")
-    parser.add_argument("--fix_hydrogen", type=bool, default=False, help="Whether to fix hydrogen")
+    parser.add_argument(
+        "--fix_hydrogen", type=bool, default=False, help="Whether to fix hydrogen"
+    )
     parser.add_argument("--data_name", type=str, default="", help="Name of the data")
-    parser.add_argument("--rule_folder", type=str, default="", help="Name of folder to store rules")
+    parser.add_argument(
+        "--rule_folder", type=str, default="", help="Name of folder to store rules"
+    )
 
     args = parser.parse_args()
 
-    data = load_database(os.path.join(root_dir, 'Data', 'DPO', args.data_name, 'train.json.gz'))[:]
+    data = load_database(
+        os.path.join(root_dir, "Data", "DPO", args.data_name, "train.json.gz")
+    )[:]
 
-    args.save_dir = os.path.join(root_dir, 'Data', 'DPO', args.data_name, args.rule_folder)
+    args.save_dir = os.path.join(
+        root_dir, "Data", "DPO", args.data_name, args.rule_folder
+    )
     run_synitsg_pipeline(
         data=data,
         mapper_name=args.mapper_name,
@@ -205,13 +219,14 @@ def main():
         n_jobs=args.n_jobs,
         fix_hydrogen=args.fix_hydrogen,
         save_dir=args.save_dir,
-        data_name=args.data_name)
+        data_name=args.data_name,
+    )
 
 
 if __name__ == "__main__":
 
     main()
-    
-    #python Docs/Analysis/_4a_its.py --batch_size 1000 --data_name USPTO_unbalance --rule_folder Raw
-    #python Docs/Analysis/_4a_its.py --batch_size 1000 -fix_hydrogen True --data_name USPTO_unbalance --rule_folder Complete
-    #python Docs/Analysis/_4a_its.py --batch_size 1000 --fix_hydrogen True --data_name USPTO_balance --rule_folder Complete
+
+    # python Docs/Analysis/_4a_its.py --batch_size 1000 --data_name USPTO_unbalance --rule_folder Raw
+    # python Docs/Analysis/_4a_its.py --batch_size 1000 -fix_hydrogen True --data_name USPTO_unbalance --rule_folder Complete
+    # python Docs/Analysis/_4a_its.py --batch_size 1000 --fix_hydrogen True --data_name USPTO_balance --rule_folder Complete
