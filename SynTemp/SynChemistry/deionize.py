@@ -23,7 +23,7 @@ class Deionize:
         aiming to maximize the total number of ions used by preferring
         multiple smaller groups over fewer larger groups.
 
-        Args:
+        Parameters:
         - charges (List[int]): A list of integer charges of the ions.
         - smiles (List[str]): A list of SMILES strings representing the ions.
 
@@ -71,7 +71,7 @@ class Deionize:
         the charges in the molecule. It returns
         the SMILES representation of the uncharged molecule.
 
-        Args:
+        Parameters::
         - smiles (str): A SMILES string representing the anionic species.
 
         Returns:
@@ -110,7 +110,7 @@ class Deionize:
         the charges in the molecule. It returns the
         SMILES representation of the uncharged molecule.
 
-        Args:
+        Parameters::
         - smiles (str): A SMILES string representing the cationic species.
 
         Returns:
@@ -139,7 +139,7 @@ class Deionize:
         It then creates permutations of the modified ions and combines them into
         a single SMILES string, ensuring the molecular structure is valid.
 
-        Args:
+        Parameters::
         - charge_smiles (str): A SMILES string that may contain ionic and non-ionic parts.
 
         Returns:
@@ -206,7 +206,7 @@ class Deionize:
         Replaces occurrences of ammonium hydroxide (NH4+ and OH-) in a
         reaction SMILES string with a simplified representation (N.O or O.N).
 
-        Args:
+        Parameters::
             reaction_smiles (str): The reaction SMILES string to be standardized.
 
         Returns:
@@ -238,17 +238,16 @@ class Deionize:
         the uncharged SMILES strings of reactants, products,
         and the overall reaction, respectively.
 
-        Args:
-            reactions (List[Dict[str, str]]): A list of dictionaries,
-                            where each dictionary represents
-                            a chemical reaction with 'reactants' and 'products' keys.
-            uncharge_smiles_func (Callable[[str], str]): A function that takes a
-                            SMILES string as input and returns a modified
-                            SMILES string with neutralized charges.
+        Parameters::
+        - reactions (List[Dict[str, str]]): A list of dictionaries, where each dictionary
+        represents a chemical reaction with 'reactants' and 'products' keys.
+        - uncharge_smiles_func (Callable[[str], str]): A function that takes a SMILES
+        string as input and returns a modified SMILES string with neutralized charges.
 
         Returns:
-            List[Dict[str, str]]: The input list of reaction dictionaries, modified in-place to include
-                'uncharged_reactants', 'uncharged_products', and 'uncharged_reactions' keys.
+        - List[Dict[str, str]]: The input list of reaction dictionaries, modified in-place
+        to include 'uncharged_reactants', 'uncharged_products', and 'uncharged_reactions'
+        keys.
         """
 
         # Define a helper function for processing a single reaction

@@ -41,9 +41,9 @@ class ITSExtraction:
         - its_graphs (List[nx.Graph]): A list of ITS graphs.
 
         Returns:
-        - List[Tuple[int, int]]: A list of tuples representing pairs of indices of isomorphic graphs.
+        - List[Tuple[int, int]]: A list of tuples representing pairs of indices of
+        isomorphic graphs.
         """
-        # nodeLabelNames = ["element", "aromatic", "hcount", "charge", "typesGH"]
         nodeLabelNames = ["typesGH"]
         nodeLabelDefault = [()]
         nodeLabelOperator = [eq]
@@ -59,7 +59,6 @@ class ITSExtraction:
             if nx.is_isomorphic(
                 its_graphs[0], its_graphs[i], node_match=nodeMatch, edge_match=edgeMatch
             ):
-                # Store the pair (0, i) to indicate that the 0th (first) graph is isomorphic to the ith graph
                 classified.append((0, i))
         return classified, len(classified)
 
@@ -73,19 +72,26 @@ class ITSExtraction:
         confident_mapper: str = "graphormer",
     ) -> Dict[str, any]:
         """
-        Processes mapped SMILES strings representing chemical reactions by constructing graph representations for reactants and products,
-        generating ITS (Imaginary Transition State) graphs, and checking for isomorphism among these graphs. The function also
-        evaluates whether the number of equivariant graphs equals a specified threshold to determine a specific graph output.
+        Processes mapped SMILES strings representing chemical reactions by constructing
+        graph representations for reactants and products, generating ITS (Imaginary
+        Transition State) graphs, and checking for isomorphism among these graphs. The
+        function also evaluates whether the number of equivariant graphs equals a
+        specified threshold to determine a specific graph output.
 
         Parameters:
-        - mapped_smiles (Dict[str, str]): A dictionary where keys are mapper names and values are SMILES strings of reactions.
+        - mapped_smiles (Dict[str, str]): A dictionary where keys are mapper names and
+        values are SMILES strings of reactions.
         - mapper_names (List[str]): A list of mapper names to be processed.
-        - check_method (str): A method to check for isomorphism among the ITS graphs. Either 'RC' or 'ITS'. Defaults to 'RC'.
+        - check_method (str): A method to check for isomorphism among the ITS graphs.
+        Either 'RC' or 'ITS'. Defaults to 'RC'.
 
         Returns:
-        - Dict[str, any]: A dictionary containing graph representations for each reaction (as tuples of reactants graph, products graph,
-        and ITS graph), ITS graphs, and isomorphism results. Additionally, it includes either the first ITS graph or None under the
-        'ISTGraph' key, depending on the equivalence of the number of equivariant graphs to the threshold.
+        - Dict[str, any]: A dictionary containing graph representations for each reaction
+        (as tuples of reactants graph, products graph,
+        and ITS graph), ITS graphs, and isomorphism results. Additionally, it includes
+        either the first ITS graph or None under the
+        'ISTGraph' key, depending on the equivalence of the number of equivariant graphs
+        to the threshold.
         """
         threshold = len(mapper_names) - 1
         graphs_by_map = {id_column: mapped_smiles.get(id_column, "N/A")}
@@ -171,15 +177,19 @@ class ITSExtraction:
         Processes a list of mapped SMILES strings in parallel.
 
         Parameters:
-        - mapped_smiles_list (List[Dict[str, str]]): A list where each element is a dictionary of mapped SMILES strings.
+        - mapped_smiles_list (List[Dict[str, str]]): A list where each element is a
+        dictionary of mapped SMILES strings.
         - mapper_names (List[str]): A list of mapper names to process.
-        - n_jobs (int): The number of jobs to run in parallel. Defaults to -1, which means using all processors.
+        - n_jobs (int): The number of jobs to run in parallel. Defaults to -1, which means
+        using all processors.
         - verbose (int): The verbosity level of the parallel processing.
-        - check_method (str): A method to check for isomorphism among the ITS graphs. Either 'RC' or 'ITS'. Defaults to 'RC'.
+        - check_method (str): A method to check for isomorphism among the ITS graphs.
+        Either 'RC' or 'ITS'. Defaults to 'RC'.
 
         Returns:
-        - List[Dict[str, any]]: A list of dictionaries containing graph representations for each reaction,
-                                ITS graphs, and isomorphism results for each mapped SMILES string.
+        - List[Dict[str, any]]: A list of dictionaries containing graph representations
+        for each reaction, ITS graphs, and isomorphism results for each mapped SMILES
+        string.
         """
         results = Parallel(n_jobs=n_jobs, verbose=verbose)(
             delayed(ITSExtraction.process_mapped_smiles)(

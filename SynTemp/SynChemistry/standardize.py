@@ -45,19 +45,20 @@ class Standardize:
         Apply comprehensive standardization to a molecule.
 
         Parameters:
-        mol (Chem.Mol): RDKit Mol object to be standardized.
-        normalize (bool, optional): Perform normalization
-                                (corrects functional groups and recharges).
-        tautomerize (bool, optional): Canonicalize tautomers.
-        remove_salts (bool, optional): Remove salt fragments from the molecule.
-        handle_charges (bool, optional): Adjust molecule to its
-                                        most likely ionic state using Reionizer.
-        uncharge (bool, optional): Neutralize molecule by
-                                    removing counter-ions using Uncharger.
-        handle_stereo (bool, optional): Handle stereochemistry.
-        remove_fragments (bool, optional): Remove small fragments,
-                                keeping only the largest one.
-        largest_fragment_only (bool, optional): Keep only the largest fragment in the molecule.
+        - mol (Chem.Mol): RDKit Mol object to be standardized.
+        - normalize (bool, optional): Perform normalization
+        (corrects functional groups and recharges).
+        - tautomerize (bool, optional): Canonicalize tautomers.
+        - remove_salts (bool, optional): Remove salt fragments from the molecule.
+        - handle_charges (bool, optional): Adjust molecule to its most likely
+        ionic state using Reionizer.
+        - uncharge (bool, optional): Neutralize molecule by removing counter-ions
+        using Uncharger function.
+        - handle_stereo (bool, optional): Handle stereochemistry.
+        - remove_fragments (bool, optional): Remove small fragments, keeping only the
+        largest one.
+        - largest_fragment_only (bool, optional): Keep only the largest fragment in
+        the molecule.
 
         Returns:
         Chem.Mol: Standardized RDKit Mol object.
@@ -100,8 +101,7 @@ class Standardize:
 
         Parameters
         ----------
-        smiles : str
-            SMILES string to be standardized.
+        - smiles (str): SMILES string to be standardized.
 
         Returns
         -------
@@ -132,16 +132,16 @@ class Standardize:
         Standardize SMILES strings in a pandas DataFrame or
         a list of dictionaries for multiple keys.
 
-        Args:
-            data_input (Union[pd.DataFrame, List[dict]]): Data containing SMILES
+        Parameters::
+        - data_input (Union[pd.DataFrame, List[dict]]): Data containing SMILES
                         strings to be standardized.
-            keys (List[str]): Keys or column names for SMILES strings in the data.
-            visualize (bool, optional): If True, visualize the molecules
-                                        during standardization.
-            parallel (bool, optional): If True and data_input is a list of dicts,
-                                        use parallel processing.
-            n_jobs (int, optional): Number of jobs to run in parallel
-            keep_mol (bool, optional): If True, keep the RDKit Mol objects in the output.
+        - keys (List[str]): Keys or column names for SMILES strings in the data.
+        - visualize (bool, optional): If True, visualize the molecules during
+        standardization.
+        - parallel (bool, optional): If True and data_input is a list of dicts,
+        use parallel processing.
+        - n_jobs (int, optional): Number of jobs to run in parallel
+        - keep_mol (bool, optional): If True, keep the RDKit Mol objects in the output.
 
         Returns:
             Union[pd.DataFrame, List[dict]]: Data with standardized SMILES strings and,

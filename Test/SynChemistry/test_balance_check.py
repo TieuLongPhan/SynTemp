@@ -47,7 +47,10 @@ class TestBalanceReactionCheck(unittest.TestCase):
 
     def test_single_smiles_balanced(self):
         """Test a single balanced reaction in SMILES format."""
-        smiles = "Clc1cnc2nc1Nc1ccc(OCCC3CCNCC3)c(c1)CCc1cncc(c1)N2.O=C=NCc1ccco1>>O=C(NCc1ccco1)N1CCC(CCOc2ccc3cc2CCc2cncc(c2)Nc2ncc(Cl)c(n2)N3)CC1"
+        smiles = (
+            "Clc1cnc2nc1Nc1ccc(OCCC3CCNCC3)c(c1)CCc1cncc(c1)N2.O=C=NCc1ccco1"
+            + ">>O=C(NCc1ccco1)N1CCC(CCOc2ccc3cc2CCc2cncc(c2)Nc2ncc(Cl)c(n2)N3)CC1"
+        )
         checker = BalanceReactionCheck()
         balanced = checker.rsmi_balance_check(smiles)
         self.assertTrue(balanced)
@@ -64,7 +67,10 @@ class TestBalanceReactionCheck(unittest.TestCase):
         reactions = [
             {
                 "R-id": "test_1",
-                "reactions": "Clc1cnc2nc1Nc1ccc(OCCC3CCNCC3)c(c1)CCc1cncc(c1)N2.O=C=NCc1ccco1>>O=C(NCc1ccco1)N1CCC(CCOc2ccc3cc2CCc2cncc(c2)Nc2ncc(Cl)c(n2)N3)CC1",
+                "reactions": (
+                    "Clc1cnc2nc1Nc1ccc(OCCC3CCNCC3)c(c1)CCc1cncc(c1)N2.O=C=NCc1ccco1"
+                    + ">>O=C(NCc1ccco1)N1CCC(CCOc2ccc3cc2CCc2cncc(c2)Nc2ncc(Cl)c(n2)N3)CC1"
+                ),
             },
             {"R-id": "test_2", "reactions": "CC(=O)O.CCO>>CC(=O)OCC"},
         ]

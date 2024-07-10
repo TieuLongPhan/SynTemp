@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynStandardizer.deionize import (
+from SynTemp.SynChemistry.deionize import (
     Deionize,
 )
 

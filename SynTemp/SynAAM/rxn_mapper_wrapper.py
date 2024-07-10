@@ -14,11 +14,11 @@ def map_with_rxn_mapper(
     Maps a reaction using the RXNMapper.
 
     Parameters:
-        reaction_smiles (str): The SMILES string of the reaction to be mapped.
-        rxn_mapper (RXNMapper): The instance of RXNMapper used for mapping.
+    - reaction_smiles (str): The SMILES string of the reaction to be mapped.
+    - rxn_mapper (RXNMapper): The instance of RXNMapper used for mapping.
 
     Returns:
-        str: The mapped reaction SMILES string, or the original string if mapping fails.
+    - str: The mapped reaction SMILES string, or the original string if mapping fails.
     """
     try:
         mapped_rxn = rxn_mapper.get_attention_guided_atom_maps(
@@ -40,12 +40,12 @@ def map_with_rxn_mapper_batch(
     Maps a batch of reactions using the RXNMapper with a specified batch size.
 
     Parameters:
-        reaction_list (list): A list of SMILES strings of reactions to be mapped.
-        rxn_mapper (RXNMapper): The instance of RXNMapper used for mapping.
-        batch_size (int): Number of reactions to process in a sub-batch.
+    - reaction_list (list): A list of SMILES strings of reactions to be mapped.
+    - rxn_mapper (RXNMapper): The instance of RXNMapper used for mapping.
+    - batch_size (int): Number of reactions to process in a sub-batch.
 
     Returns:
-        list: A list of mapped reaction SMILES strings, retains original on failure.
+    - list: A list of mapped reaction SMILES strings, retains original on failure.
     """
     mapped_rxns = []
     total_reactions = len(reaction_list)

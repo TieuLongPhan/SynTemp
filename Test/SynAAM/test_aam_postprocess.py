@@ -1,5 +1,4 @@
 import unittest
-import time
 from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
 
 
@@ -46,24 +45,24 @@ class TestAMMPostprocessor(unittest.TestCase):
                 "mapper1": self.reaction_smiles_with_mapping,
                 "mapper2": self.reaction_smiles_with_mapping,
             },
+            {
+                "mapper1": self.reaction_smiles_with_mapping,
+                "mapper2": self.reaction_smiles_with_mapping,
+            },
+            {
+                "mapper1": self.reaction_smiles_with_mapping,
+                "mapper2": self.reaction_smiles_with_mapping,
+            },
+            {
+                "mapper1": self.reaction_smiles_with_mapping,
+                "mapper2": self.reaction_smiles_with_mapping,
+            },
         ]
         mapper_names = ["mapper1", "mapper2"]
-        # Measure execution time with a single job
-        start_time = time.time()
-        _ = AMMPostprocessor.parallel_postprocess(
-            mapped_smiles_list, mapper_names, 2, n_jobs=2, verbose=1
+        results = AMMPostprocessor.parallel_postprocess(
+            mapped_smiles_list, mapper_names, 2, n_jobs=4, verbose=1
         )
-        single_job_time = time.time() - start_time
-
-        # Measure execution time with multiple jobs
-        start_time = time.time()
-        _ = AMMPostprocessor.parallel_postprocess(
-            mapped_smiles_list, mapper_names, 2, n_jobs=2, verbose=1
-        )
-        multiple_jobs_time = time.time() - start_time
-
-        # Assert that multiple jobs take less time than a single job, indicating parallel execution
-        self.assertLess(multiple_jobs_time, single_job_time)
+        self.assertTrue(results[0]["Valid"])
 
 
 if __name__ == "__main__":

@@ -8,20 +8,21 @@ logging.basicConfig(level=logging.INFO)
 
 def map_with_local_mapper(batch):
     """
-    Process a batch of reactions using the local mapper, handling each reaction individually.
-    If a single reaction is passed, it returns a single mapped reaction string.
-    If a list is passed, it returns a list of mapped reactions.
+    Process a batch of reactions using the local mapper,
+    handling each reaction individually. If a single reaction is passed,
+    it returns a single mapped reaction string. If a list is passed,
+    it returns a list of mapped reactions.
 
-    Args:
-        batch (str or list): A single reaction string or a batch of reactions to be processed.
+    Parameters:
+    - batch (str or list): A single reaction string or a batch of reactions
+    to be processed.
 
     Returns:
-        str or list: The mapping results corresponding to the input format,
-                     with original reaction retained if an error occurs.
+    - str or list: The mapping results corresponding to the input format,
+    with original reaction retained if an error occurs.
     """
     mapper = localmapper()
 
-    # Check if the input is a list or a single reaction string
     single_input = False
     if not isinstance(batch, list):
         batch = [batch]
@@ -37,9 +38,8 @@ def map_with_local_mapper(batch):
                 f"Failed to process reaction '{reaction}' due to error: {e}",
                 exc_info=True,
             )
-            results.append(reaction)  # Append the original reaction as a fallback
+            results.append(reaction)
 
-    # Return results in a format consistent with the input type
     return results[0] if single_input else results
 
 
@@ -48,12 +48,12 @@ def map_with_local_mapper_batch(reaction_list, batch_size=200, job_timeout=None)
     Maps reactions in batches using a thread pool.
 
     Parameters:
-        reaction_list (list): List of SMILES strings representing reactions.
-        batch_size (int): Number of reactions to process in a batch. Defaults to 200.
-        job_timeout (int): Timeout in seconds for processing a batch. Defaults to 100.
+    - reaction_list (list): List of SMILES strings representing reactions.
+    - batch_size (int): Number of reactions to process in a batch. Defaults to 200.
+    - job_timeout (int): Timeout in seconds for processing a batch. Defaults to 100.
 
     Returns:
-        list: List of mapped SMILES strings.
+    - list: List of mapped SMILES strings.
     """
     max_size = len(reaction_list)
     results_all = []
@@ -85,15 +85,14 @@ def map_with_local_mapper_batch(reaction_list, batch_size=200, job_timeout=None)
                             fallback_pool.terminate()
                             fallback_pool.join()
                             logger.error(
-                                f"Timeout: Individual reaction processing exceeded limits for {reaction}."
+                                f"Timeout: Individual reaction processing"
+                                + "exceeded limits for {reaction}."
                             )
-                            results_all.append(
-                                reaction
-                            )  # Append the original reaction on failure
+                            results_all.append(reaction)
                 logger.info(
                     f"Successfully processed Internal Batch from {i} to {i+batch_size}"
                 )
-                pool = Pool(processes=1)  # Reinitialize the pool for the next batch
+                pool = Pool(processes=1)
     finally:
         pool.close()
         pool.join()

@@ -15,20 +15,22 @@ class ITSConstruction:
         """
         Creates a Combined Graph Representation (CGR) from two input graphs G and H.
 
-        This function merges the nodes of G and H, preserving their attributes. Edges are added
-        based on their presence in G and/or H, with special labeling for edges unique to one graph.
+        This function merges the nodes of G and H, preserving their attributes. Edges are
+        added based on their presence in G and/or H, with special labeling for edges
+        unique to one graph.
 
         Parameters:
         - G (nx.Graph): The first input graph.
         - H (nx.Graph): The second input graph.
-        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs. Defaults to False.
-        - attributes_defaults (Dict[str, Any]): A dictionary of default attributes to use for nodes that are not present in either G or H.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs.
+        Defaults to False.
+        - attributes_defaults (Dict[str, Any]): A dictionary of default attributes
+        to use for nodes that are not present in either G or H.
 
         Returns:
         - nx.Graph: The Combined Graph Representation as a new graph instance.
         """
         # Create a null graph from a copy of G to preserve attributes
-        # Choose the graph with more nodes or the graph H depending on the 'balance_its' flag
         if (balance_its and len(G.nodes()) <= len(H.nodes())) or (
             not balance_its and len(G.nodes()) >= len(H.nodes())
         ):
@@ -65,7 +67,8 @@ class ITSConstruction:
     @staticmethod
     def get_node_attribute(graph: nx.Graph, node: int, attribute: str, default):
         """
-        Retrieves a specific attribute for a node in a graph, returning a default value if the attribute is missing.
+        Retrieves a specific attribute for a node in a graph, returning a default value if
+        the attribute is missing.
 
         Parameters:
         - graph (nx.Graph): The graph from which to retrieve the node attribute.
@@ -74,7 +77,8 @@ class ITSConstruction:
         - default: The default value to return if the attribute is missing.
 
         Returns:
-        - The value of the node attribute, or the default value if the attribute is missing.
+        - The value of the node attribute, or the default value if the attribute is
+        missing.
         """
         try:
             return graph.nodes[node][attribute]
@@ -86,16 +90,19 @@ class ITSConstruction:
         graph: nx.Graph, node: int, attributes_defaults: Dict[str, Any] = None
     ) -> Tuple:
         """
-        Retrieves node attributes from a graph, assigning default values if they are missing. Allows
-        for an optional dictionary of attribute-default value pairs to specify custom attributes and defaults.
+        Retrieves node attributes from a graph, assigning default values if they are
+        missing. Allows for an optional dictionary of attribute-default value pairs to
+        specify custom attributes and defaults.
 
         Parameters:
         - graph (nx.Graph): The graph from which to retrieve node attributes.
         - node (int): The node identifier.
-        - attributes_defaults (Dict[str, Any], optional): A dictionary specifying attributes and their default values.
+        - attributes_defaults (Dict[str, Any], optional): A dictionary specifying
+        attributes and their default values.
 
         Returns:
-        - Tuple: A tuple containing the node attributes in the order specified by attributes_defaults.
+        - Tuple: A tuple containing the node attributes in the order specified by
+        attributes_defaults.
         """
         if attributes_defaults is None:
             attributes_defaults = {
@@ -116,14 +123,15 @@ class ITSConstruction:
         ITS: nx.Graph, G: nx.Graph, H: nx.Graph, ignore_aromaticity: bool = False
     ) -> nx.Graph:
         """
-        Adds edges to the Combined Graph Representation (ITS) based on the edges of G and H,
-        and returns a new graph without modifying the original ITS.
+        Adds edges to the Combined Graph Representation (ITS) based on the edges of G and
+        H, and returns a new graph without modifying the original ITS.
 
         Parameters:
         - ITS (nx.Graph): The initial combined graph representation.
         - G (nx.Graph): The first input graph.
         - H (nx.Graph): The second input graph.
-        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs. Defaults to False.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graphs. Defaults
+        to False.
 
         Returns:
         - nx.Graph: The updated graph with added edges.
@@ -167,13 +175,23 @@ class ITSConstruction:
         graph: nx.Graph, ignore_aromaticity: bool = False
     ) -> nx.Graph:
         """
-        Adds a 'standard_order' attribute to each edge in the given NetworkX graph based on the 'order' attribute.
-        The 'standard_order' is computed by subtracting the second element of the 'order' tuple from the first.
-        If an element of the tuple is not an integer (e.g., '*'), it is treated as 0 for the computation.
+        Adds a 'standard_order' attribute to each edge in the provided NetworkX graph.
+        This attribute is calculated based on the existing 'order' attribute, which should
+        be a tuple associated with each edge. The 'standard_order' is computed by
+        subtracting the second element of the 'order' tuple from the first element.
+        If any element of the 'order' tuple is not an integer (e.g., '*'), it is treated
+        as 0 for the purpose of this computation.
 
-        :param graph: A NetworkX graph whose edges have 'order' attributes as tuples.
-        :return: A new NetworkX graph with 'standard_order' attributes added to each edge.
+        Parameters:
+        - graph (NetworkX.Graph): A NetworkX graph where each edge has an 'order'
+        attribute formatted as a tuple.
+
+        Returns:
+        - NetworkX.Graph: The same graph passed as input, now with a 'standard_order'
+        attribute added to each edge, reflecting the computed standard order derived from
+        the 'order' attribute.
         """
+
         new_graph = graph.copy()
 
         for u, v, data in new_graph.edges(data=True):
@@ -189,7 +207,7 @@ class ITSConstruction:
                 # Update the edge data with a new attribute 'standard_order'
                 new_graph[u][v]["standard_order"] = standard_order
             else:
-                # If 'order' attribute is missing or not a tuple, set 'standard_order' to 0
+                # If 'order' attribute is missing or not a tuple, 'standard_order' to 0
                 new_graph[u][v]["standard_order"] = 0
 
         return new_graph

@@ -1,14 +1,20 @@
 import unittest
-from pathlib import Path
+import importlib.resources
 from SynTemp.SynAAM.rdt_wrapper import map_with_rdt, map_with_rdt_batch
 
 
 class TestRDT(unittest.TestCase):
 
     def setUp(self):
-        root_dir = Path(__file__).parents[2]
         self.working_dir = "./"
-        self.rdt_jar_path = f"{root_dir}/Data/RDT_2.4.1.jar"
+        try:
+            self.rdt_jar_path = importlib.resources.files("SynTemp.SynAAM").joinpath(
+                "RDT_2.4.1.jar"
+            )
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                "The RDT jar file is not found in the specified package resources."
+            )
 
         self.reaction_smiles = "C=O.N#[C-].[K+].O=C(Cl)c1ccccc1>>N#CC(O)C(=O)c1ccccc1"
         self.mapped_reaction = "[O:1]=[C:2]([Cl:13])[c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1.[O:9]=[CH2:10].[C-:11]#[N:12].[K+:14]>>[cH:8]1[cH:7][cH:6][cH:5][cH:4][c:3]1[C:2]([CH:10]([C:11]#[N:12])[OH:9])=[O:1]"

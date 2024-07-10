@@ -1,7 +1,6 @@
 import logging
 from chython import smiles
 
-# Configure logging
 logger = logging.getLogger("graphormer")
 logging.basicConfig(level=logging.INFO)
 
@@ -11,7 +10,7 @@ def map_with_graphormer(reaction_smiles: str) -> str:
     Maps a reaction using the Graphormer.
 
     Parameters:
-        reaction_smiles (str): The SMILES string of the reaction to be mapped.
+    - reaction_smiles (str): The SMILES string of the reaction to be mapped.
 
     Returns:
         str: The mapped reaction SMILES string or the original string if mapping fails.
@@ -22,8 +21,6 @@ def map_with_graphormer(reaction_smiles: str) -> str:
         myrxn.reset_mapping()
         # Get mapped reaction
         mapped_rxn = format(myrxn, "m")
-        # Log successful mapping
-        # logger.info(f"Successfully mapped reaction: {reaction_smiles}")
         return mapped_rxn.split(" ")[0] if " " in mapped_rxn else mapped_rxn
     except Exception as e:
         logger.error(
@@ -38,11 +35,11 @@ def map_with_graphormer_batch(reaction_list: list, batch_size: int = 200) -> lis
     Maps a batch of reactions using the Graphormer with a specified batch size.
 
     Parameters:
-        reaction_list (list): A list of SMILES strings of reactions to be mapped.
-        batch_size (int): Number of reactions to process in a sub-batch.
+    - reaction_list (list): A list of SMILES strings of reactions to be mapped.
+    - batch_size (int): Number of reactions to process in a sub-batch.
 
     Returns:
-        list: A list of mapped reaction SMILES strings, retains original on failure.
+    - list: A list of mapped reaction SMILES strings, retains original on failure.
     """
     mapped_rxns = []
     total_reactions = len(reaction_list)

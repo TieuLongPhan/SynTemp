@@ -1,7 +1,7 @@
 import unittest
 from rdkit import Chem
 import pandas as pd
-from SynTemp.SynStandardizer.standardize import Standardize
+from SynTemp.SynChemistry.standardize import Standardize
 
 
 class TestSMILESStandardizer(unittest.TestCase):

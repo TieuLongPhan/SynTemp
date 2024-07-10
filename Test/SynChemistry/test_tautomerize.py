@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynStandardizer.tautomerize import (
+from SynTemp.SynChemistry.tautomerize import (
     Tautomerize,
 )
 

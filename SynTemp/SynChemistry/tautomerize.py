@@ -6,9 +6,8 @@ from joblib import Parallel, delayed
 
 class Tautomerize:
     """
-    A class to standardize molecules by converting specific
-    functional groups to their more common forms
-    using RDKit for molecule manipulation.
+    A class to standardize molecules by converting specific functional groups to their
+    more common forms using RDKit for molecule manipulation.
     """
 
     @staticmethod
@@ -18,9 +17,8 @@ class Tautomerize:
 
         Parameters:
         - smiles (str): The SMILES string.
-        - atom_indices (List[int], optional): List containing indices of
-                            two carbons and one oxygen involved in the enol formation.
-                            Defaults to [0, 1, 2].
+        - atom_indices (List[int], optional): List containing indices of two carbons and
+        one oxygen involved in the enol formation. Defaults to [0, 1, 2].
 
         Returns:
         - str: The SMILES string of the molecule after conversion.
@@ -58,13 +56,12 @@ class Tautomerize:
     @staticmethod
     def standardize_hemiketal(smiles: str, atom_indices: List[int]) -> str:
         """
-        Converts a hemiketal form to a carbonyl form based
-        on specified atom indices.
+        Converts a hemiketal form to a carbonyl form based on specified atom indices.
 
         Parameters:
         - smiles (str): SMILES representation of the original molecule.
         - atom_indices (List[int]): Indices of the carbon and two oxygen atoms
-                                    involved in the transformation.
+        involved in the transformation.
 
         Returns:
         - str: SMILES string of the modified molecule if successful,
@@ -125,7 +122,8 @@ class Tautomerize:
 
         Parameters:
         - data (Dict[str, str]): Dictionary containing the reaction data.
-        - reaction_column (str): The key in the dictionary where the reaction SMILES string is stored.
+        - reaction_column (str): The key in the dictionary where the reaction SMILES
+        string is stored.
 
         Returns:
         - Dict[str, str]: The updated dictionary with standardized SMILES strings.
@@ -153,9 +151,10 @@ class Tautomerize:
         reaction data in parallel.
 
         Parameters:
-        - data (List[Dict[str, str]]): List of dictionaries, each containing reaction data.
+        - data (List[Dict[str, str]]): List of dictionaries, each containing reaction
+        data.
         - reaction_column (str): The key where the reaction SMILES strings are
-                                stored in each dictionary.
+        stored in each dictionary.
         - n_jobs (int, optional): Number of jobs to run in parallel. Defaults to 4.
         - verbose (int, optional): The verbosity level. Defaults to 0.
 

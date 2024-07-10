@@ -26,12 +26,12 @@ def map_with_rdt(reaction_smiles: str, rdt_jar_path: str, working_dir: str) -> s
     Maps a reaction using the RDT (Retro-Data) tool.
 
     Parameters:
-        reaction_smiles (str): The SMILES string of the reaction to be mapped.
-        rdt_jar_path (str): The file path to the RDT JAR file.
-        working_dir (str): The working directory to execute RDT.
+    - reaction_smiles (str): The SMILES string of the reaction to be mapped.
+    - rdt_jar_path (str): The file path to the RDT JAR file.
+    - working_dir (str): The working directory to execute RDT.
 
     Returns:
-        str: The mapped reaction SMILES string.
+    - str: The mapped reaction SMILES string.
     """
     unique_id = uuid4()
     unique_dir = os.path.join(working_dir, f"RDT_{unique_id}")
@@ -68,17 +68,18 @@ def map_with_rdt_batch(
     reaction_list: List[str], rdt_jar_path: str, working_dir: str, batch_size: int = 200
 ) -> List[str]:
     """
-    Maps a batch of reactions using the RDT (Retro-Data) tool with a specified batch size and level of concurrency.
+    Maps a batch of reactions using the RDT (Retro-Data) tool with
+    a specified batch size and level of concurrency.
 
     Parameters:
-        reaction_list (List[str]): A list of SMILES strings of reactions to be mapped.
-        rdt_jar_path (str): The path to the RDT JAR file.
-        working_dir (str): The working directory for RDT executions.
-        batch_size (int): Number of reactions to process in a sub-batch.
-        processes (int): Number of concurrent processes to use for mapping.
+    - reaction_list (List[str]): A list of SMILES strings of reactions to be mapped.
+    - rdt_jar_path (str): The path to the RDT JAR file.
+    - working_dir (str): The working directory for RDT executions.
+    - batch_size (int): Number of reactions to process in a sub-batch.
+    - processes (int): Number of concurrent processes to use for mapping.
 
     Returns:
-        List[str]: A list of mapped reaction SMILES strings, retains original on failure.
+    - List[str]: A list of mapped reaction SMILES strings, retains original on failure.
     """
 
     mapped_rxns = []
