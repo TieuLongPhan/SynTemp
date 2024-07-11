@@ -9,3 +9,6 @@ localmapper==0.1.3
 rxn-chem-utils==1.5.0
 rxn-utils==2.0.0
 rxnmapper==0.3.0
+seaborn==0.13.2
+joblib==1.3.2
+fgutils==0.0.17
