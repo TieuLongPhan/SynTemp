@@ -4,15 +4,9 @@
 *.gml
 .pytest_cache
 __pycache__
-mod_test.py
-clean_code.ipynb
 *pdf
-test.py
-test_database_out.json.gz
-test_database.json.gz
-Data/uspto/*
 
-aam_reactions.json.gz
+
 *.tar.gz
 *pkl.gz
 *json.gz
