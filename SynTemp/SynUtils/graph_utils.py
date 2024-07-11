@@ -166,13 +166,13 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
     This function will add a Child field to each node, which is a list of Cluster_ids
     from the child nodes in the subsequent layer.
 
-    Args:
-    data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of dictionaries
-                                       containing at least the keys 'Cluster_id' and 'Parent'.
+    Parameters:
+    - data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of
+    dictionaries containing at least the keys 'Cluster_id' and 'Parent'.
 
     Returns:
-    List[List[Dict[str, Any]]]: The modified data with each node dictionary containing 'Cluster_id',
-                                'Percentage', 'Parent', and 'Child' keys.
+    - List[List[Dict[str, Any]]]: The modified data with each node dictionary containing
+    'Cluster_id', 'Percentage', 'Parent', and 'Child' keys.
     """
     data = copy.deepcopy(df)
     node_dict = {}
@@ -277,44 +277,6 @@ def check_graph_connectivity(graph):
         return "Disconnected."
 
 
-# def get_priority(
-#     its_list, reaction_centers: List[Any], priority_ring: List[int] = [4, 6]
-# ) -> List[int]:
-#     """
-#     Filters reaction centers based on their connectivity and specific ring sizes.
-
-#     Args:
-#     - reaction_center_list (List[Any]): List of reaction centers to evaluate.
-#     - priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
-
-#     Returns:
-#     - List[int]: Indices of reaction centers in the original list that are connected and contain priority ring sizes.
-#     """
-#     # Filter to include only connected reaction centers
-#     # reaction_centers = [RuleExtraction.extract_reaction_rules(its_good[0]['ITSGraph'][0], its_good[0]['ITSGraph'][1], i)[2] for i in its_list]
-#     connected_centers = []
-#     connected_its_list = []
-#     for key, value in enumerate(reaction_centers):
-#         if check_graph_connectivity(value) == "Connected":
-#             connected_centers.append(value)
-#             connected_its_list.append(its_list[key])
-#     cyclic = [get_cycle_member_rings(center) for center in connected_centers]
-
-#     # Find indices of centers with priority ring sizes
-#     index_priority = [
-#         i
-#         for i, rings in enumerate(cyclic)
-#         if any(ring in priority_ring for ring in rings)
-#     ]
-#     connected_its_list = [
-#         value for key, value in enumerate(connected_its_list) if key in index_priority
-#     ]
-#     connected_centers = [
-#         value for key, value in enumerate(connected_centers) if key in index_priority
-#     ]
-#     return connected_its_list, connected_centers
-
-
 def get_priority(
     its_list: List[Any],
     reaction_centers: List[Any],
@@ -324,20 +286,25 @@ def get_priority(
 ) -> Tuple[List[Any], List[Any]]:
     """
     Filters reaction centers based on their connectivity and specific ring sizes,
-    including those with both rings in the priority pair, and excluding those with non-priority ring sizes,
+    including those with both rings in the priority pair, and excluding those with non-
+    priority ring sizes,
     unless a specific pair condition is met (e.g., 3 must appear with 5).
 
-    Args:
-        its_list (List[Any]): List of identifiers for the reaction centers.
-        reaction_centers (List[Any]): List of reaction centers to evaluate.
-        priority_ring (List[int], optional): List of ring sizes given priority. Defaults to [4, 6].
-        priority_pair (List[int], optional): List of two ring sizes that must both appear together to qualify. Defaults to [3, 5].
-        not_priority_ring (List[int], optional): List of ring sizes that disqualify a center unless paired appropriately. Defaults to [3].
+    Parameters:
+    - its_list (List[Any]): List of identifiers for the reaction centers.
+    - reaction_centers (List[Any]): List of reaction centers to evaluate.
+    - priority_ring (List[int], optional): List of ring sizes given priority.
+    Defaults to [4, 6].
+    - priority_pair (List[int], optional): List of two ring sizes that must both appear
+    together to qualify. Defaults to [3, 5].
+    - not_priority_ring (List[int], optional): List of ring sizes that disqualify a center
+    unless paired appropriately. Defaults to [3].
 
     Returns:
-        Tuple[List[Any], List[Any]]: Tuple containing two lists:
-            - The first list contains the identifiers from its_list that meet all criteria.
-            - The second list contains the corresponding reaction centers that meet the criteria.
+    - Tuple[List[Any], List[Any]]: Tuple containing two lists:
+        - The first list contains the identifiers from its_list that meet all criteria.
+        - The second list contains the corresponding reaction centers that meet the
+        criteria.
     """
     priority_set = set(priority_ring)
     not_priority_set = set(not_priority_ring)

@@ -76,5 +76,5 @@ def map_with_rxn_mapper_batch(
                     reaction_smiles
                 )  # Append the original SMILES on failure
         logger.info(f"Successfully processed Internal Batch from {i} to {i+batch_size}")
-    logger.info(f"Completed mapping all reactions.")
+    logger.info("Completed mapping all reactions.")
     return mapped_rxns

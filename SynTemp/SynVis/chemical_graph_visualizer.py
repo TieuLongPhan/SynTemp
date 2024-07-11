@@ -303,11 +303,14 @@ class ChemicalGraphVisualizer:
         log=False,
     ):
         """
-        Visualize two rows of graphs, each with three graphs, optionally displaying a grid.
+        Visualize two rows of graphs, each with three graphs, optionally displaying a
+        grid.
 
         Parameters:
-            graph_tuple_row1 (tuple): Tuple of NetworkX graphs for the first row (reactants, ITS graph, products).
-            graph_tuple_row2 (tuple): Tuple of NetworkX graphs for the second row (L, K, R).
+            graph_tuple_row1 (tuple): Tuple of NetworkX graphs for the first row
+            (reactants, ITS graph, products).
+            graph_tuple_row2 (tuple): Tuple of NetworkX graphs for the second row (L, K,
+            R).
             figsize (tuple): Figure size in inches (width, height).
             titles_row1 (tuple): Titles for the first row subplots.
             titles_row2 (tuple): Titles for the second row subplots.

@@ -12,8 +12,6 @@ from SynTemp.SynUtils.graph_utils import (
 )
 from SynTemp.SynITS.its_extraction import ITSExtraction
 
-import logging
-
 
 class ITSHAdjuster:
 

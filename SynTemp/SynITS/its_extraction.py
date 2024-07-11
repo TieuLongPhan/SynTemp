@@ -156,8 +156,12 @@ class ITSExtraction:
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:
             # Update the target dictionary based on the determined conditions
-            target_dict["ITSGraph"] = graphs_by_map.get(confident_mapper, None)
-            target_dict["GraphRules"] = rules_by_map.get(confident_mapper, None)
+            if confident_mapper in mapper_names:
+                target_dict["ITSGraph"] = graphs_by_map.get(confident_mapper, None)
+                target_dict["GraphRules"] = rules_by_map.get(confident_mapper, None)
+            else:
+                target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
+                target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
 
         return graphs_by_map_correct, graphs_by_map_incorrect
 

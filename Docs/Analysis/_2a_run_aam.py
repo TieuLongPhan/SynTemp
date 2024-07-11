@@ -3,9 +3,7 @@ import sys
 import time
 import logging
 import pandas as pd
-from rxnmapper import RXNMapper
-from localmapper import localmapper
-from chython import smiles
+
 
 root_dir = pathlib.Path(__file__).parents[2]
 # Setup logging

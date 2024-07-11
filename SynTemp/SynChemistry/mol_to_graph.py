@@ -106,12 +106,14 @@ class MolToGraph:
     @classmethod
     def mol_to_graph(cls, mol: Chem.Mol, drop_non_aam: bool = False) -> nx.Graph:
         """
-        Converts an RDKit molecule object to a NetworkX graph with specified atom and bond attributes.
+        Converts an RDKit molecule object to a NetworkX graph with specified atom and bond
+        attributes.
         Optionally excludes atoms without atom mapping numbers if drop_non_aam is True.
 
         Parameters:
         - mol (Chem.Mol): An RDKit molecule object.
-        - drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will be dropped.
+        - drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will
+        be dropped.
 
         Returns:
         - nx.Graph: A NetworkX graph representing the molecule.
