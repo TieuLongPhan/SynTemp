@@ -18,7 +18,8 @@ class RuleDecompose:
         - value (Any): The value to find the corresponding key for.
 
         Returns:
-        - Optional[Any]: The key associated with the specified value, or None if not found.
+        - Optional[Any]: The key associated with the specified value, or None if not
+        found.
         """
         return next((key for key, val in dictionary.items() if val == value), None)
 
@@ -38,18 +39,19 @@ class RuleDecompose:
     @staticmethod
     def remove_disconnected_part(graph: nx.Graph) -> nx.Graph:
         """
-        Remove the smaller disconnected components from a graph, leaving only the largest connected component.
-        This function now works on a copy of the original graph, leaving the original graph unmodified.
+        Remove the smaller disconnected components from a graph, leaving only the largest
+        connected component. This function now works on a copy of the original graph,
+        leaving the original graph unmodified.
 
         Parameters:
         - graph (nx.Graph): The original graph to analyze.
 
         Returns:
-        - nx.Graph: A new graph, which is a copy of the original but with only the largest connected component.
+        - nx.Graph: A new graph, which is a copy of the original but with only the largest
+        connected component.
         """
         # Create a copy of the original graph to work with
         graph_copy = deepcopy(graph)
-        # Check if the graph is connected; if not, proceed to find and keep only the largest connected component
         if not nx.is_connected(graph_copy):
             components = list(nx.connected_components(graph_copy))
             largest_component = max(components, key=len)
@@ -106,17 +108,23 @@ class RuleDecompose:
         edge_match: callable = None,
     ) -> Optional[Dict]:
         """
-        Finds the largest common subgraph between a parent and a child graph based on specified node and edge matching criteria.
-        The function uses the VF2 algorithm for graph isomorphism testing and subgraph search to find the largest common subgraph.
+        Finds the largest common subgraph between a parent and a child graph based on
+        specified node and edge matching criteria.
+        The function uses the VF2 algorithm for graph isomorphism testing and subgraph
+        search to find the largest common subgraph.
 
         Parameters:
         - parent_graph (nx.Graph): The parent graph in which to find the subgraph.
         - child_graph (nx.Graph): The child graph representing the potential subgraph.
-        - node_match (callable, optional): A function used to determine whether nodes in the two graphs match. Defaults to None, which considers all nodes as matching.
-        - edge_match (callable, optional): A function used to determine whether edges in the two graphs match. Defaults to None, which considers all edges as matching.
+        - node_match (callable, optional): A function used to determine whether nodes in
+        the two graphs match. Defaults to None, which considers all nodes as matching.
+        - edge_match (callable, optional): A function used to determine whether edges in
+        the two graphs match. Defaults to None, which considers all edges as matching.
 
         Returns:
-        - Optional[Dict]: A dictionary representing the mapping of nodes in the parent graph to nodes in the child graph for the largest common subgraph. Returns None if no common subgraph is found.
+        - Optional[Dict]: A dictionary representing the mapping of nodes in the parent
+        graph to nodes in the child graph for the largest common subgraph. Returns None if
+        no common subgraph is found.
 
         Example:
         - node_match could be a function that checks if nodes have the same label.
@@ -139,7 +147,6 @@ class RuleDecompose:
                 max_size = current_size
                 max_common_subgraph = isomorphism
 
-        # Return the largest common subgraph mapping or None if no common subgraph is found
         return max_common_subgraph
 
     @staticmethod
@@ -150,16 +157,23 @@ class RuleDecompose:
         edge_order: str = "standard_order",
     ) -> nx.Graph:
         """
-        Creates a modified copy of the parent graph by adjusting edges based on the maximum common subgraph shared with a child graph.
-        For each edge in the common subgraph, the method checks a specified edge attribute (defaulting to 'standard_order'):
-        - If the attribute value in the parent graph is greater or equal and their signs are the same, the edge is removed.
-        - If the attribute value in the parent graph is greater, it's decreased by the value in the child graph.
+        Creates a modified copy of the parent graph by adjusting edges based on the
+        maximum common subgraph shared with a child graph.
+        For each edge in the common subgraph, the method checks a specified edge attribute
+        (defaulting to 'standard_order'):
+        - If the attribute value in the parent graph is greater or equal and their signs
+        are the same, the edge is removed.
+        - If the attribute value in the parent graph is greater, it's decreased by the
+        value in the child graph.
 
         Parameters:
         - parent_graph (nx.Graph): The original graph from which edges will be modified.
-        - child_graph (nx.Graph): The graph containing the subgraph shared with the parent.
-        - subgraph_isomorphism (dict): Node mapping from the parent graph to the child graph for the maximum common subgraph.
-        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
+        - child_graph (nx.Graph): The graph containing the subgraph shared with the
+        parent.
+        - subgraph_isomorphism (dict): Node mapping from the parent graph to the child
+        graph for the maximum common subgraph.
+        - edge_order (str): The edge attribute to consider for modification (default
+        'standard_order').
 
         Returns:
         - nx.Graph: A new graph, modified based on the criteria described above.
@@ -180,7 +194,6 @@ class RuleDecompose:
             ):
                 parent_edge_data = parent_graph_copy.get_edge_data(parent_u, parent_v)
 
-                # Check if the specified edge attribute exists in both child and parent edges
                 if edge_order in data and edge_order in parent_edge_data:
                     # Compare attribute values and their signs
                     if (
@@ -191,7 +204,6 @@ class RuleDecompose:
                         parent_graph_copy.remove_edge(parent_u, parent_v)
 
                         if abs(parent_edge_data[edge_order]) > abs(data[edge_order]):
-                            # If the attribute value in the parent is greater, decrease it instead of removing the edge
                             parent_graph_copy.add_edge(
                                 parent_u,
                                 parent_v,
@@ -201,7 +213,6 @@ class RuleDecompose:
                                 },
                             )
 
-        # Optionally, remove disconnected components, keeping only the largest connected component
         parent_graph_copy = RuleDecompose.remove_disconnected_part(parent_graph_copy)
 
         return parent_graph_copy
@@ -214,16 +225,21 @@ class RuleDecompose:
         edge_order: str = "standard_order",
     ) -> Optional[List[nx.Graph]]:
         """
-        Recursively remove isomorphic subgraphs from a complex graph using depth-first search.
+        Recursively remove isomorphic subgraphs from a complex graph using depth-first
+        search.
 
         Parameters:
         - complex_graph (nx.Graph): The complex graph to decompose.
-        - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and remove.
-        - explained_graphs (List[nx.Graph]): Accumulator for single cyclic graphs that explain parts of the complex graph.
-        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
+        - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and
+        remove.
+        - explained_graphs (List[nx.Graph]): Accumulator for single cyclic graphs that
+        explain parts of the complex graph.
+        - edge_order (str): The edge attribute to consider for modification (default
+        'standard_order').
 
         Returns:
-        - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex graph, or None if no solution is found.
+        - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex
+        graph, or None if no solution is found.
         """
 
         if not complex_graph.edges():
@@ -259,15 +275,19 @@ class RuleDecompose:
         edge_order: str = "standard_order",
     ) -> Optional[List[nx.Graph]]:
         """
-        Iteratively remove isomorphic subgraphs from a complex graph using breadth-first search.
+        Iteratively remove isomorphic subgraphs from a complex graph using breadth-first
+        search.
 
         Parameters:
         - complex_graph (nx.Graph): The complex graph to decompose.
-        - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and remove.
-        - edge_order (str): The edge attribute to consider for modification (default 'standard_order').
+        - single_cyclic_graphs (List[nx.Graph]): List of single cyclic graphs to match and
+        remove.
+        - edge_order (str): The edge attribute to consider for modification (default
+        'standard_order').
 
         Returns:
-        - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex graph, or None if no solution is found.
+        - Optional[List[nx.Graph]]: List of single cyclic graphs that explain the complex
+        graph, or None if no solution is found.
         """
         queue = deque([(complex_graph, [])])
         while queue:
@@ -299,14 +319,22 @@ class RuleDecompose:
         parent_graph: nx.Graph, child_graphs: List[nx.Graph], seed: int = 42
     ) -> None:
         """
-        Visualizes a parent graph alongside two child graphs, highlighting common subgraphs between each child and the parent.
+        Visualizes a parent graph alongside two child graphs, highlighting common
+        subgraphs between each child and the parent.
 
-        This method creates a 1x3 subplot: the first two subplots display the child graphs with common subgraph edges highlighted, and the third subplot displays the parent graph with edges common to each child graph highlighted in distinct colors. Edges common to both child graphs and the parent graph are highlighted in a separate color to indicate overlap.
+        This method creates a 1x3 subplot: the first two subplots display the child graphs
+        with common subgraph edges highlighted, and the third subplot displays the parent
+        graph with edges common to each child graph highlighted in distinct colors. Edges
+        common to both child graphs and the parent graph are highlighted in a separate
+        color to indicate overlap.
 
         Parameters:
-        - parent_graph (nx.Graph): The parent graph in which common subgraphs are to be identified.
-        - child_graphs (List[nx.Graph]): A list containing exactly two child graphs to compare against the parent graph.
-        - seed (int, optional): The seed for the layout algorithm to ensure consistent positioning of nodes across plots. Defaults to 42.
+        - parent_graph (nx.Graph): The parent graph in which common subgraphs are to be
+        identified.
+        - child_graphs (List[nx.Graph]): A list containing exactly two child graphs to
+        compare against the parent graph.
+        - seed (int, optional): The seed for the layout algorithm to ensure consistent
+        positioning of nodes across plots. Defaults to 42.
 
         Returns:
         - None
@@ -342,7 +370,8 @@ class RuleDecompose:
                 for node, data in child_graph.nodes(data=True)
             }
             nx.draw_networkx_labels(child_graph, pos, labels=node_labels)
-            # matcher = nx.algorithms.isomorphism.GraphMatcher(parent_graph, child_graph, node_match=node_match, edge_match=edge_match)
+            # matcher = nx.algorithms.isomorphism.GraphMatcher(parent_graph, child_graph,
+            # node_match=node_match, edge_match=edge_match)
             subgraph_isomorphism = RuleDecompose.find_maximum_common_subgraph(
                 parent_graph,
                 child_graph,

@@ -7,7 +7,8 @@ import random
 
 class MolToGraph:
     """
-    A class for converting molecules from SMILES strings to graph representations using RDKit and NetworkX.
+    A class for converting molecules from SMILES strings to graph representations using
+    RDKit and NetworkX.
     """
 
     def __init__(self):
@@ -20,7 +21,7 @@ class MolToGraph:
         Computes and assigns Gasteiger partial charges to each atom in the given molecule.
 
         Parameters:
-            mol (Chem.Mol): An RDKit molecule object.
+        - mol (Chem.Mol): An RDKit molecule object.
         """
         AllChem.ComputeGasteigerCharges(mol)
 
@@ -30,10 +31,10 @@ class MolToGraph:
         Determines the stereochemistry (R/S configuration) of a given atom.
 
         Parameters:
-            atom (Chem.Atom): An RDKit atom object.
+        - atom (Chem.Atom): An RDKit atom object.
 
         Returns:
-            str: The stereochemistry ('R', 'S', or 'N' for non-chiral).
+        - str: The stereochemistry ('R', 'S', or 'N' for non-chiral).
         """
         chiral_tag = atom.GetChiralTag()
         if chiral_tag == Chem.ChiralType.CHI_TETRAHEDRAL_CCW:
@@ -48,10 +49,11 @@ class MolToGraph:
         Determines the stereochemistry (E/Z configuration) of a given bond.
 
         Parameters:
-            bond (Chem.Bond): An RDKit bond object.
+        - bond (Chem.Bond): An RDKit bond object.
 
         Returns:
-            str: The stereochemistry ('E', 'Z', or 'N' for non-stereospecific or non-double bonds).
+        - str: The stereochemistry ('E', 'Z', or 'N' for non-stereospecific
+        or non-double bonds).
         """
         if bond.GetBondType() != Chem.BondType.DOUBLE:
             return "N"
@@ -71,10 +73,10 @@ class MolToGraph:
         between atoms in reactants and products.
 
         Parameters:
-        mol (Chem.Mol): An RDKit molecule object.
+        - mol (Chem.Mol): An RDKit molecule object.
 
         Returns:
-        bool: True if any atom in the molecule has a mapping number, False otherwise.
+        - bool: True if any atom in the molecule has a mapping number, False otherwise.
         """
         for atom in mol.GetAtoms():
             if atom.HasProp("molAtomMapNumber"):
@@ -90,10 +92,10 @@ class MolToGraph:
         mapping number between 1 and the total number of atoms to each atom.
 
         Parameters:
-        mol (Chem.Mol): An RDKit molecule object.
+        - mol (Chem.Mol): An RDKit molecule object.
 
         Returns:
-        Chem.Mol: The RDKit molecule object with random atom mapping numbers assigned.
+        - Chem.Mol: The RDKit molecule object with random atom mapping numbers assigned.
         """
         atom_indices = list(range(1, mol.GetNumAtoms() + 1))
         random.shuffle(atom_indices)
@@ -104,15 +106,17 @@ class MolToGraph:
     @classmethod
     def mol_to_graph(cls, mol: Chem.Mol, drop_non_aam: bool = False) -> nx.Graph:
         """
-        Converts an RDKit molecule object to a NetworkX graph with specified atom and bond attributes.
+        Converts an RDKit molecule object to a NetworkX graph with specified atom and bond
+        attributes.
         Optionally excludes atoms without atom mapping numbers if drop_non_aam is True.
 
         Parameters:
-            mol (Chem.Mol): An RDKit molecule object.
-            drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will be dropped.
+        - mol (Chem.Mol): An RDKit molecule object.
+        - drop_non_aam (bool, optional): If True, nodes without atom mapping numbers will
+        be dropped.
 
         Returns:
-            nx.Graph: A NetworkX graph representing the molecule.
+        - nx.Graph: A NetworkX graph representing the molecule.
         """
         cls.add_partial_charges(mol)
         graph = nx.Graph()
@@ -122,7 +126,7 @@ class MolToGraph:
 
         for atom in mol.GetAtoms():
             atom_map = atom.GetAtomMapNum()
-            # Skip atoms without atom mapping numbers if drop_non_aam is True
+
             if drop_non_aam and atom_map == 0:
                 continue
             gasteiger_charge = round(float(atom.GetProp("_GasteigerCharge")), 3)
@@ -148,7 +152,6 @@ class MolToGraph:
         for bond in mol.GetBonds():
             begin_atom_class = index_to_class.get(bond.GetBeginAtomIdx())
             end_atom_class = index_to_class.get(bond.GetEndAtomIdx())
-            # Skip bonds if either atom is missing due to drop_non_aam option
             if begin_atom_class is None or end_atom_class is None:
                 continue
             graph.add_edge(

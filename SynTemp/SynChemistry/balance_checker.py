@@ -20,9 +20,10 @@ class BalanceReactionCheck:
         parallel processing, and verbosity level.
 
         Parameters:
-        - input_data (Union[str, List[Union[str, Dict[str, str]]]]): A single SMILES string,
-          a list of SMILES strings, or a list of dictionaries with 'reactions' keys.
-        - rsmi_column (str): The key/column name for reaction SMILES strings in the input data.
+        - input_data (Union[str, List[Union[str, Dict[str, str]]]]): A single SMILES
+        string, a list of SMILES strings, or a list of dictionaries with 'reactions' keys.
+        - rsmi_column (str): The key/column name for reaction SMILES strings
+        in the input data.
         - n_jobs (int): The number of parallel jobs to run for balance checking.
         - verbose (int): The verbosity level of joblib parallel execution.
         """
@@ -40,7 +41,8 @@ class BalanceReactionCheck:
         dictionaries for each reaction.
 
         Parameters:
-        - input_data (Union[str, List[Union[str, Dict[str, str]]]]): The input data to be processed.
+        - input_data (Union[str, List[Union[str, Dict[str, str]]]]):
+        The input data to be processed.
 
         Returns:
         - List[Dict[str, str]]: A list of dictionaries with reaction SMILES strings.
@@ -95,14 +97,16 @@ class BalanceReactionCheck:
         reaction_dict: Dict[str, str], rsmi_column: str
     ) -> Dict[str, Union[bool, str]]:
         """
-        Checks if a single reaction (in SMILES format) is balanced, maintaining the input format.
+        Checks if a single reaction (in SMILES format) is balanced, maintaining
+        the input format.
 
         Parameters:
-        - reaction_dict (Dict[str, str]): A dictionary containing the reaction SMILES string.
+        - reaction_dict (Dict[str, str]): A dictionary containing the
+        reaction SMILES string.
 
         Returns:
-        - Dict[str, Union[bool, str]]: A dictionary indicating if the reaction is balanced,
-          along with the original reaction data.
+        - Dict[str, Union[bool, str]]: A dictionary indicating if the reaction is
+        balanced, along with the original reaction data.
         """
         reaction_smiles = reaction_dict[rsmi_column]
         balance = BalanceReactionCheck.rsmi_balance_check(reaction_smiles)
@@ -117,8 +121,9 @@ class BalanceReactionCheck:
         Checks the balance of all reactions in the input data.
 
         Returns:
-        - Tuple[List[Dict[str, Union[bool, str]]], List[Dict[str, Union[bool, str]]]]: Two lists containing dictionaries
-          of balanced and unbalanced reactions, respectively.
+        - Tuple[List[Dict[str, Union[bool, str]]], List[Dict[str, Union[bool, str]]]]:
+        Two lists containing dictionaries of balanced and unbalanced reactions,
+        respectively.
         """
 
         reactions = self.parse_input(input_data, rsmi_column)

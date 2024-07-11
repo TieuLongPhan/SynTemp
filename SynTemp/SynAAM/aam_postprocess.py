@@ -26,7 +26,6 @@ class AMMPostprocessor:
                 sorted based on their appearance, and the second element is the
                 total count of atoms in the molecule.
         """
-        # molecule = AMMPostprocessor.smiles_to_mol(smiles)
         molecule = Chem.MolFromSmiles(smiles)
         if molecule is None:
             return ("Invalid SMILES", 0)
@@ -34,7 +33,7 @@ class AMMPostprocessor:
         atom_map_numbers = []
         for atom in molecule.GetAtoms():
             atom_map_num = atom.GetAtomMapNum()
-            if atom_map_num:  # Only consider atoms with a mapping number
+            if atom_map_num:
                 atom_map_numbers.append(atom_map_num)
 
         sorted_atom_map_numbers = sorted(atom_map_numbers)

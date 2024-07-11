@@ -1,79 +1,128 @@
 import unittest
 import networkx as nx
+from SynTemp.SynUtils.utils import load_from_pickle
 from SynTemp.SynRule.rule_writing import RuleWriting
 
 
-class TestMODRules(unittest.TestCase):
+class TestRuleWriting(unittest.TestCase):
 
-    def test_convert_graph_to_gml(self):
-        # Create a simple graph to test
-        graph = nx.Graph()
-        graph.add_node(1, element="H")
-        graph.add_node(2, element="O")
-        graph.add_edge(1, 2, order=1)
+    def setUp(self) -> None:
+        self.data = load_from_pickle("Data/Testcase/templates.pkl.gz")
 
-        # Generate GML string
-        gml_str = RuleWriting.convert_graph_to_gml(graph, "left", changed_node_ids=[])
+    def test_charge_to_string(self):
+        self.assertEqual(RuleWriting.charge_to_string(3), "+++")
+        self.assertEqual(RuleWriting.charge_to_string(-2), "--")
+        self.assertEqual(RuleWriting.charge_to_string(0), "")
 
-        # Check if the GML string is formatted correctly
-        self.assertIn('edge [ source 1 target 2 label "-" ]', gml_str)
+    def test_convert_graph_to_gml_context(self):
+        G = nx.Graph()
+        G.add_node(1, element="C")
+        G.add_node(2, element="H")
+        changed_node_ids = [2]
+        gml_str = RuleWriting.convert_graph_to_gml(G, "context", changed_node_ids)
+        expected_str = '   context [\n      node [ id 1 label "C" ]\n   ]\n'
+        self.assertEqual(gml_str, expected_str)
 
-        gml_str = RuleWriting.convert_graph_to_gml(
-            graph, "context", changed_node_ids=[]
+    def test_convert_graph_to_gml_left_right(self):
+        G = nx.Graph()
+        G.add_node(1, element="C", charge=1)
+        G.add_node(2, element="H", charge=0)
+        G.add_edge(1, 2, order=2)
+        changed_node_ids = [1]
+        gml_str = RuleWriting.convert_graph_to_gml(G, "left", changed_node_ids)
+        expected_str = (
+            '   left [\n      edge [ source 1 target 2 label "=" ]'
+            + '\n      node [ id 1 label "C+" ]\n   ]\n'
         )
+        self.assertEqual(gml_str, expected_str)
 
-        # Check if the GML string is formatted correctly
-        self.assertIn('node [ id 1 label "H" ]', gml_str)
-        self.assertIn('node [ id 2 label "O" ]', gml_str)
+    def test_rules_grammar(self):
+        L = self.data[0]["RC"][0]
+        R = self.data[0]["RC"][1]
+        K = self.data[0]["RC"][2]
+        changed_node_ids = RuleWriting.find_changed_nodes(L, R, ["charge"])
+        rule_name = "test_rule"
+        gml_str = RuleWriting.RulesGrammar(L, R, K, rule_name, changed_node_ids)
+        expected_str = (
+            "rule [\n"
+            '   ruleID "test_rule"\n'
+            "   left [\n"
+            '      edge [ source 4 target 21 label "-" ]\n'
+            '      edge [ source 3 target 20 label "-" ]\n'
+            "   ]\n"
+            "   context [\n"
+            '      node [ id 4 label "N" ]\n'
+            '      node [ id 3 label "C" ]\n'
+            '      node [ id 20 label "Br" ]\n'
+            '      node [ id 21 label "H" ]\n'
+            "   ]\n"
+            "   right [\n"
+            '      edge [ source 4 target 3 label "-" ]\n'
+            '      edge [ source 20 target 21 label "-" ]\n'
+            "   ]\n"
+            "]"
+        )
+        self.assertEqual(gml_str, expected_str)
 
-    # def test_RulesGrammar(self):
-    #     # Create simple graphs for L, R, and K
-    #     L = nx.Graph()
-    #     R = nx.Graph()
-    #     K = nx.Graph()
-    #     L.add_node(1, element='H')
-    #     R.add_node(1, element='H')
-    #     K.add_node(1, element='H')
+    def test_find_changed_nodes(self):
+        G1 = nx.Graph()
+        G1.add_node(1, element="C", charge=0)
+        G2 = nx.Graph()
+        G2.add_node(1, element="C", charge=1)
+        changed_nodes = RuleWriting.find_changed_nodes(G1, G2, ["charge"])
+        self.assertEqual(changed_nodes, [1])
 
-    #     # Generate GML string for the rule
-    #     gml_str = RuleWriting.RulesGrammar(L, R, K, "test_rule")
+    def test_process_graph_rules(self):
+        L = self.data[0]["RC"][0]
+        R = self.data[0]["RC"][1]
+        K = self.data[0]["RC"][2]
+        graph_rules = {"R-id": "test_rule", "GraphRules": (L, R, K)}
+        gml_str = RuleWriting.process_graph_rules(graph_rules, reindex=True)
+        expected_str = (
+            "rule [\n"
+            '   ruleID "test_rule"\n'
+            "   left [\n"
+            '      edge [ source 1 target 4 label "-" ]\n'
+            '      edge [ source 2 target 3 label "-" ]\n'
+            "   ]\n"
+            "   context [\n"
+            '      node [ id 1 label "N" ]\n'
+            '      node [ id 2 label "C" ]\n'
+            '      node [ id 3 label "Br" ]\n'
+            '      node [ id 4 label "H" ]\n'
+            "   ]\n"
+            "   right [\n"
+            '      edge [ source 1 target 2 label "-" ]\n'
+            '      edge [ source 3 target 4 label "-" ]\n'
+            "   ]\n"
+            "]"
+        )
+        self.assertEqual(gml_str, expected_str)
 
-    #     # Check if the rule is formatted correctly
-    #     self.assertIn("ruleID \"test_rule\"", gml_str)
-    #     self.assertIn("left [", gml_str)
-    #     self.assertIn("right [", gml_str)
-    #     self.assertIn("context [", gml_str)
-
-    # def test_process_graph_rules(self):
-    #     # Define a rule in dictionary format
-    #     graph_rule = {
-    #         'R-id': 'rule1',
-    #         'graph_rules': (nx.Graph(), nx.Graph(), nx.Graph())
-    #     }
-    #     graph_rule['graph_rules'][0].add_node(1, element='H')
-
-    #     # Process the graph rule
-    #     result = RuleWriting.process_graph_rules(graph_rule)
-
-    #     # Check if the result is a dictionary with the correct rule ID
-    #     self.assertIsInstance(result, str)
-    #     self.assertIn("ruleID \"rule1\"", result)
-
-    # def test_auto_extraction(self):
-    #     # Define a list of graph rules
-    #     data_dicts = [{
-    #         'R-id': 'rule1',
-    #         'graph_rules': (nx.Graph(), nx.Graph(), nx.Graph())
-    #     }]
-    #     data_dicts[0]['graph_rules'][0].add_node(1, element='H')
-
-    #     # Test auto_extraction
-    #     results = RuleWriting.auto_extraction(data_dicts, save_path=None)
-
-    #     # Check if the results are correct
-    #     self.assertIsInstance(results, list)
-    #     self.assertEqual(len(results), 1)
-    #     self.assertIn("ruleID \"rule1\"", results[0])
+    def test_auto_extraction(self):
+        write = RuleWriting.auto_extraction(
+            self.data, id_column="Cluster_id", rule_column="RC", reindex=True
+        )
+        expected_str = (
+            "rule [\n"
+            '   ruleID "0"\n'
+            "   left [\n"
+            '      edge [ source 1 target 4 label "-" ]\n'
+            '      edge [ source 2 target 3 label "-" ]\n'
+            "   ]\n"
+            "   context [\n"
+            '      node [ id 1 label "N" ]\n'
+            '      node [ id 2 label "C" ]\n'
+            '      node [ id 3 label "Br" ]\n'
+            '      node [ id 4 label "H" ]\n'
+            "   ]\n"
+            "   right [\n"
+            '      edge [ source 1 target 2 label "-" ]\n'
+            '      edge [ source 3 target 4 label "-" ]\n'
+            "   ]\n"
+            "]"
+        )
+        self.assertEqual(write[0], expected_str)
 
 
 if __name__ == "__main__":

@@ -29,11 +29,7 @@ class TestITSConstruction(unittest.TestCase):
 
     def test_get_node_attributes_with_defaults(self):
         attributes = ITSConstruction.get_node_attributes_with_defaults(self.G, 1)
-        self.assertEqual(attributes, ("C", False, 2, 0))
-
-        # Test with a non-existent node (should return defaults)
-
-        # self.assertEqual(default_attributes, ('*', False, 0, 0))
+        self.assertEqual(attributes, ("C", False, 2, 0, ["", ""]))
 
     def test_add_edges_to_ITS(self):
         ITS = nx.Graph()

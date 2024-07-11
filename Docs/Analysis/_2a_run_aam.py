@@ -3,9 +3,8 @@ import sys
 import time
 import logging
 import pandas as pd
-from rxnmapper import RXNMapper
-from localmapper import localmapper
-from chython import smiles
+
+
 root_dir = pathlib.Path(__file__).parents[2]
 # Setup logging
 logging.basicConfig(
@@ -40,20 +39,29 @@ for folder_name, num_columns in list_data.items():
     save_dir = f"{root_dir}/Data/AAM/unbalance/{folder_name}"
     save_path = f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_aam_reactions.json.gz"
     data = load_database(
-            f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_reactions.json.gz"
-        )
+        f"{root_dir}/Data/AAM/unbalance/{folder_name}/{folder_name}_reactions.json.gz"
+    )
     logger.info(f"Loaded {len(data)} reactions from {folder_name}")
     for mapper in mapper_types:
         aam = AAMConsensus(data, mappers=[mapper])
         start_time = time.time()
         logger.info(f"Starting consensus mapping for {folder_name} using {mapper}")
-        
-        results = aam.batch_consensus(data, rsmi_column='reactions', batch_size=len(data), job_timeout=None,
-                                      safe_mode=False, rdt_jar_path=rdt_jar_path, working_dir=working_dir)
+
+        results = aam.batch_consensus(
+            data,
+            rsmi_column="reactions",
+            batch_size=len(data),
+            job_timeout=None,
+            safe_mode=False,
+            rdt_jar_path=rdt_jar_path,
+            working_dir=working_dir,
+        )
         end_time = time.time()
         elapsed_time = end_time - start_time
-        logger.info(f"Completed consensus mapping for {folder_name} using {mapper} in {elapsed_time:.2f} seconds")
-        
+        logger.info(
+            f"Completed consensus mapping for {folder_name} using {mapper} in {elapsed_time:.2f} seconds"
+        )
+
         # Store the time taken in the dictionary
         time_dict[mapper][folder_name] = elapsed_time
         for key, value in enumerate(data):

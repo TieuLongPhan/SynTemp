@@ -197,7 +197,8 @@ def train_val_test_split_df(
     - random_state (int): The seed used by the random number generator.
 
     Returns:
-    - Tuple[pd.DataFrame, pd.UtilityModel, pd.DataFrame]: A tuple containing the training set, validation set, and test set as DataFrames.
+    - Tuple[pd.DataFrame, pd.UtilityModel, pd.DataFrame]: A tuple containing the training
+    set, validation set, and test set as DataFrames.
 
     Raises:
     - AssertionError: If the sum of train_size, val_size, and test_size does not equal 1.

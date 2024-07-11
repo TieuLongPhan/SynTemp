@@ -15,7 +15,8 @@ class RuleExtraction:
         - G (nx.Graph): The graph in which to identify reaction center nodes.
 
         Returns:
-        - List[int]: Nodes that are part of edges with unequal orders, indicating reaction centers.
+        - List[int]: Nodes that are part of edges with unequal orders, indicating reaction
+        centers.
         """
         reaction_center_nodes: Set[int] = set()
         for u, v, data in G.edges(data=True):
@@ -31,7 +32,8 @@ class RuleExtraction:
         G: nx.Graph, center_nodes: List[int], n_knn: int = 1
     ) -> Set[int]:
         """
-        Finds up to n_knn levels of nearest neighbors for specified center nodes within a graph.
+        Finds up to n_knn levels of nearest neighbors for specified center nodes within a
+        graph.
 
         Parameters:
         - G (nx.Graph): The graph to search within.
@@ -39,7 +41,8 @@ class RuleExtraction:
         - n_knn (int): Levels of nearest neighbors to include.
 
         Returns:
-        - Set[int]: Nodes including the center nodes and their up to n_knn-nearest neighbors.
+        - Set[int]: Nodes including the center nodes and their up to n_knn-nearest
+        neighbors.
         """
         extended_nodes = set(center_nodes)
         for _ in range(n_knn):
@@ -69,19 +72,24 @@ class RuleExtraction:
         reactants_graph, products_graph, its_graph, extend: bool = False, n_knn: int = 1
     ) -> Dict[str, Any]:
         """
-        Extracts transformation rules for a chemical reaction represented by graphs of reactants, products, and intermediate transition states (ITS).
+        Extracts transformation rules for a chemical reaction represented by graphs of
+        reactants, products, and intermediate transition states (ITS).
 
-        This method identifies the reaction center nodes, optionally extends them based on nearest neighbors, and constructs a tuple of subgraphs representing the rules.
+        This method identifies the reaction center nodes, optionally extends them based on
+        nearest neighbors, and constructs a tuple of subgraphs representing the rules.
 
         Parameters:
         - reactants_graph (Graph): Graph representing the reactants.
         - products_graph (Graph): Graph representing the products.
         - its_graph (Graph): Graph representing the intermediate transition states.
-        - extend (bool, optional): If True, extends the reaction center nodes by including nearest neighbors. Defaults to True.
-        - n_knn (int, optional): Specifies the number of nearest neighbors to consider when extending the reaction center nodes. Defaults to 1.
+        - extend (bool, optional): If True, extends the reaction center nodes by including
+        nearest neighbors. Defaults to True.
+        - n_knn (int, optional): Specifies the number of nearest neighbors to consider
+        when extending the reaction center nodes. Defaults to 1.
 
         Returns:
-        - Tuple: A tuple contains the subgraphs for the reactants, products, and ITS, representing the extracted rules.
+        - Tuple: A tuple contains the subgraphs for the reactants, products, and ITS,
+        representing the extracted rules.
         """
         reaction_center_nodes = RuleExtraction.find_unequal_order_edges(its_graph)
         if extend:
@@ -109,7 +117,8 @@ class RuleExtraction:
         n_knn: int = 1,
     ) -> Dict[str, Any]:
         """
-        Extracts rules for a single reaction using a specified mapper, optionally extending reaction centers.
+        Extracts rules for a single reaction using a specified mapper, optionally
+        extending reaction centers.
 
         Parameters:
         - reaction_dict (Dict[str, Any]): Single reaction representation.
@@ -119,7 +128,8 @@ class RuleExtraction:
 
         Returns:
         - Dict[str, Any]: Reaction dictionary updated with extracted rules.
-                          'GraphRules': Tuple of reactants graph (L graph), products graph (R graph), ITS graph (K graph)
+        'GraphRules': Tuple of reactants graph (L graph), products graph
+        (R graph), ITS graph (K graph)
         """
         reactants_graph, products_graph, its_graph = reaction_dict[mapper_type]
         reaction_center_nodes = RuleExtraction.find_unequal_order_edges(its_graph)
@@ -148,7 +158,8 @@ class RuleExtraction:
         n_knn: int = 1,
     ) -> List[Dict[str, Any]]:
         """
-        Parallelizes rules extraction for multiple reactions, with options for extension and parallelism control.
+        Parallelizes rules extraction for multiple reactions, with options for extension
+        and parallelism control.
 
         Parameters:
         - reaction_dicts (List[Dict[str, Any]]): Reactions to process.
@@ -180,7 +191,8 @@ class RuleExtraction:
         property_key (str): The key for the edge attribute that should be examined.
 
         Returns:
-        nx.Graph: A new graph with the specified edges removed. The original graph is not modified.
+        nx.Graph: A new graph with the specified edges removed. The original graph is not
+        modified.
         """
         # Create a copy of the graph to avoid inplace modification
         filtered_graph = graph.copy()
@@ -190,7 +202,6 @@ class RuleExtraction:
             # Unpack edge data
             start_node, end_node, attributes = edge
 
-            # Check if the property exists and compare its values at the start and end of the edge
             if property_key in attributes and attributes[property_key] == 0:
                 # Remove the edge if the property values are equal
                 filtered_graph.remove_edge(start_node, end_node)

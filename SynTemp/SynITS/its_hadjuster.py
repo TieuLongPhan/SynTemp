@@ -12,8 +12,6 @@ from SynTemp.SynUtils.graph_utils import (
 )
 from SynTemp.SynITS.its_extraction import ITSExtraction
 
-import logging
-
 
 class ITSHAdjuster:
 
@@ -26,17 +24,27 @@ class ITSHAdjuster:
         balance_its: bool = True,
     ) -> Dict:
         """
-        Processes a single dictionary containing graph information by applying modifications based on hcount changes.
-        Optionally handles aromaticity and provides different return behaviors based on the `return_all` flag.
+        Processes a single dictionary containing graph information by applying
+        modifications based on hcount changes.
+        Optionally handles aromaticity and provides different return behaviors based on
+        the `return_all` flag.
 
-        Args:
-        graph_data (Dict): Dictionary containing graph information.
-        column (str): Key where the graph tuple is stored.
-        return_all (bool): Flag to return all data or just the most relevant. Default is False.
-        ignore_aromaticity (bool): Flag to ignore aromaticity in the ITS construction. Default is False.
+        Parameters:
+        - graph_data (Dict): A dictionary containing essential graph information. This
+        includes nodes, edges, and other graph-specific data.
+        - column (str): The key in the dictionary where the graph tuple is stored,
+        typically pointing to the specific data structure to be modified.
+        - return_all (bool): A flag that determines the nature of the output. If True, the
+        function returns all modified data, otherwise it returns only the most relevant
+        changes. The default value is False.
+        - ignore_aromaticity (bool): A flag to indicate whether aromaticity should be
+        ignored during the graph processing. Ignoring aromaticity may affect the ITS
+        construction. The default value is False.
 
         Returns:
-        Dict: Updated dictionary with new ITS and GraphRules if applicable.
+        - Dict: An updated dictionary that includes the new internal topology structure
+        (ITS) and any applicable GraphRules, reflecting the modifications made based on
+        hydrogen counts and aromaticity considerations.
         """
         graphs = deepcopy(graph_data)
         react_graph, prod_graph, its = graphs[column]
@@ -72,11 +80,12 @@ class ITSHAdjuster:
     @staticmethod
     def update_graph_data(graph_data, react_graph, prod_graph, its):
         """
-        Update graph data dictionary with new ITS and GraphRules based on the graphs provided.
+        Update graph data dictionary with new ITS and GraphRules based on the graphs
+        provided.
 
-        Args:
-        graph_data (Dict): Existing graph data.
-        react_graph (nx.Graph), prod_graph (nx.Graph), its: Graphs and ITS to use.
+        Parameters:
+        - graph_data (Dict): Existing graph data.
+        - react_graph (nx.Graph), prod_graph (nx.Graph), its: Graphs and ITS to use.
 
         Returns:
         Dict: Updated graph data dictionary.
@@ -99,13 +108,15 @@ class ITSHAdjuster:
     ):
         """
         Handles cases with hydrogen count changes between 2 and 4, inclusive.
-        Manages the creation of multiple hydrogen node scenarios and evaluates their equivalence.
+        Manages the creation of multiple hydrogen node scenarios and evaluates their
+        equivalence.
 
-        Args:
-        graph_data, react_graph, prod_graph, its, ignore_aromaticity, return_all as described.
+        Parameters:
+        - graph_data, react_graph, prod_graph, its, ignore_aromaticity,
+        return_all as described.
 
         Returns:
-        Dict: Updated graph data.
+        - Dict: Updated graph data.
         """
         combinations_solution = ITSHAdjuster.add_hydrogen_nodes_multiple(
             react_graph, prod_graph
@@ -148,11 +159,11 @@ class ITSHAdjuster:
         Handles cases with hydrogen count changes of 5 or more.
         Similar to `process_multiple_hydrogens` but tailored for higher counts.
 
-        Args:
-        Same as `process_multiple_hydrogens`.
+        Parameters:
+        - Same as `process_multiple_hydrogens`.
 
         Returns:
-        Dict: Updated graph data.
+        - Dict: Updated graph data.
         """
         combinations_solution = ITSHAdjuster.add_hydrogen_nodes_multiple(
             react_graph, prod_graph
@@ -198,7 +209,8 @@ class ITSHAdjuster:
         Processes a list of dictionaries containing graph information in parallel.
 
         Parameters:
-        - graph_data_list (List[Dict]): A list of dictionaries containing graph information.
+        - graph_data_list (List[Dict]): A list of dictionaries containing graph
+        information.
         - column (str): The key in the dictionary where the graph tuple is stored.
         - n_jobs (int): The number of concurrent jobs.
         - verbose (int): The verbosity level.
@@ -222,12 +234,15 @@ class ITSHAdjuster:
         atom_map_update: bool = True,
     ) -> nx.Graph:
         """
-        Creates and returns a new graph with added hydrogen nodes based on the input graph and node ID pairs.
+        Creates and returns a new graph with added hydrogen nodes based on the input graph
+        and node ID pairs.
 
         Parameters:
         - graph (nx.Graph): The base graph to which the nodes will be added.
-        - node_id_pairs (Iterable[Tuple[int, int]]): Pairs of node IDs (original node, new hydrogen node) to link with hydrogen.
-        - atom_map_update (bool): If True, update the 'atom_map' attribute with the new hydrogen node ID; otherwise, retain the original node's 'atom_map'.
+        - node_id_pairs (Iterable[Tuple[int, int]]): Pairs of node IDs (original node, new
+        hydrogen node) to link with hydrogen.
+        - atom_map_update (bool): If True, update the 'atom_map' attribute with the new
+        hydrogen node ID; otherwise, retain the original node's 'atom_map'.
 
         Returns:
         - nx.Graph: A new graph instance with the added hydrogen nodes.
@@ -270,16 +285,19 @@ class ITSHAdjuster:
         prod_graph: nx.Graph,
     ) -> List[Tuple[nx.Graph, nx.Graph]]:
         """
-        Adds hydrogen nodes to the copies of the reactant and product graphs based on the difference in hcount between them.
-        Hydrogen nodes are added or removed to represent the breaking and forming of hydrogen bonds.
-        The function generates multiple graph pairs, each with a different permutation of the added hydrogen nodes in the product graph.
+        Adds hydrogen nodes to the copies of the reactant and product graphs based on the
+        difference in hcount between them. Hydrogen nodes are added or removed to
+        represent the breaking and forming of hydrogen bonds. The function generates
+        multiple graph pairs, each with a different permutation of the added hydrogen
+        nodes in the product graph.
 
         Parameters:
         - react_graph (nx.Graph): The reactant graph.
         - prod_graph (nx.Graph): The product graph.
 
         Returns:
-        - List[Tuple[nx.Graph, nx.Graph]]: A list of tuples, each containing a pair of updated reactant and product graphs.
+        - List[Tuple[nx.Graph, nx.Graph]]: A list of tuples, each containing a pair of
+        updated reactant and product graphs.
         """
         react_graph_copy = deepcopy(react_graph)
         prod_graph_copy = deepcopy(prod_graph)
@@ -333,7 +351,6 @@ class ITSHAdjuster:
                 react_graph_copy
             ), deepcopy(prod_graph_copy)
 
-            # Correctly form the list for new hydrogen node IDs by adding react_explicit_h to each element in permutations_seed
             new_hydrogen_node_ids = [i for i in permutations_seed]
 
             # Use `zip` to pair `hydrogen_nodes_break` with the new IDs

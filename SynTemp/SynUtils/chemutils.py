@@ -395,22 +395,25 @@ def remove_stereochemistry_from_reaction_smiles(reaction_smiles: str) -> str:
 
 def enumerate_tautomers(reaction_smiles: str) -> Optional[List[str]]:
     """
-    Enumerates possible tautomers for reactants while canonicalizing the products in a reaction SMILES string.
+    Enumerates possible tautomers for reactants while canonicalizing the products in a
+    reaction SMILES string. This function first splits the reaction SMILES string into
+    reactants and products. It then generates all possible tautomers for the reactants and
+    canonicalizes the product molecule. The function returns a list of reaction SMILES
+    strings for each tautomer of the reactants combined with the canonical product.
 
-    This function first splits the reaction SMILES string into reactants and products. It then generates all
-    possible tautomers for the reactants and canonicalizes the product molecule. The function returns a list of
-    reaction SMILES strings for each tautomer of the reactants combined with the canonical product.
-
-    Args:
-        reaction_smiles (str): A SMILES string of the reaction formatted as 'reactants>>products'.
+    Parameters:
+    - reaction_smiles (str): A SMILES string of the reaction formatted as
+    'reactants>>products'.
 
     Returns:
-        List[str] | None: A list of SMILES strings for the reaction, with each string representing a different
-        tautomer of the reactants combined with the canonicalized products. Returns None if an error occurs
-        or if invalid SMILES strings are provided.
+    - List[str] | None: A list of SMILES strings for the reaction, with each string
+    representing a different
+    - tautomer of the reactants combined with the canonicalized products. Returns None if
+    an error occurs or if invalid SMILES strings are provided.
 
     Raises:
-        ValueError: If the provided SMILES strings cannot be converted to molecule objects, indicating invalid input.
+    - ValueError: If the provided SMILES strings cannot be converted to molecule objects,
+    indicating invalid input.
     """
     try:
         # Split the input reaction SMILES string into reactants and products
@@ -457,16 +460,18 @@ def enumerate_tautomers(reaction_smiles: str) -> Optional[List[str]]:
 
 def mapping_success_rate(list_mapping_data):
     """
-    Calculate the success rate of entries containing atom mappings in a list of data strings.
+    Calculate the success rate of entries containing atom mappings in a list of data
+    strings.
 
     Parameters:
-        list_mapping_in_data (list of str): List containing strings to be searched for atom mappings.
+    - list_mapping_in_data (list of str): List containing strings to be searched for atom
+    mappings.
 
     Returns:
-        float: The success rate of finding atom mappings in the list as a percentage.
+    - float: The success rate of finding atom mappings in the list as a percentage.
 
     Raises:
-        ValueError: If the input list is empty.
+    - ValueError: If the input list is empty.
     """
     atom_map_pattern = re.compile(r":\d+")
     if not list_mapping_data:
@@ -484,20 +489,23 @@ def generate_reaction_smiles(
     temp_results: List[str], base_smiles: str, is_forward: bool = True
 ) -> List[str]:
     """
-    Constructs reaction SMILES strings from intermediate results using a base SMILES string, indicating whether the
-    process is a forward or backward reaction. This function iterates over a list of intermediate SMILES strings,
-    combines them with the base SMILES, and formats them into complete reaction SMILES strings.
+    Constructs reaction SMILES strings from intermediate results using a base SMILES
+    string, indicating whether the process is a forward or backward reaction. This
+    function iterates over a list of intermediate SMILES strings, combines them with the
+    base SMILES, and formats them into complete reaction SMILES strings.
 
     Parameters:
-    - temp_results (List[str]): Intermediate SMILES strings resulting from partial reactions or combinations.
-    - base_smiles (str): The SMILES string representing the starting point of the reaction, either as reactants
-                        or products, depending on the reaction direction.
-    - is_forward (bool, optional): Flag to determine the direction of the reaction; 'True' for forward reactions
-                                where 'base_smiles' are reactants, and 'False' for backward reactions where
-                                'base_smiles' are products. Defaults to True.
+    - temp_results (List[str]): Intermediate SMILES strings resulting from partial
+    reactions or combinations.
+    - base_smiles (str): The SMILES string representing the starting point of the
+    reaction, either as reactants or products, depending on the reaction direction.
+    - is_forward (bool, optional): Flag to determine the direction of the reaction; 'True'
+    for forward reactions where 'base_smiles' are reactants, and 'False' for backward
+    reactions where 'base_smiles' are products. Defaults to True.
 
     Returns:
-    - List[str]: A list of complete reaction SMILES strings, formatted according to the specified reaction direction.
+    - List[str]: A list of complete reaction SMILES strings, formatted according to the
+    specified reaction direction.
     """
     results = []
     for comb in temp_results:

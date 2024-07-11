@@ -24,10 +24,10 @@ class AMMValidator:
         Constructs a graph representation from a SMILES string.
 
         Parameters:
-            smiles (str): A SMILES string representing a molecule or a set of molecules.
+        - smiles (str): A SMILES string representing a molecule or a set of molecules.
 
         Returns:
-            nx.Graph: A graph representation of the molecule(s).
+        - nx.Graph: A graph representation of the molecule(s).
         """
         mol = Chem.MolFromSmiles(smiles)
         graph = MolToGraph().mol_to_graph(mol, drop_non_aam=True)
@@ -80,15 +80,15 @@ class AMMValidator:
         using reaction center (RC) or ITS graph method.
 
         Parameters:
-            mapped_smile (str): The mapped SMILES string.
-            ground_truth (str): The ground truth SMILES string.
-            check_method (str): The method used for validation
+        - mapped_smile (str): The mapped SMILES string.
+        - ground_truth (str): The ground truth SMILES string.
+        - check_method (str): The method used for validation
             ('RC' or 'ITS').
-            ignore_aromaticity (bool): Flag to ignore aromaticity
-                                        in ITS graph construction.
+        - ignore_aromaticity (bool): Flag to ignore aromaticity
+                                    in ITS graph construction.
 
         Returns:
-            bool: True if the mapped SMILES is equivalent to the ground truth,
+        - bool: True if the mapped SMILES is equivalent to the ground truth,
                     False otherwise.
         """
         its_graphs = []
@@ -111,7 +111,7 @@ class AMMValidator:
 
             return equivariant == 1
 
-        except Exception as e:  # Catch more general exceptions
+        except Exception as e:
             print("An error occurred:", str(e))
             return False
 
@@ -122,28 +122,28 @@ class AMMValidator:
         ignore_aromaticity: bool = False,
     ) -> Optional[bool]:
         """
-        Determines if a given mapped SMILE string is equivalent to any tautomer of a ground truth SMILES string
-        using a specified comparison method.
+        Determines if a given mapped SMILE string is equivalent to any tautomer of
+        a ground truth SMILES string using a specified comparison method.
 
-        The function first enumerates all possible tautomers of the ground truth SMILES and then checks
-        if the mapped SMILE string matches any of these tautomers based on the specified method.
-
-        Args:
-            mapped_smile (str): The SMILES string to check against the tautomers of the ground truth.
-            ground_truth (str): The reference SMILES string for generating possible tautomers.
-            check_method (str): The method to use for checking equivalence. Possible values are "RC" for
-                                relaxed chemical transformation or "ITS" for isomorphic tautomer search.
-                                Default is "RC".
-            ignore_aromaticity (bool): If True, the comparison ignores differences in aromaticity between
-                                       the mapped SMILE and the tautomers. Default is False.
+        Parameters:
+        - mapped_smile (str): The mapped SMILES string to check against the tautomers of
+        the ground truth.
+        - ground_truth (str): The reference SMILES string for generating possible
+        tautomers.
+        - check_method (str): The method used for checking equivalence. Default is 'RC'.
+        Possible values are 'RC' for reaction center or 'ITS'.
+        - ignore_aromaticity (bool): Flag to ignore differences in aromaticity between
+        the mapped SMILE and the tautomers.Default is False.
 
         Returns:
-            Optional[bool]: True if the mapped SMILE matches any of the enumerated tautomers of the ground truth
-                            according to the specified check method. Returns False if no match is found.
-                            Returns None if an error occurs during processing.
+        - Optional[bool]: True if the mapped SMILE matches any of the enumerated tautomers
+        of the ground truth according to the specified check method.
+        Returns False if no match is found.
+        Returns None if an error occurs during processing.
 
         Raises:
-            Exception: If an error occurs during the tautomer enumeration or during the comparison process.
+        - Exception: If an error occurs during the tautomer enumeration
+        or the comparison process.
         """
         try:
             ground_truth_tautomers = enumerate_tautomers(ground_truth)
@@ -174,22 +174,20 @@ class AMMValidator:
         Parameters:
         - mapping (Dict[str, str]): A dictionary containing the data entries to check.
         - mapped_col (str): The key in the mapping dictionary corresponding
-                                    to the mapped value.
+        to the mapped value.
         - ground_truth_col (str): The key in the mapping dictionary corresponding
-                                    to the ground truth value.
+        to the ground truth value.
         - check_method (str, optional): The method used for checking the equivalence.
-                                    Defaults to 'RC'.
+        Defaults to 'RC'.
         - ignore_aromaticity (bool, optional): Flag to indicate whether aromaticity
-                                    should be ignored during the check.
-                                    Defaults to False.
+        should be ignored during the check. Defaults to False.
         - ignore_tautomers (bool, optional): Flag to indicate whether tautomers
-                                    should be ignored during the check.
-                                    Defaults to False.
+        should be ignored during the check. Defaults to False.
 
         Returns:
         - bool: The result of the check, indicating whether the mapped value is
-                equivalent to the ground truth according to the specified method
-                and considerations regarding aromaticity.
+        equivalent to the ground truth according to the specified method
+        and considerations regarding aromaticity.
         """
         if ignore_tautomers:
             return AMMValidator.smiles_check(
@@ -224,29 +222,27 @@ class AMMValidator:
         ignore_tautomers=True,
     ) -> List[Dict[str, Union[str, float, List[bool]]]]:
         """
-        Validates collections of mapped SMILES against their ground truths
-        for multiple mappers and calculates the accuracy.
+        Validates collections of mapped SMILES against their ground truths for
+        multiple mappers and calculates the accuracy.
 
         Parameters:
-            data (Union[pd.DataFrame, List[Dict[str, str]]]): The input data
-                                    containing mapped and ground truth SMILES.
-            id_col (str): The name of the column or key containing
-                                    the reaction ID.
-            ground_truth_col (str): The name of the column or key containing
-                                    the ground truth SMILES.
-            mapped_cols (List[str]): The list of columns or keys containing
-                                    the mapped SMILES for different mappers.
-            check_method (str): The method used for validation ('RC' or 'ITS').
-            ignore_aromaticity (bool): Whether to ignore aromaticity
-                                    in ITS graph construction.
-            n_jobs (int): The number of parallel jobs to run.
-            verbose (int): The verbosity level for joblib's parallel execution.
+        - data (Union[pd.DataFrame, List[Dict[str, str]]]):
+        The input data containing mapped and ground truth SMILES.
+        - id_col (str): The name of the column or key containing the reaction ID.
+        - ground_truth_col (str): The name of the column or key containing
+        the ground truth SMILES.
+        - mapped_cols (List[str]): The list of columns or keys containing
+        the mapped SMILES for different mappers.
+        - check_method (str): The method used for validation ('RC' or 'ITS').
+        - ignore_aromaticity (bool): Flag to ignore aromaticity in ITS graph construction.
+        - n_jobs (int): The number of parallel jobs to run.
+        - verbose (int): The verbosity level for joblib's parallel execution.
 
         Returns:
-            List[Dict[str, Union[str, float, List[bool]]]]: A list of dictionaries,
-            each containing the mapper name,
-            accuracy, and individual results for each SMILES pair.
+        - List[Dict[str, Union[str, float, List[bool]]]]: A list of dictionaries, each
+        containing the mapper name, accuracy, and individual results for each SMILES pair.
         """
+
         validation_results = []
 
         for mapped_col in mapped_cols:
@@ -260,7 +256,6 @@ class AMMValidator:
                     "Data must be either a pandas DataFrame or a list of dictionaries."
                 )
 
-            # Use joblib to parallelize the validation checks
             results = Parallel(n_jobs=n_jobs, verbose=verbose)(
                 delayed(AMMValidator.check_pair)(
                     mapping,
@@ -274,7 +269,7 @@ class AMMValidator:
             )
             accuracy = sum(results) / len(mappings) if mappings else 0
             mapped_data = [value[mapped_col] for value in mappings]
-            # Store the results for each mapper in the list
+
             validation_results.append(
                 {
                     "mapper": mapped_col,
@@ -286,12 +281,9 @@ class AMMValidator:
         if ensemble:
             for key, strategy in enumerate(strategies):
                 mapped_cols = strategy
-                threshold = len(mapped_cols) - 1
-
                 its_graph, _ = ITSExtraction.parallel_process_smiles(
-                    mappings,
-                    mapped_cols,
-                    threshold=threshold,
+                    mapped_smiles_list=mappings,
+                    mapper_names=mapped_cols,
                     n_jobs=n_jobs,
                     verbose=verbose,
                     export_full=False,
