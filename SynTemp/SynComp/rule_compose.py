@@ -15,6 +15,7 @@ class RuleCompose:
     def __init__(self) -> None:
         pass
 
+    @staticmethod    
     def _compose(rule_1, rule_2):
         """
         Compose two rules and filter the results based on chemical valence constraints.
