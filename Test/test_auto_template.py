@@ -25,8 +25,8 @@ class TestRuleCluster(unittest.TestCase):
             refinement_its=True,
         )
 
-    def test_fit(self):
-        (rules, _, _, _, _, _) = self.auto.fit(self.data)
+    def test_temp_extract(self):
+        (rules, _, _, _, _, _) = self.auto.temp_extract(self.data)
         self.assertIn("ruleID", rules[0][0])
 
 
