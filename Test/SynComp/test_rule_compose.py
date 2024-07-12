@@ -45,6 +45,9 @@ class TestRuleCompose(unittest.TestCase):
         self.assertTrue(
             new_files, "No new .gml files were created in the" + " compose_rule_path."
         )
+        for file_path in glob.glob(os.path.join(self.compose_rule_path, "*.gml")):
+            os.remove(file_path)
+            print(f"Removed {file_path}")
 
 
 if __name__ == "__main__":
