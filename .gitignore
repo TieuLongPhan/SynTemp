@@ -11,3 +11,4 @@ __pycache__
 *pkl.gz
 *json.gz
 *txt
+Data/DPO/*
