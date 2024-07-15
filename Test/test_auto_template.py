@@ -12,7 +12,7 @@ class TestRuleCluster(unittest.TestCase):
         self.data = load_database(f"{root_dir}/Data/Testcase/demo.json.gz")[:20]
         self.auto = AutoTemp(
             rebalancing=True,
-            mapper_types=["rxn_mapper", "graphormer"],
+            mapper_types=["rxn_mapper", "graphormer", "local_mapper"],
             id="R-id",
             rsmi="reactions",
             n_jobs=1,
@@ -28,14 +28,14 @@ class TestRuleCluster(unittest.TestCase):
     def test_temp_extract(self):
         (rules, _, _, _, _, _) = self.auto.temp_extract(self.data, lib_path=None)
         self.assertIn("ruleID", rules[0][0])
-        self.assertEqual(len(rules[0]), 11)
+        self.assertEqual(len(rules[0]), 10)
 
-    # def test_temp_extract_lib(self):
-    #     (rules, _, _, _, _, _) = self.auto.temp_extract(
-    #         self.data, lib_path=f"{root_dir}/Data/Testcase/Update_data"
-    #     )  # 2 rules exist
-    #     self.assertIn("ruleID", rules[0][0])
-    #     self.assertEqual(len(rules[0]), 9)
+    def test_temp_extract_lib(self):
+        (rules, _, _, _, _, _) = self.auto.temp_extract(
+            self.data, lib_path=f"{root_dir}/Data/Testcase/Update_data"
+        )  # 2 rules exist
+        self.assertIn("ruleID", rules[0][0])
+        self.assertEqual(len(rules[0]), 8)
 
 
 if __name__ == "__main__":

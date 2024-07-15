@@ -105,9 +105,9 @@ def check_graph_type(G: nx.Graph) -> str:
     elif is_single_cyclic_graph(G):
         return "Single Cyclic"
     elif is_complex_cyclic_graph(G):
-        return "Complex Cyclic"
+        return "Combinatorial Cyclic"
     else:
-        return "None"
+        return "Complex Cyclic"
 
 
 def get_cycle_member_rings(G: nx.Graph) -> List[int]:
@@ -135,6 +135,42 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
     member_rings.sort()
 
     return member_rings
+
+
+def get_descriptors(data: List[Dict], reaction_centers: str = "RC") -> List[Dict]:
+    """
+    Enhance data with topology type and reaction type descriptors.
+
+    Parameters:
+    - data (List[Dict]): List of dictionaries containing reaction data.
+    - reaction_centers (str): Key for accessing the reaction centers in the data
+    dictionaries.
+
+    Returns:
+    - List[Dict]: Enhanced list of dictionaries with added descriptors.
+    """
+    for value in data:
+        graph = value[reaction_centers][2]
+
+        # Determine topology type and cycle member rings
+        value["Topo Type"] = check_graph_type(graph)
+        value["Rings"] = get_cycle_member_rings(graph)
+
+        # Determine reaction type based on topology type
+        if value["Topo Type"] in ["Single Cyclic", "Acyclic"]:
+            value["Reaction Type"] = "Elementary"
+        else:
+            value["Reaction Type"] = "Complicated"
+
+        # Set "Rings" based on topology type
+        if value["Topo Type"] == "Acyclic":
+            value["Rings"] = [0]
+        elif value["Topo Type"] == "Complex Cyclic":
+            value["Rings"] = [0] + value["Rings"]
+
+        value["Reaction Step"] = len(value["Rings"])
+
+    return data
 
 
 def load_gml_as_text(gml_file_path):

@@ -64,7 +64,7 @@ class ITSRefinement:
                     )
                     uncertain_graph.append(processed_data)
                     results.append(type_of_graph)
-                    if type_of_graph == "Single Cyclic":
+                    if type_of_graph == "Topo Cyclic":
                         processed_data["R-id"] = input_graph.get("R-id", "")
                         return processed_data
                 except ValueError:
