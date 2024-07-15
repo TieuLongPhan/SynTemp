@@ -2,7 +2,7 @@ import os
 import shutil
 import logging
 import pandas as pd
-from typing import List, Any, Dict, Optional, Union
+from typing import List, Any, Dict, Optional, Union, Tuple
 from SynTemp.SynChemistry.neutralize import Neutralize
 from SynTemp.SynChemistry.deionize import Deionize
 from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
@@ -20,7 +20,6 @@ logging.basicConfig(
 )
 
 
-@staticmethod
 def rebalance(
     data: Union[pd.DataFrame, List[Dict[str, Any]]],
     reaction_col: str = "reactions",
@@ -73,7 +72,6 @@ def rebalance(
     return new_data
 
 
-@staticmethod
 def clean(
     data: Union[pd.DataFrame, List[Dict[str, Any]]],
     id: str = "R-id",
@@ -115,7 +113,6 @@ def clean(
     return data
 
 
-@staticmethod
 def run_aam(
     data: List[Dict[str, Any]],
     mapper_types: List[Any],
@@ -154,7 +151,6 @@ def run_aam(
     return results
 
 
-@staticmethod
 def extract_its(
     data: List[str],
     mapper_types: Optional[List[str]] = None,
@@ -288,30 +284,29 @@ def extract_its(
     return its_correct, its_incorrect, uncertain_hydrogen
 
 
-@staticmethod
 def rule_extract(
-    data,
+    data: List[Any],
     node_label_names: List[str] = ["element", "charge"],
     node_label_default: List[Any] = ["*", 0],
     edge_attribute: str = "order",
     max_radius: int = 3,
     save_path: Optional[str] = None,
-) -> List:
+) -> Tuple[Optional[List[Any]], Optional[List[Any]], Optional[List[Any]]]:
     """
     Automates the generation of templates and rules from hierarchical clustering of
-    given data.
+    given data. Handles potential errors gracefully.
 
     Parameters:
-    - data: Input data to process.
-    - node_label_names (List[str]): Labels for the nodes in the hierarchical
-    clustering.
+    - data (List[Any]): Input data to process.
+    - node_label_names (List[str]): Labels for the nodes in the hierarchical clustering.
     - node_label_default (List[Any]): Default values for node labels if not specified.
     - edge_attribute (str): The attribute used for defining edges.
     - max_radius (int): Maximum radius for the clustering algorithm.
     - save_path (Optional[str]): Path to save output files.
 
     Returns:
-    - List: A list of rules extracted from the generated templates.
+    - Tuple of Optional[List[Any]]: A tuple containing lists of rules, templates,
+      and hierarchical templates extracted, or None for each if an error occurs.
     """
     try:
         hier_cluster = HierarchicalClustering(
@@ -321,34 +316,63 @@ def rule_extract(
         reaction_dicts, templates, hier_templates = hier_cluster.fit(data)
         logging.info("Clustering completed and data extracted.")
 
-        rules = []
-        for radius, template in enumerate(templates):
-            directory_path = None
-            if save_path:
-                directory_path = os.path.join(save_path, f"R{radius}")
-                if not os.path.exists(directory_path):
-                    os.makedirs(directory_path)
-                    logging.info(f"Directory created at {directory_path}")
-                else:
-                    logging.info(f"Directory {directory_path} already exists")
+        if save_path:
+            for obj, name in zip(
+                [reaction_dicts, templates, hier_templates],
+                ["data_cluster.pkl.gz", "templates.pkl.gz", "hier_templates.pkl.gz"],
+            ):
+                save_to_pickle(obj, f"{save_path}/{name}")
+                logging.info(f"{name} successfully saved.")
 
+        return reaction_dicts, templates, hier_templates
+    except Exception as e:
+        logging.error("An error occurred during template generation: %s", e)
+        return None, None, None
+
+
+def write_gml(
+    template_data: List[Any],
+    save_path: Optional[str] = None,
+    id_column: str = "Cluster_id",
+    rule_column: str = "RC",
+    reindex: bool = True,
+) -> List:
+    """
+    Process templates to extract and save rules.
+
+    Parameters:
+    - template_data (List[Any]): List of template data to process.
+    - save_path (Optional[str]): Base directory where directories will be created and
+    files saved.
+
+    Returns:
+    - List: A list of results from the rule extraction process.
+    """
+    logging.basicConfig(level=logging.INFO)  # Configuring logging level to INFO
+    rules = []
+    for radius, template in enumerate(template_data):
+        directory_path = None
+        if save_path:
+            directory_path = os.path.join(save_path, f"R{radius}")
+            try:
+                # Ensure directory exists
+                os.makedirs(directory_path, exist_ok=True)
+                logging.info(f"Ensured directory exists at {directory_path}")
+            except Exception as e:
+                logging.error(f"Failed to create directory {directory_path}: {e}")
+                continue  # Skip this iteration on failure to create directory
+
+        try:
             write = RuleWriting.auto_extraction(
                 template,
-                id_column="Cluster_id",
-                rule_column="RC",
-                reindex=True,
+                id_column=id_column,
+                rule_column=rule_column,
+                reindex=reindex,
                 save_path=directory_path,
             )
             rules.append(write)
             logging.info(f"Rules extracted for template at radius {radius}")
+        except Exception as e:
+            logging.error(f"Error extracting rules for radius {radius}: {e}")
 
-        if save_path:
-            save_to_pickle(reaction_dicts, f"{save_path}/data_cluster.pkl.gz")
-            save_to_pickle(templates, f"{save_path}/templates.pkl.gz")
-            save_to_pickle(hier_templates, f"{save_path}/hier_templates.pkl.gz")
-            logging.info("All data successfully saved.")
-
-        return rules, reaction_dicts, templates, hier_templates
-    except Exception as e:
-        logging.error("An error occurred during template generation: %s", e)
-        raise
+    return rules

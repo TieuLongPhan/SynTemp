@@ -1,9 +1,19 @@
+import os
+import glob
 import logging
 from typing import List, Any, Dict, Optional, Tuple
-from SynTemp.pipeline import rebalance, clean, run_aam, extract_its, rule_extract
+from SynTemp.pipeline import (
+    rebalance,
+    clean,
+    run_aam,
+    extract_its,
+    rule_extract,
+    write_gml,
+)
+from SynTemp.lib_isomorphism import LibIsomorphism
+from SynTemp.SynUtils.utils import prune_branches, reindex_data
 
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -28,13 +38,15 @@ class AutoTemp:
         node_label_default: List[Any] = ["*", 0],
         edge_attribute: str = "order",
         max_radius: int = 3,
+        reindex: bool = True,
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
         reaction data.
 
         Parameters:
-        - rebalancing (bool): Whether to use synrbl to rebalance reactions. Defaults to False.
+        - rebalancing (bool): Whether to use synrbl to rebalance reactions.
+        Defaults to False.
         - mapper_types (List[str]): List of mapper names to use for processing.
         Defaults to ['local_mapper'].
         - id (str): Identifier for reaction IDs. Defaults to 'R-id'.
@@ -79,6 +91,7 @@ class AutoTemp:
         self.node_label_default = node_label_default
         self.edge_attribute = edge_attribute
         self.max_radius = max_radius
+        self.reindex = reindex
 
     def temp_extract(
         self, data: List[Dict[str, Any]], lib_path: str = None
@@ -118,19 +131,20 @@ class AutoTemp:
             self.refinement_its,
             self.save_dir,
         )
-        if lib_path is None:
-            # Step 4: Extract rules from the correct ITS graphs
-            rules, reaction_dicts, templates, hier_templates = rule_extract(
-                its_correct,
-                self.node_label_names,
-                self.node_label_default,
-                self.edge_attribute,
-                self.max_radius,
-                self.save_dir,
-            )
 
+        # Step 4: Extract rules from the correct ITS graphs
+        reaction_dicts, templates, hier_templates = rule_extract(
+            its_correct,
+            self.node_label_names,
+            self.node_label_default,
+            self.edge_attribute,
+            self.max_radius,
+            self.save_dir,
+        )
+        if lib_path is None:
+            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
             return (
-                rules,
+                gml_rules,
                 reaction_dicts,
                 templates,
                 hier_templates,
@@ -138,4 +152,52 @@ class AutoTemp:
                 uncertain_hydrogen,
             )
         else:
-            pass
+            # Generate GML rules without saving to a path
+            gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)
+
+            # Check rules for isomorphism and collect IDs that do not pass the check
+            radius_0_lib_path = os.path.join(lib_path, "R0")
+            radius_0_id = [
+                templates[0][i]["Cluster_id"]
+                for i, rule in enumerate(gml_rules[0])
+                if not LibIsomorphism.lib_isomorphism(
+                    rule=rule, lib_path=radius_0_lib_path
+                )
+            ]
+
+            new_templates = [
+                (
+                    [t for t in layer if t["Cluster_id"] in radius_0_id]
+                    if idx == 0
+                    else layer
+                )
+                for idx, layer in enumerate(templates)
+            ]
+            new_hier_templates = [
+                (
+                    [t for t in layer if t["Cluster_id"] in radius_0_id]
+                    if idx == 0
+                    else layer
+                )
+                for idx, layer in enumerate(hier_templates)
+            ]
+            starting_indices = []
+            for radius in range(self.max_radius + 1):
+                rule_path = os.path.join(lib_path, f"R{radius}")
+                num_rules = len(glob.glob(os.path.join(rule_path, "*.gml")))
+                starting_indices.append(num_rules + 1)
+            # Prune branches from templates and hierarchical templates
+            templates = prune_branches(new_templates)
+            templates = reindex_data(templates, starting_indices)
+            hier_templates = prune_branches(new_hier_templates)
+            hier_templates = reindex_data(hier_templates, starting_indices)
+            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
+            # Return all relevant data
+            return (
+                gml_rules,
+                reaction_dicts,
+                templates,
+                hier_templates,
+                its_correct,
+                uncertain_hydrogen,
+            )
