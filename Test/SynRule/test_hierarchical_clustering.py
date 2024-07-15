@@ -19,8 +19,10 @@ class TestRuleCluster(unittest.TestCase):
         assert "Cluster_R1" in reaction_dicts[0].keys()
         assert "Cluster_R2" in reaction_dicts[0].keys()
         assert "Cluster_R3" in reaction_dicts[0].keys()
-        self.assertEqual(reaction_dicts[0]["Reaction Type"], "Single Cyclic")
+        self.assertEqual(reaction_dicts[0]["Reaction Type"], "Elementary")
+        self.assertEqual(reaction_dicts[0]["Topo Type"], "Single Cyclic")
         self.assertEqual(reaction_dicts[0]["Rings"][0], 4)  # 0 1 2 3
+        self.assertEqual(reaction_dicts[0]["Reaction Step"], 1)  # 0 1 2 3
 
         # assert templates
         self.assertEqual(len(templates), 4)  # 0 1 2 3
