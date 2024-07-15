@@ -254,8 +254,9 @@ class HierarchicalClustering(RuleCluster):
             ).to_dict("records")
             for key, value in enumerate(reaction_dicts):
                 value.update(cluster_df[key])
-            reaction_dicts = get_descriptors(reaction_dicts,
-                                              reaction_centers='GraphRules')
+            reaction_dicts = get_descriptors(
+                reaction_dicts, reaction_centers="GraphRules"
+            )
             hier_templates = add_child_ids(templates)
             return reaction_dicts, templates, hier_templates
 
