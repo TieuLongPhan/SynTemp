@@ -60,7 +60,7 @@ class AutoTemp:
         reindex: bool = True,
         rerun_aam: bool = True,
         log_file: str = None,
-        log_level: str = 'INFO',
+        log_level: str = "INFO",
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical

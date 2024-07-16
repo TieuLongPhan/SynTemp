@@ -41,7 +41,7 @@ SynTemp is organized into several key components, each dedicated to a specific a
 
 ## Installation
 
-To install and set up the SynRBL framework, follow these steps. Please ensure you have Python 3.9 or later installed on your system.
+To install and set up the SynTemp framework, follow these steps. Please ensure you have Python 3.9 or later installed on your system.
 
 ### Prerequisites
 
@@ -60,7 +60,7 @@ To install and set up the SynRBL framework, follow these steps. Please ensure yo
 
   ```bash
   python -m venv syntemp-env
-  source syntemp-env/bin/activate  # On Windows use `synrbl-env\Scripts\activate`
+  source syntemp-env/bin/activate  # On Windows use `syntemp-env\Scripts\activate`
   ```
   Or Conda
 
@@ -75,7 +75,7 @@ To install and set up the SynRBL framework, follow these steps. Please ensure yo
   ```bash
   git clone https://github.com/TieuLongPhan/SynTemp.git
   cd SynTemp
-  pip install .
+  pip install -r requirements.txt
   ```
 
 4. **Verify Installation:**

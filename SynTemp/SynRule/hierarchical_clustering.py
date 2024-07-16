@@ -109,10 +109,16 @@ class HierarchicalClustering(RuleCluster):
         potentially updated templates.
         """
         logging.info(f"Processing templates with {k}:")
-        rc_graphs = [
-            RuleExtraction.extract_reaction_rules(*value, extend=True, n_knn=k)
-            for value in its_graphs
-        ]
+        if k > 0:
+            rc_graphs = [
+                RuleExtraction.extract_reaction_rules(*value, extend=True, n_knn=k)
+                for value in its_graphs
+            ]
+        else:
+            rc_graphs = [
+                RuleExtraction.extract_reaction_rules(*value, extend=False)
+                for value in its_graphs
+            ]
 
         # Fit the rule clusters with the extracted graphs and templates
         cluster_indices, templates = RuleCluster(
@@ -257,7 +263,9 @@ class HierarchicalClustering(RuleCluster):
             reaction_dicts = get_descriptors(
                 reaction_dicts, reaction_centers="GraphRules"
             )
+
             hier_templates = add_child_ids(templates)
+
             return reaction_dicts, templates, hier_templates
 
         except Exception as e:
