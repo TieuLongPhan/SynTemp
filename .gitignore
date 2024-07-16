@@ -12,3 +12,4 @@ __pycache__
 *json.gz
 *txt
 Data/DPO/*
+_test.py

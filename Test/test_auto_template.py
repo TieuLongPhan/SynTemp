@@ -6,7 +6,7 @@ from pathlib import Path
 root_dir = Path(__file__).parents[1]
 
 
-class TestRuleCluster(unittest.TestCase):
+class TestAutoTemp(unittest.TestCase):
 
     def setUp(self) -> None:
         self.data = load_database(f"{root_dir}/Data/Testcase/demo.json.gz")[:20]

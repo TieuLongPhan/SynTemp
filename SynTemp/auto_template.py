@@ -1,5 +1,6 @@
 import os
 import glob
+import pandas as pd
 import logging
 from typing import List, Any, Dict, Optional, Tuple
 from SynTemp.pipeline import (
@@ -10,13 +11,31 @@ from SynTemp.pipeline import (
     rule_extract,
     write_gml,
 )
-from SynTemp.lib_isomorphism import LibIsomorphism
 from SynTemp.SynUtils.utils import prune_branches, reindex_data
 
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+def setup_logger(log_file=None, log_level=logging.INFO):
+    """Setup logging configuration with the ability to handle multiple calls and ensure
+    that directories are created if they don't exist."""
+    log_format = "%(asctime)s - %(levelname)s - %(message)s"
+
+    # Clear all handlers if any exist, to reconfigure logging
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    if log_file:
+        # Check and create the directory path if it doesn't exist
+        log_dir = os.path.dirname(log_file)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir, exist_ok=True)
+
+        # Configure logging to file
+        logging.basicConfig(
+            filename=log_file, level=log_level, format=log_format, filemode="w"
+        )
+    else:
+        # Configure logging to stdout
+        logging.basicConfig(level=log_level, format=log_format)
 
 
 class AutoTemp:
@@ -39,6 +58,9 @@ class AutoTemp:
         edge_attribute: str = "order",
         max_radius: int = 3,
         reindex: bool = True,
+        rerun_aam: bool = True,
+        log_file: str = None,
+        log_level: str = 'INFO',
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
@@ -73,6 +95,9 @@ class AutoTemp:
         Defaults to "order".
         - max_radius (int): Maximum radius for node connectivity in the graph.
         Defaults to 3.
+        - reindex (bool): Reindex the rule or not .Defaults to True,
+        - rerun_aam: Run atom map for the whole data or already have the atom map data.
+        Defaults to False,
 
         """
         self.rebalancing = rebalancing
@@ -92,6 +117,12 @@ class AutoTemp:
         self.edge_attribute = edge_attribute
         self.max_radius = max_radius
         self.reindex = reindex
+        self.rerun_aam = rerun_aam
+
+        log_level = getattr(logging, log_level.upper(), None)
+        if not isinstance(log_level, int):
+            raise ValueError(f"Invalid log level: {log_level}")
+        setup_logger(log_file, log_level)
 
     def temp_extract(
         self, data: List[Dict[str, Any]], lib_path: str = None
@@ -109,16 +140,27 @@ class AutoTemp:
           - List of ITS data that was incorrectly processed.
           - List of ITS data with uncertain hydrogen adjustments.
         """
-        # Step 1: rebalance and clean the data
-        if self.rebalancing:
-            data = rebalance(data, self.rsmi, self.id, self.n_jobs, self.batch_size)
-            print(data[0])
-        clean_data = clean(data, self.id, self.rsmi, self.n_jobs)
 
-        # Step 2: Run atom-atom mapping
-        aam_data = run_aam(
-            clean_data, self.mapper_types, "reactions", self.job_timeout, self.safe_mode
-        )
+        if isinstance(data, pd.DataFrame):
+            data = data.to_dict("records")
+            logging.info("Data converted to list of dictionaries.")
+
+        # Step 1: rebalance and clean the data
+        if self.rerun_aam:
+            if self.rebalancing:
+                data = rebalance(data, self.rsmi, self.id, self.n_jobs, self.batch_size)
+            clean_data = clean(data, self.id, self.rsmi, self.n_jobs)
+
+            # Step 2: Run atom-atom mapping
+            aam_data = run_aam(
+                clean_data,
+                self.mapper_types,
+                "reactions",
+                self.job_timeout,
+                self.safe_mode,
+            )
+        else:
+            aam_data = data
 
         # Step 3: Extract ITS graphs and categorize them
         its_correct, its_incorrect, uncertain_hydrogen = extract_its(
@@ -152,6 +194,8 @@ class AutoTemp:
                 uncertain_hydrogen,
             )
         else:
+            from SynTemp.lib_isomorphism import LibIsomorphism
+
             # Generate GML rules without saving to a path
             gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)
 
