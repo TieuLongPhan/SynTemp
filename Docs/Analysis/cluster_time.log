@@ -1,0 +1,8 @@
+2024-07-18 09:36:48,099 - INFO - Processing templates with k=0
+2024-07-18 09:37:45,916 - INFO - Finished processing for k=0 in 57.82 seconds
+2024-07-18 09:37:45,916 - INFO - Processing templates with k=1
+2024-07-18 09:42:20,938 - INFO - Finished processing for k=1 in 275.02 seconds
+2024-07-18 09:42:20,939 - INFO - Processing templates with k=2
+2024-07-18 10:12:28,514 - INFO - Finished processing for k=2 in 1807.58 seconds
+2024-07-18 10:12:28,514 - INFO - Processing templates with k=3
+2024-07-18 11:47:04,055 - INFO - Finished processing for k=3 in 5675.54 seconds

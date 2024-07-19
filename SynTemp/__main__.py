@@ -58,7 +58,7 @@ def read_data(filepath):
     """Load data from a JSON or CSV file."""
     file_ext = os.path.splitext(filepath)[1].lower()
     try:
-        if file_ext == ".json":
+        if file_ext == ".gz":
             return load_database(filepath)
         elif file_ext == ".csv":
             return pd.read_csv(filepath)
@@ -72,7 +72,7 @@ def read_data(filepath):
 def main():
     args = parse_arguments()
 
-    data = read_data(args.data_path)
+    data = read_data(args.data_path)[:]
 
     try:
         auto = AutoTemp(

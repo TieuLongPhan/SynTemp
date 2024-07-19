@@ -11,7 +11,7 @@ from SynTemp.pipeline import (
     rule_extract,
     write_gml,
 )
-from SynTemp.SynUtils.utils import prune_branches, reindex_data
+from SynTemp.SynUtils.utils import prune_branches, reindex_data, save_database
 
 
 def setup_logger(log_file=None, log_level=logging.INFO):
@@ -42,7 +42,7 @@ class AutoTemp:
     def __init__(
         self,
         rebalancing: bool = False,
-        mapper_types: List[str] = ["local_mapper"],
+        mapper_types: List[str] = ["local_mapper", "rxn_mapper", "graphormer"],
         id: str = "R-id",
         rsmi: str = "reactions",
         n_jobs: int = 4,
@@ -61,6 +61,7 @@ class AutoTemp:
         rerun_aam: bool = True,
         log_file: str = None,
         log_level: str = "INFO",
+        clean_data: bool = True,
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
@@ -118,6 +119,7 @@ class AutoTemp:
         self.max_radius = max_radius
         self.reindex = reindex
         self.rerun_aam = rerun_aam
+        self.clean_data = clean_data
 
         log_level = getattr(logging, log_level.upper(), None)
         if not isinstance(log_level, int):
@@ -149,7 +151,10 @@ class AutoTemp:
         if self.rerun_aam:
             if self.rebalancing:
                 data = rebalance(data, self.rsmi, self.id, self.n_jobs, self.batch_size)
-            clean_data = clean(data, self.id, self.rsmi, self.n_jobs)
+            if self.clean_data:
+                clean_data = clean(data, self.id, self.rsmi, self.n_jobs)
+            else:
+                clean_data = data
 
             # Step 2: Run atom-atom mapping
             aam_data = run_aam(
@@ -162,7 +167,11 @@ class AutoTemp:
         else:
             aam_data = data
 
+        if self.save_dir:
+            save_database(aam_data, f"{self.save_dir}/aam.json.gz")
+
         # Step 3: Extract ITS graphs and categorize them
+        logging.info("Extract ITS graphs and categorize them.")
         its_correct, its_incorrect, uncertain_hydrogen = extract_its(
             aam_data,
             self.mapper_types,
@@ -175,6 +184,7 @@ class AutoTemp:
         )
 
         # Step 4: Extract rules from the correct ITS graphs
+        logging.info("Extract rules from the correct ITS graphs.")
         reaction_dicts, templates, hier_templates = rule_extract(
             its_correct,
             self.node_label_names,
@@ -184,6 +194,7 @@ class AutoTemp:
             self.save_dir,
         )
         if lib_path is None:
+            logging.info("Write Rules.")
             gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
             return (
                 gml_rules,
