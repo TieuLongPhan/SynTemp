@@ -66,7 +66,7 @@ class TestUncertainRefinement(unittest.TestCase):
         # Test check_graph_type method
         self.assertEqual(check_graph_type(tree_graph), "Acyclic")
         self.assertEqual(check_graph_type(single_cycle_graph), "Single Cyclic")
-        self.assertEqual(check_graph_type(two_cycle_graph), "Complex Cyclic")
+        self.assertEqual(check_graph_type(two_cycle_graph), "Combinatorial Cyclic")
 
     def test_get_cycle_member_rings(self):
         # Create a test graph with cycles of different sizes

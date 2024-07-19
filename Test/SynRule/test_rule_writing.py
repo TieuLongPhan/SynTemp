@@ -7,7 +7,7 @@ from SynTemp.SynRule.rule_writing import RuleWriting
 class TestRuleWriting(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.data = load_from_pickle("Data/Testcase/templates.pkl.gz")
+        self.data = load_from_pickle("Data/Testcase/templates.pkl.gz")[0]
 
     def test_charge_to_string(self):
         self.assertEqual(RuleWriting.charge_to_string(3), "+++")
@@ -47,18 +47,18 @@ class TestRuleWriting(unittest.TestCase):
             "rule [\n"
             '   ruleID "test_rule"\n'
             "   left [\n"
-            '      edge [ source 4 target 21 label "-" ]\n'
+            '      edge [ source 21 target 4 label "-" ]\n'
             '      edge [ source 3 target 20 label "-" ]\n'
             "   ]\n"
             "   context [\n"
-            '      node [ id 4 label "N" ]\n'
-            '      node [ id 3 label "C" ]\n'
-            '      node [ id 20 label "Br" ]\n'
             '      node [ id 21 label "H" ]\n'
+            '      node [ id 3 label "C" ]\n'
+            '      node [ id 4 label "N" ]\n'
+            '      node [ id 20 label "Br" ]\n'
             "   ]\n"
             "   right [\n"
-            '      edge [ source 4 target 3 label "-" ]\n'
-            '      edge [ source 20 target 21 label "-" ]\n'
+            '      edge [ source 21 target 20 label "-" ]\n'
+            '      edge [ source 3 target 4 label "-" ]\n'
             "   ]\n"
             "]"
         )
@@ -78,22 +78,23 @@ class TestRuleWriting(unittest.TestCase):
         K = self.data[0]["RC"][2]
         graph_rules = {"R-id": "test_rule", "GraphRules": (L, R, K)}
         gml_str = RuleWriting.process_graph_rules(graph_rules, reindex=True)
+        print(gml_str)
         expected_str = (
             "rule [\n"
             '   ruleID "test_rule"\n'
             "   left [\n"
-            '      edge [ source 1 target 4 label "-" ]\n'
-            '      edge [ source 2 target 3 label "-" ]\n'
+            '      edge [ source 1 target 3 label "-" ]\n'
+            '      edge [ source 2 target 4 label "-" ]\n'
             "   ]\n"
             "   context [\n"
-            '      node [ id 1 label "N" ]\n'
+            '      node [ id 1 label "H" ]\n'
             '      node [ id 2 label "C" ]\n'
-            '      node [ id 3 label "Br" ]\n'
-            '      node [ id 4 label "H" ]\n'
+            '      node [ id 3 label "N" ]\n'
+            '      node [ id 4 label "Br" ]\n'
             "   ]\n"
             "   right [\n"
-            '      edge [ source 1 target 2 label "-" ]\n'
-            '      edge [ source 3 target 4 label "-" ]\n'
+            '      edge [ source 1 target 4 label "-" ]\n'
+            '      edge [ source 2 target 3 label "-" ]\n'
             "   ]\n"
             "]"
         )
@@ -107,18 +108,18 @@ class TestRuleWriting(unittest.TestCase):
             "rule [\n"
             '   ruleID "0"\n'
             "   left [\n"
-            '      edge [ source 1 target 4 label "-" ]\n'
-            '      edge [ source 2 target 3 label "-" ]\n'
+            '      edge [ source 1 target 3 label "-" ]\n'
+            '      edge [ source 2 target 4 label "-" ]\n'
             "   ]\n"
             "   context [\n"
-            '      node [ id 1 label "N" ]\n'
+            '      node [ id 1 label "H" ]\n'
             '      node [ id 2 label "C" ]\n'
-            '      node [ id 3 label "Br" ]\n'
-            '      node [ id 4 label "H" ]\n'
+            '      node [ id 3 label "N" ]\n'
+            '      node [ id 4 label "Br" ]\n'
             "   ]\n"
             "   right [\n"
-            '      edge [ source 1 target 2 label "-" ]\n'
-            '      edge [ source 3 target 4 label "-" ]\n'
+            '      edge [ source 1 target 4 label "-" ]\n'
+            '      edge [ source 2 target 3 label "-" ]\n'
             "   ]\n"
             "]"
         )

@@ -1,23 +1,41 @@
 import os
-import shutil
-import logging
+import glob
 import pandas as pd
-from typing import List, Any, Dict, Optional, Union, Tuple
-from SynTemp.SynChemistry.neutralize import Neutralize
-from SynTemp.SynChemistry.deionize import Deionize
-from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
-from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynITS.its_refinement import ITSRefinement
-from SynTemp.SynRule.hierarchical_clustering import HierarchicalClustering
-from SynTemp.SynRule.rule_writing import RuleWriting
-from SynTemp.SynUtils.utils import load_from_pickle, save_to_pickle
-
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+import logging
+from typing import List, Any, Dict, Optional, Tuple
+from SynTemp.pipeline import (
+    rebalance,
+    clean,
+    run_aam,
+    extract_its,
+    rule_extract,
+    write_gml,
 )
+from SynTemp.SynUtils.utils import prune_branches, reindex_data
+
+
+def setup_logger(log_file=None, log_level=logging.INFO):
+    """Setup logging configuration with the ability to handle multiple calls and ensure
+    that directories are created if they don't exist."""
+    log_format = "%(asctime)s - %(levelname)s - %(message)s"
+
+    # Clear all handlers if any exist, to reconfigure logging
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    if log_file:
+        # Check and create the directory path if it doesn't exist
+        log_dir = os.path.dirname(log_file)
+        if log_dir and not os.path.exists(log_dir):
+            os.makedirs(log_dir, exist_ok=True)
+
+        # Configure logging to file
+        logging.basicConfig(
+            filename=log_file, level=log_level, format=log_format, filemode="w"
+        )
+    else:
+        # Configure logging to stdout
+        logging.basicConfig(level=log_level, format=log_format)
 
 
 class AutoTemp:
@@ -39,13 +57,18 @@ class AutoTemp:
         node_label_default: List[Any] = ["*", 0],
         edge_attribute: str = "order",
         max_radius: int = 3,
+        reindex: bool = True,
+        rerun_aam: bool = True,
+        log_file: str = None,
+        log_level: str = "INFO",
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
         reaction data.
 
         Parameters:
-        - rebalancing (bool): Whether to use synrbl to rebalance reactions. Defaults to False.
+        - rebalancing (bool): Whether to use synrbl to rebalance reactions.
+        Defaults to False.
         - mapper_types (List[str]): List of mapper names to use for processing.
         Defaults to ['local_mapper'].
         - id (str): Identifier for reaction IDs. Defaults to 'R-id'.
@@ -72,6 +95,9 @@ class AutoTemp:
         Defaults to "order".
         - max_radius (int): Maximum radius for node connectivity in the graph.
         Defaults to 3.
+        - reindex (bool): Reindex the rule or not .Defaults to True,
+        - rerun_aam: Run atom map for the whole data or already have the atom map data.
+        Defaults to False,
 
         """
         self.rebalancing = rebalancing
@@ -90,347 +116,16 @@ class AutoTemp:
         self.node_label_default = node_label_default
         self.edge_attribute = edge_attribute
         self.max_radius = max_radius
+        self.reindex = reindex
+        self.rerun_aam = rerun_aam
 
-    @staticmethod
-    def rebalance(
-        data: Union[pd.DataFrame, List[Dict[str, Any]]],
-        reaction_col: str = "reactions",
-        id_col: str = "id",
-        n_jobs: int = 1,
-        batch_size: int = 10,
-    ) -> List[Dict[str, Any]]:
-        """
-        Rebalances a dataset of chemical reactions by modifying them to a balanced state
-        using the Balancer class.
+        log_level = getattr(logging, log_level.upper(), None)
+        if not isinstance(log_level, int):
+            raise ValueError(f"Invalid log level: {log_level}")
+        setup_logger(log_file, log_level)
 
-        Parameters:
-        - data (Union[pd.DataFrame, List[Dict[str, Any]]]): Input chemical reaction data
-        as a pandas DataFrame or list of dicts.
-        - reaction_col (str): Column name for the reaction strings in the data. Default is
-        "reactions".
-        - id_col (str): Column name for the reaction identifiers in the data. Default is
-        "id".
-        - n_jobs (int): Number of jobs to run in parallel. Default is 1.
-        - batch_size (int): Size of the batch to process at once. Default is 10.
-
-        Returns:
-        - List[Dict[str, Any]]: A list of dictionaries containing the balanced reactions.
-        """
-        logging.info("Starting the rebalancing process.")
-        from synrbl import Balancer
-
-        # Convert DataFrame to list of dictionaries if necessary
-        if isinstance(data, pd.DataFrame):
-            data = data.to_dict("records")
-            logging.info("Data converted to list of dictionaries.")
-
-        # Initialize the Balancer class with specified parameters
-        synrbl = Balancer(
-            reaction_col=reaction_col,
-            id_col=id_col,
-            n_jobs=n_jobs,
-            batch_size=batch_size,
-        )
-
-        # Process rebalancing and receive output as a list
-        balanced_reactions = synrbl.rebalance(reactions=data, output_dict=False)
-
-        # Update the original data with balanced reactions
-        new_data = [
-            dict(entry, **{reaction_col: balanced_reactions[idx]})
-            for idx, entry in enumerate(data)
-        ]
-
-        logging.info("Rebalancing process completed.")
-        return new_data
-
-    @staticmethod
-    def clean(
-        data: Union[pd.DataFrame, List[Dict[str, Any]]],
-        id: str = "R-id",
-        rsmi: str = "reactions",
-        n_jobs: int = 4,
-    ) -> List[Dict[str, Any]]:
-        """
-        Cleans and standardizes reaction data by converting DataFrame to list,
-        neutralizing charges, and applying deionization processes to
-        SMILES representations.
-
-        Parameters:
-        - data (Union[pd.DataFrame, List[Dict[str, Any]]]): The reaction data to clean,
-        either as a DataFrame or a list of dictionaries.
-        - id (str, optional): The column/key name for reaction IDs. Defaults to 'R-id'.
-        - rsmi (str, optional): The column/key name for reaction SMILES strings. Defaults
-        to 'reactions'.
-        - n_jobs (int, optional): Number of parallel jobs for the neutralization process.
-        Defaults to 4.
-
-        Returns:
-        - List[Dict[str, Any]]: A list of dictionaries with cleaned and standardized
-        reaction data.
-        """
-        logging.info("Starting the cleaning process.")
-        if isinstance(data, pd.DataFrame):
-            data = data.to_dict("records")
-            logging.info("Data converted to list of dictionaries.")
-        data = [{"R-id": value[id], "reactions": value[rsmi]} for value in data]
-        data = Neutralize.parallel_fix_unbalanced_charge(data, "reactions", n_jobs)
-        logging.info("Neutralization process completed.")
-        data = Deionize.apply_uncharge_smiles_to_reactions(
-            data, Deionize.uncharge_smiles
-        )
-        logging.info("Deionization process completed.")
-        data = [
-            {"R-id": value["R-id"], "reactions": value["standardized_reactions"]}
-            for value in data
-        ]
-        logging.info("Cleaning process completed.")
-        return data
-
-    @staticmethod
-    def run_aam(
-        data: List[Dict[str, Any]],
-        mapper_types: List[Any],
-        rsmi_column: str = "reactions",
-        job_timeout: Optional[int] = None,
-        safe_mode: bool = False,
-    ) -> List[Dict[str, Any]]:
-        """
-        Runs atom-atom mapping on reaction data using a consensus approach among specified
-        mappers.
-
-        Parameters:
-        - data (List[Dict[str, Any]]): The reaction data.
-        - mapper_types (List[Any]): List of mapper objects/types to be used.
-        - rsmi_column (str, optional): The key name for reaction SMILES strings in the
-        input data. Defaults to "reactions".
-        - job_timeout (Optional[int], optional): Timeout for each batch job in seconds.
-        If None, there is no timeout. Defaults to None.
-        - safe_mode (bool, optional): Whether to use safe mode during mapping,
-        which might handle exceptions or special cases. Defaults to False.
-
-        Returns:
-        - List[Dict[str, Any]]: Results of the atom mapping process as a list of
-        dictionaries.
-        """
-        logging.info("Starting atom mapping consensus process.")
-        aam = AAMConsensus(data, mappers=mapper_types)
-        results = aam.batch_consensus(
-            data,
-            rsmi_column=rsmi_column,
-            batch_size=len(data),
-            job_timeout=job_timeout,
-            safe_mode=safe_mode,
-        )
-        logging.info("Atom mapping consensus process completed.")
-        return results
-
-    @staticmethod
-    def extract_its(
-        data: List[str],
-        mapper_types: Optional[List[str]] = None,
-        batch_size: int = 1000,
-        verbose: int = 1,
-        n_jobs: int = 4,
-        fix_hydrogen: bool = True,
-        refinement_its: bool = False,
-        save_dir: Optional[str] = None,
-        data_name: str = "",
-    ) -> List[dict]:
-        """
-        Executes the extraction of ITS graphs from reaction data in batches,
-        adjusts hydrogen if necessary, and saves the data.
-
-        Parameters:
-        - data (List[str]): List of reaction data as SMILES strings or equivalent.
-        - mapper_types (Optional[List[str]]): Optional list of mapper names to
-        use for processing. Defaults to common mappers if not specified.
-        - batch_size (int): Number of reactions to process in each batch.
-        - verbose (int): Level of verbosity in logging output (0, 1, or 2).
-        - n_jobs (int): Number of concurrent jobs for parallel processing.
-        - fix_hydrogen (bool): Flag to indicate if hydrogen atoms should be adjusted
-        in the ITS graphs.
-        - save_dir (Optional[str]): Directory path where the processed data should be
-        saved.
-        If not provided, defaults to the current directory.
-        - data_name (str): Base name for the saved data files, which helps in
-        identifying different datasets.
-
-        Returns:
-        - List[dict]: A list of dictionaries containing the processed ITS graph data,
-        with keys for correct, incorrect, and uncertain mappings.
-        """
-        logging.info(f"Extracting ITS graph with {n_jobs} CPUs.")
-
-        if not mapper_types:
-            mapper_types = ["rxn_mapper", "graphormer", "local_mapper"]
-            logging.info("No mapper_types provided. Using default mappers.")
-
-        temp_dir = (
-            os.path.join(save_dir, "temp_batches") if save_dir else "temp_batches"
-        )
-        os.makedirs(temp_dir, exist_ok=True)
-
-        num_batches = len(data) // batch_size + (len(data) % batch_size > 0)
-        for i in range(num_batches):
-            logging.debug(f"Processing batch {i + 1}/{num_batches}")
-            start_index = i * batch_size
-            end_index = min((i + 1) * batch_size, len(data))
-            batch_data = data[start_index:end_index]
-
-            batch_correct, batch_incorrect = ITSExtraction.parallel_process_smiles(
-                batch_data,
-                mapper_types,
-                n_jobs=n_jobs,
-                verbose=verbose,
-                export_full=False,
-                check_method="RC",
-            )
-
-            if fix_hydrogen:
-                logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
-                batch_processed = ITSHAdjuster.process_graph_data_parallel(
-                    batch_correct, "ITSGraph", n_jobs=n_jobs, verbose=verbose
-                )
-                uncertain_hydrogen = [
-                    value for value in batch_processed if value["ITSGraph"] is None
-                ]
-                batch_correct = [
-                    value for value in batch_processed if value["ITSGraph"] is not None
-                ]
-
-                # Save uncertain hydrogen data for the batch
-                save_to_pickle(
-                    uncertain_hydrogen,
-                    os.path.join(temp_dir, f"uncertain_hydrogen_{i}.pkl"),
-                )
-
-            # Save batch results to temporary files
-            save_to_pickle(
-                batch_correct, os.path.join(temp_dir, f"batch_correct_{i}.pkl")
-            )
-            save_to_pickle(
-                batch_incorrect, os.path.join(temp_dir, f"batch_incorrect_{i}.pkl")
-            )
-
-        # Combine saved batch data
-        its_correct, its_incorrect, all_uncertain_hydrogen = [], [], []
-        for i in range(num_batches):
-            its_correct.extend(
-                load_from_pickle(os.path.join(temp_dir, f"batch_correct_{i}.pkl"))
-            )
-            its_incorrect.extend(
-                load_from_pickle(os.path.join(temp_dir, f"batch_incorrect_{i}.pkl"))
-            )
-            if fix_hydrogen:
-                all_uncertain_hydrogen.extend(
-                    load_from_pickle(
-                        os.path.join(temp_dir, f"uncertain_hydrogen_{i}.pkl")
-                    )
-                )
-
-        # Clean up temporary files
-        shutil.rmtree(temp_dir)
-
-        if refinement_its:
-            its_refine = ITSRefinement.process_graphs_in_parallel(
-                its_incorrect, mapper_types, n_jobs, verbose
-            )
-            its_refine = [value for value in its_refine if value]
-            refined_ids = {value["R-id"] for value in its_refine}
-            its_incorrect = [
-                value for value in its_incorrect if value["R-id"] not in refined_ids
-            ]
-
-            its_correct.extend(its_refine)
-
-        logging.info(f"Number of correct mappers: {len(its_correct)}")
-        logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-        # logging.info(f"Number of uncertain hydrogen:{len(all_uncertain_hydrogen)}")
-        if save_dir:
-            logging.info("Combining and saving data")
-
-            save_to_pickle(
-                its_correct, os.path.join(save_dir, f"{data_name}_its_correct.pkl.gz")
-            )
-            save_to_pickle(
-                its_incorrect,
-                os.path.join(save_dir, f"{data_name}_its_incorrect.pkl.gz"),
-            )
-            save_to_pickle(
-                all_uncertain_hydrogen,
-                os.path.join(save_dir, f"{data_name}_uncertain_hydrogen.pkl.gz"),
-            )
-
-        return its_correct, its_incorrect, uncertain_hydrogen
-
-    @staticmethod
-    def rule_extract(
-        data,
-        node_label_names: List[str] = ["element", "charge"],
-        node_label_default: List[Any] = ["*", 0],
-        edge_attribute: str = "order",
-        max_radius: int = 3,
-        save_path: Optional[str] = None,
-    ) -> List:
-        """
-        Automates the generation of templates and rules from hierarchical clustering of
-        given data.
-
-        Parameters:
-        - data: Input data to process.
-        - node_label_names (List[str]): Labels for the nodes in the hierarchical
-        clustering.
-        - node_label_default (List[Any]): Default values for node labels if not specified.
-        - edge_attribute (str): The attribute used for defining edges.
-        - max_radius (int): Maximum radius for the clustering algorithm.
-        - save_path (Optional[str]): Path to save output files.
-
-        Returns:
-        - List: A list of rules extracted from the generated templates.
-        """
-        try:
-            hier_cluster = HierarchicalClustering(
-                node_label_names, node_label_default, edge_attribute, max_radius
-            )
-            logging.info("Hierarchical clustering initialized successfully.")
-            reaction_dicts, templates, hier_templates = hier_cluster.fit(data)
-            logging.info("Clustering completed and data extracted.")
-
-            rules = []
-            for radius, template in enumerate(templates):
-                directory_path = None
-                if save_path:
-                    directory_path = os.path.join(save_path, f"R{radius}")
-                    if not os.path.exists(directory_path):
-                        os.makedirs(directory_path)
-                        logging.info(f"Directory created at {directory_path}")
-                    else:
-                        logging.info(f"Directory {directory_path} already exists")
-
-                write = RuleWriting.auto_extraction(
-                    template,
-                    id_column="Cluster_id",
-                    rule_column="RC",
-                    reindex=True,
-                    save_path=directory_path,
-                )
-                rules.append(write)
-                logging.info(f"Rules extracted for template at radius {radius}")
-
-            if save_path:
-                save_to_pickle(reaction_dicts, f"{save_path}/data_cluster.pkl.gz")
-                save_to_pickle(templates, f"{save_path}/templates.pkl.gz")
-                save_to_pickle(hier_templates, f"{save_path}/hier_templates.pkl.gz")
-                logging.info("All data successfully saved.")
-
-            return rules, reaction_dicts, templates, hier_templates
-        except Exception as e:
-            logging.error("An error occurred during template generation: %s", e)
-            raise
-
-    def fit(
-        self, data: List[Dict[str, Any]]
+    def temp_extract(
+        self, data: List[Dict[str, Any]], lib_path: str = None
     ) -> Tuple[Any, List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
         Processes the given chemical reaction data through cleaning, atom-atom mapping,
@@ -445,21 +140,30 @@ class AutoTemp:
           - List of ITS data that was incorrectly processed.
           - List of ITS data with uncertain hydrogen adjustments.
         """
-        # Step 1: rebalance and clean the data
-        if self.rebalancing:
-            data = self.rebalance(
-                data, self.rsmi, self.id, self.n_jobs, self.batch_size
-            )
-            print(data[0])
-        clean_data = self.clean(data, self.id, self.rsmi, self.n_jobs)
 
-        # Step 2: Run atom-atom mapping
-        aam_data = self.run_aam(
-            clean_data, self.mapper_types, "reactions", self.job_timeout, self.safe_mode
-        )
+        if isinstance(data, pd.DataFrame):
+            data = data.to_dict("records")
+            logging.info("Data converted to list of dictionaries.")
+
+        # Step 1: rebalance and clean the data
+        if self.rerun_aam:
+            if self.rebalancing:
+                data = rebalance(data, self.rsmi, self.id, self.n_jobs, self.batch_size)
+            clean_data = clean(data, self.id, self.rsmi, self.n_jobs)
+
+            # Step 2: Run atom-atom mapping
+            aam_data = run_aam(
+                clean_data,
+                self.mapper_types,
+                "reactions",
+                self.job_timeout,
+                self.safe_mode,
+            )
+        else:
+            aam_data = data
 
         # Step 3: Extract ITS graphs and categorize them
-        its_correct, its_incorrect, uncertain_hydrogen = self.extract_its(
+        its_correct, its_incorrect, uncertain_hydrogen = extract_its(
             aam_data,
             self.mapper_types,
             self.batch_size,
@@ -471,7 +175,7 @@ class AutoTemp:
         )
 
         # Step 4: Extract rules from the correct ITS graphs
-        rules, reaction_dicts, templates, hier_templates = self.rule_extract(
+        reaction_dicts, templates, hier_templates = rule_extract(
             its_correct,
             self.node_label_names,
             self.node_label_default,
@@ -479,12 +183,65 @@ class AutoTemp:
             self.max_radius,
             self.save_dir,
         )
+        if lib_path is None:
+            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
+            return (
+                gml_rules,
+                reaction_dicts,
+                templates,
+                hier_templates,
+                its_incorrect,
+                uncertain_hydrogen,
+            )
+        else:
+            from SynTemp.lib_isomorphism import LibIsomorphism
 
-        return (
-            rules,
-            reaction_dicts,
-            templates,
-            hier_templates,
-            its_incorrect,
-            uncertain_hydrogen,
-        )
+            # Generate GML rules without saving to a path
+            gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)
+
+            # Check rules for isomorphism and collect IDs that do not pass the check
+            radius_0_lib_path = os.path.join(lib_path, "R0")
+            radius_0_id = [
+                templates[0][i]["Cluster_id"]
+                for i, rule in enumerate(gml_rules[0])
+                if not LibIsomorphism.lib_isomorphism(
+                    rule=rule, lib_path=radius_0_lib_path
+                )
+            ]
+
+            new_templates = [
+                (
+                    [t for t in layer if t["Cluster_id"] in radius_0_id]
+                    if idx == 0
+                    else layer
+                )
+                for idx, layer in enumerate(templates)
+            ]
+            new_hier_templates = [
+                (
+                    [t for t in layer if t["Cluster_id"] in radius_0_id]
+                    if idx == 0
+                    else layer
+                )
+                for idx, layer in enumerate(hier_templates)
+            ]
+            starting_indices = []
+            for radius in range(self.max_radius + 1):
+                rule_path = os.path.join(lib_path, f"R{radius}")
+                num_rules = len(glob.glob(os.path.join(rule_path, "*.gml")))
+                starting_indices.append(num_rules + 1)
+            # Prune branches from templates and hierarchical templates
+            templates = prune_branches(new_templates)
+            templates = reindex_data(templates, starting_indices)
+            hier_templates = prune_branches(new_hier_templates)
+            hier_templates = reindex_data(hier_templates, starting_indices)
+            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
+            # Return all relevant data
+            return (
+                gml_rules,
+                reaction_dicts,
+                templates,
+                hier_templates,
+                its_correct,
+                uncertain_hydrogen,
+            )

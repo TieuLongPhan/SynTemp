@@ -1,5 +1,5 @@
 import os
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Set, Tuple, Optional
 import json
 import pickle
 import random
@@ -238,3 +238,103 @@ def modify_smiles(smiles):
     str: The modified SMILES string.
     """
     return smiles.replace("[HH]", "[H][H]")
+
+
+def prune_branches(
+    data: List[List[Dict[str, Optional[int]]]]
+) -> List[List[Dict[str, Optional[int]]]]:
+    """
+    Prunes branches in a hierarchical structure where any parent does not exist in the
+    immediately preceding layer. Each layer is represented as a list of nodes, and
+    each node is a dictionary with keys including 'Cluster_id' (integer) for the node's
+    identifier and 'Parent' (integer or None for root nodes) for the node's parent ID
+    in the previous layer.
+
+    Args:
+    - data (List[List[Dict[str, Optional[int]]]]): Hierarchical data where
+    each sub-list represents a layer.
+
+    Returns:
+    - List[List[Dict[str, Optional[int]]]]: Pruned hierarchical data containing
+    only nodes with existing parents.
+
+    Each node's existence in a given layer depends on the presence of its 'Parent' ID in
+    the set of 'Cluster_id's from the immediately previous layer. Root nodes in the
+    first layer should have their 'Parent' set to None.
+    """
+    # Dictionary to keep track of existing cluster IDs for each layer
+    existing_ids: Dict[int, Set[int]] = {0: {item["Cluster_id"] for item in data[0]}}
+
+    # Process each layer after the first
+    for layer_index in range(1, len(data)):
+        layer = data[layer_index]
+        # Store current layer's cluster IDs temporarily
+        current_ids: Set[int] = set()
+
+        new_layer: List[Dict[str, Optional[int]]] = []
+        for item in layer:
+            # Check if the single parent exists in the previous layer's IDs
+            if item["Parent"] in existing_ids[layer_index - 1]:
+                new_layer.append(item)
+                current_ids.add(item["Cluster_id"])
+
+        # Update the data layer with pruned nodes
+        data[layer_index] = new_layer
+        # Update existing IDs for this layer
+        existing_ids[layer_index] = current_ids
+
+    return data
+
+
+def reindex_data(
+    data: List[List[Dict[str, Optional[int]]]], starting_indices: List[int]
+) -> List[List[Dict[str, Optional[int]]]]:
+    """
+    Reindexes 'Cluster_id', 'Parent', and optionally 'Child' fields in hierarchical data.
+    First, each layer is normalized to start indexing from 0. Then, a layer-specific
+    starting index from 'starting_indices' is added to each 'Cluster_id' in the layer.
+
+    Parameters:
+    - data (List[List[Dict[str, Optional[int]]]]): Hierarchical data
+    where each sub-list represents a layer.
+    - starting_indices (List[int]): The list of starting indices for 'Cluster_id'
+    in each layer.
+
+    Returns:
+    - List[List[Dict[str, Optional[int]]]]: Hierarchical data with updated indices.
+    """
+    reindexed_data = []
+
+    # Initialize id_map for reindexing all layers from 0, then apply starting_indices
+    id_map = []
+    for layer in data:
+        current_map = {item["Cluster_id"]: idx for idx, item in enumerate(layer)}
+        id_map.append(current_map)
+
+    for layer_index, layer in enumerate(data):
+        new_layer = []
+        for item in layer:
+            new_item = item.copy()
+            # Apply the starting index for the current layer
+            new_item["Cluster_id"] = (
+                id_map[layer_index][item["Cluster_id"]] + starting_indices[layer_index]
+            )
+
+            # Update the 'Parent' field to the new index if it's not None
+            if item["Parent"] is not None and layer_index > 0:
+                new_item["Parent"] = (
+                    id_map[layer_index - 1][item["Parent"]]
+                    + starting_indices[layer_index - 1]
+                )
+
+            if "Child" in item and (layer_index + 1) < len(data):
+                new_item["Child"] = [
+                    id_map[layer_index + 1][child] + starting_indices[layer_index + 1]
+                    for child in item["Child"]
+                    if child in id_map[layer_index + 1]
+                ]
+
+            new_layer.append(new_item)
+        reindexed_data.append(new_layer)
+
+    return reindexed_data

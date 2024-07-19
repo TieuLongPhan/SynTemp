@@ -41,7 +41,7 @@ SynTemp is organized into several key components, each dedicated to a specific a
 
 ## Installation
 
-To install and set up the SynRBL framework, follow these steps. Please ensure you have Python 3.9 or later installed on your system.
+To install and set up the SynTemp framework, follow these steps. Please ensure you have Python 3.9 or later installed on your system.
 
 ### Prerequisites
 
@@ -60,7 +60,7 @@ To install and set up the SynRBL framework, follow these steps. Please ensure yo
 
   ```bash
   python -m venv syntemp-env
-  source syntemp-env/bin/activate  # On Windows use `synrbl-env\Scripts\activate`
+  source syntemp-env/bin/activate  # On Windows use `syntemp-env\Scripts\activate`
   ```
   Or Conda
 
@@ -75,7 +75,7 @@ To install and set up the SynRBL framework, follow these steps. Please ensure yo
   ```bash
   git clone https://github.com/TieuLongPhan/SynTemp.git
   cd SynTemp
-  pip install .
+  pip install -r requirements.txt
   ```
 
 4. **Verify Installation:**
@@ -87,7 +87,61 @@ To install and set up the SynRBL framework, follow these steps. Please ensure yo
 
 ## Usage
 
-TODO
+### Use in script
+  ```python
+  from SynTemp.auto_template import AutoTemp
+
+  smiles = (
+      "COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>"
+      + "COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O"
+  )
+
+  data = [{'R-id': '1', 'reactions': smiles}]
+
+  auto = AutoTemp(
+      rebalancing=True,
+      mapper_types=["rxn_mapper", "graphormer", "local_mapper"],
+      id="R-id",
+      rsmi="reactions",
+      n_jobs=1,
+      verbose=2,
+      batch_size=1,
+      job_timeout=None,
+      safe_mode=False,
+      save_dir=None,
+      fix_hydrogen=True,
+      refinement_its=False,
+  )
+
+  (gml_rules, reaction_dicts, templates, hier_templates,
+  its_correct, uncertain_hydrogen,) = auto.temp_extract(data, lib_path=None)
+
+  print(gml_rules[0][0])
+  >> '''rule [
+   ruleID "0"
+   left [
+      edge [ source 1 target 2 label "-" ]
+      edge [ source 3 target 4 label "-" ]
+   ]
+   context [
+      node [ id 1 label "N" ]
+      node [ id 2 label "C" ]
+      node [ id 3 label "O" ]
+      node [ id 4 label "H" ]
+   ]
+   right [
+      edge [ source 1 target 4 label "-" ]
+      edge [ source 2 target 3 label "-" ]
+   ]
+]'''
+  ```
+  
+
+### Use in command line
+  ```bash
+  echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" > test.csv
+  python -m SynTemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
+  ```
 
 
 

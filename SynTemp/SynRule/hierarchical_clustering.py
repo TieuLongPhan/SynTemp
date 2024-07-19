@@ -4,9 +4,8 @@ import copy
 from SynTemp.SynRule.rules_extraction import RuleExtraction
 from SynTemp.SynRule.rule_cluster import RuleCluster
 from SynTemp.SynUtils.graph_utils import (
-    check_graph_type,
-    get_cycle_member_rings,
     add_child_ids,
+    get_descriptors,
 )
 import logging
 
@@ -110,10 +109,16 @@ class HierarchicalClustering(RuleCluster):
         potentially updated templates.
         """
         logging.info(f"Processing templates with {k}:")
-        rc_graphs = [
-            RuleExtraction.extract_reaction_rules(*value, extend=True, n_knn=k)
-            for value in its_graphs
-        ]
+        if k > 0:
+            rc_graphs = [
+                RuleExtraction.extract_reaction_rules(*value, extend=True, n_knn=k)
+                for value in its_graphs
+            ]
+        else:
+            rc_graphs = [
+                RuleExtraction.extract_reaction_rules(*value, extend=False)
+                for value in its_graphs
+            ]
 
         # Fit the rule clusters with the extracted graphs and templates
         cluster_indices, templates = RuleCluster(
@@ -203,7 +208,6 @@ class HierarchicalClustering(RuleCluster):
         its_column: str = "ITSGraph",
         templates: List[Dict] = None,
         update_template: bool = True,
-        root_sample: int = 100,
     ) -> List[Dict[str, Any]]:
         """
         Fit the hierarchical clustering model to the data.
@@ -231,7 +235,7 @@ class HierarchicalClustering(RuleCluster):
                 update_template,
             )
             cluster_indices = [cluster_indices_0]
-            templates = [templates_0]
+            templates = [get_descriptors(templates_0)]
 
             parent_cluster_indices = cluster_indices_0
             for k in self.radius:
@@ -251,63 +255,17 @@ class HierarchicalClustering(RuleCluster):
                     templates.append(templates_k)
                     parent_cluster_indices = cluster_indices_k
 
-            # cluster_indices = cluster_indices.append([value[0] for value in results])
-            # templates = cluster_indices.append([value[1] for value in results])
-            # else:
-            #     logging.info("Processing without templates")
-            #     root_length = min(root_sample, len(its_graphs))
-
-            #     its_root = its_graphs[:root_length]
-            #     its_left = its_graphs[root_length:]
-
-            #     logging.info(f"Processing {root_length} data to get templates")
-            #     results = [
-            #         self.process_level(
-            #             its_root,
-            #             k,
-            #             self.nodeLabelNames,
-            #             self.nodeLabelDefault,
-            #             self.edgeAttribute,
-            #             None,
-            #             update_template,
-            #         )
-            #         for k in self.radius
-            #     ]
-
-            #     cluster_indices_root = [value[0] for value in results]
-            #     templates_root = [value[1] for value in results]
-
-            #     logging.info("Processing other data with new templates")
-            #     results_left = [
-            #         self.process_level(
-            #             its_left,
-            #             k,
-            #             self.nodeLabelNames,
-            #             self.nodeLabelDefault,
-            #             self.edgeAttribute,
-            #             templates_root[k],
-            #             update_template,
-            #         )
-            #         for k in self.radius
-            #     ]
-            #     cluster_indices_left = [value[0] for value in results_left]
-            #     templates = [value[1] for value in results_left]
-
-            #     cluster_indices = [
-            #         cluster_indices_root[key] + cluster_indices_left[key]
-            #         for key, _ in enumerate(cluster_indices_root)
-            #     ]
-
             cluster_df = pd.DataFrame(
                 {f"Cluster_R{k}": idx for k, idx in zip(self.radius, cluster_indices)}
             ).to_dict("records")
-
             for key, value in enumerate(reaction_dicts):
                 value.update(cluster_df[key])
-                value["Reaction Type"] = check_graph_type(value["GraphRules"][2])
-                value["Rings"] = get_cycle_member_rings(value["GraphRules"][2])
+            reaction_dicts = get_descriptors(
+                reaction_dicts, reaction_centers="GraphRules"
+            )
 
             hier_templates = add_child_ids(templates)
+
             return reaction_dicts, templates, hier_templates
 
         except Exception as e:
