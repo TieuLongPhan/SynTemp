@@ -38,7 +38,7 @@ def parse_arguments():
         "--fix_hydrogen", action="store_true", help="Enable fixing hydrogen"
     )
     parser.add_argument(
-        "--refinement_its", action="store_false", help="Refine non-equivalent ITS"
+        "--refinement_its", action="store_true", help="Refine non-equivalent ITS"
     )
     parser.add_argument(
         "--rerun_aam", action="store_true", help="Run AAM based on mapper types input"
