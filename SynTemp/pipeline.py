@@ -11,7 +11,7 @@ from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
 from SynTemp.SynITS.its_refinement import ITSRefinement
 from SynTemp.SynRule.hierarchical_clustering import HierarchicalClustering
 from SynTemp.SynRule.rule_writing import RuleWriting
-from SynTemp.SynUtils.utils import load_from_pickle, save_to_pickle
+from SynTemp.SynUtils.utils import save_to_pickle, collect_data
 from synrbl import Balancer
 
 # Configure logging
@@ -161,6 +161,7 @@ def extract_its(
     refinement_its: bool = False,
     save_dir: Optional[str] = None,
     data_name: str = "",
+    symbol: str = ">>",
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -208,10 +209,12 @@ def extract_its(
             verbose=verbose,
             export_full=False,
             check_method="RC",
+            symbol=symbol,
         )
 
         if fix_hydrogen:
-            logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
+            if i == 1 or (i % 10 == 0 and i >= 10):
+                logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
             batch_processed = ITSHAdjuster.process_graph_data_parallel(
                 batch_correct, "ITSGraph", n_jobs=n_jobs, verbose=verbose
             )
@@ -235,23 +238,22 @@ def extract_its(
         )
 
     # Combine saved batch data
-    its_correct, its_incorrect, all_uncertain_hydrogen = [], [], []
-    for i in range(num_batches):
-        its_correct.extend(
-            load_from_pickle(os.path.join(temp_dir, f"batch_correct_{i}.pkl"))
-        )
-        its_incorrect.extend(
-            load_from_pickle(os.path.join(temp_dir, f"batch_incorrect_{i}.pkl"))
-        )
-        if fix_hydrogen:
-            all_uncertain_hydrogen.extend(
-                load_from_pickle(os.path.join(temp_dir, f"uncertain_hydrogen_{i}.pkl"))
-            )
+    logging.info("Combine batch data.")
 
-    # Clean up temporary files
-    shutil.rmtree(temp_dir)
+    logging.info("Processing equivalent ITS correct")
+    its_correct = collect_data(num_batches, temp_dir, "batch_correct_{}.pkl")
+    logging.info("Processing unequivalent ITS correct")
+    its_incorrect = collect_data(num_batches, temp_dir, "batch_incorrect_{}.pkl")
+    all_uncertain_hydrogen = []
+    if fix_hydrogen:
+        logging.info("Processing ambiguous hydrogen-ITS")
+        all_uncertain_hydrogen = collect_data(
+            num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
+        )
 
+    # logging.info(f"Number of correct mappers before refinement: {len(its_correct)}")
     if refinement_its:
+        logging.info("Refining unequivalent ITS correct")
         its_refine = ITSRefinement.process_graphs_in_parallel(
             its_incorrect, mapper_types, n_jobs, verbose
         )
@@ -265,23 +267,27 @@ def extract_its(
 
     logging.info(f"Number of correct mappers: {len(its_correct)}")
     logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-    # logging.info(f"Number of uncertain hydrogen:{len(all_uncertain_hydrogen)}")
+    logging.info(f"Number of uncertain hydrogen:{len(all_uncertain_hydrogen)}")
     if save_dir:
         logging.info("Combining and saving data")
 
         save_to_pickle(
             its_correct, os.path.join(save_dir, f"{data_name}_its_correct.pkl.gz")
         )
+
         save_to_pickle(
             its_incorrect,
             os.path.join(save_dir, f"{data_name}_its_incorrect.pkl.gz"),
         )
+
         save_to_pickle(
             all_uncertain_hydrogen,
             os.path.join(save_dir, f"{data_name}_uncertain_hydrogen.pkl.gz"),
         )
+    # Clean up temporary files
+    shutil.rmtree(temp_dir)
 
-    return its_correct, its_incorrect, uncertain_hydrogen
+    return its_correct, its_incorrect, all_uncertain_hydrogen
 
 
 def rule_extract(

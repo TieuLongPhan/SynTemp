@@ -55,7 +55,7 @@ class ITSRefinement:
                         graph_data[column][1],
                         graph_data[column][2],
                         extend=False,
-                        n_knn=1,
+                        n_knn=0,
                     )
                     if len(rc.edges) > 20:
                         return None
@@ -64,7 +64,7 @@ class ITSRefinement:
                     )
                     uncertain_graph.append(processed_data)
                     results.append(type_of_graph)
-                    if type_of_graph == "Topo Cyclic":
+                    if type_of_graph == "Single Cyclic":
                         processed_data["R-id"] = input_graph.get("R-id", "")
                         return processed_data
                 except ValueError:

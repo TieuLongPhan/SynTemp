@@ -12,24 +12,23 @@ root_dir = Path(__file__).parents[2]
 class TestRuleCompose(unittest.TestCase):
 
     def setUp(self):
-        self.single_rule_path = f"{root_dir}/Data/Testcase/Compose/SingleRule"
+        self.single_rule_path = f"{root_dir}/Data/Testcase/Compose/SingleRule/R0"
 
         self.compose_rule_path = f"{root_dir}/Data/Testcase/Compose/ComposeRule"
         self.rule_1 = ruleGMLString(load_gml_as_text(f"{self.single_rule_path}/1.gml"))
-        # print(self.rule_1)
         self.rule_2 = ruleGMLString(load_gml_as_text(f"{self.single_rule_path}/2.gml"))
         self.rule_compose = RuleCompose()
 
     def test_compose(self):
         list_rule = self.rule_compose._compose(self.rule_1, self.rule_2)
-        self.assertEqual(len(list_rule), 2)
+        self.assertEqual(len(list_rule), 1)
         self.assertIn("ruleID", list_rule[0].getGMLString())
 
     def test_process_compose(self):
         list_rule = self.rule_compose._process_compose(
             1, 2, self.single_rule_path, None
         )
-        self.assertEqual(len(list_rule), 2)
+        self.assertEqual(len(list_rule), 1)
         self.assertIn("ruleID", list_rule[0].getGMLString())
 
     def test_auto_compose(self):

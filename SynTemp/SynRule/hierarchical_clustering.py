@@ -108,7 +108,6 @@ class HierarchicalClustering(RuleCluster):
         - Tuple[Dict, Dict]: A tuple containing the mapping of graphs to clusters and the
         potentially updated templates.
         """
-        logging.info(f"Processing templates with {k}:")
         if k > 0:
             rc_graphs = [
                 RuleExtraction.extract_reaction_rules(*value, extend=True, n_knn=k)
