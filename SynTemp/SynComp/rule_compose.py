@@ -1,7 +1,7 @@
 import os
 import glob
 import logging
-from typing import List
+from typing import List, Set
 from SynTemp.SynComp.valence_constrain import ValenceConstrain
 from SynTemp.SynUtils.graph_utils import load_gml_as_text
 from mod import RCMatch, ruleGMLString
@@ -14,6 +14,70 @@ logging.basicConfig(
 class RuleCompose:
     def __init__(self) -> None:
         pass
+
+    @staticmethod
+    def filter_smallest_vertex(combo: List[object]) -> List[object]:
+        """
+        Filters and returns the elements from a list that have the smallest
+        number of vertices in their context.
+
+        Parameters:
+        - combo (List[object]): A list of objects, each with a 'context'
+        attribute that has a 'numVertices' attribute.
+
+        Returns:
+        - List[object]: A list of objects from the input list that have
+        the minimum number of vertices in their context.
+        """
+        # Extract the number of vertices from each rule's context and find the minimum
+        num_vertices = [rule.context.numVertices for rule in combo]
+        min_vertex = min(num_vertices)
+
+        # Collect all rules that have the minimum number of vertices
+        new_combo = [
+            rule
+            for rule, vertices in zip(combo, num_vertices)
+            if vertices == min_vertex
+        ]
+
+        return new_combo
+
+    @staticmethod
+    def rule_cluster(graphs: List) -> List:
+        """
+        Clusters graphs based on their isomorphic relationship and returns
+        a list of graphs, each from a different cluster.
+
+        Parameters:
+        - graphs: A list of graph objects.
+
+        Returns:
+        - List: A list of graphs where each graph is a representative
+        from a different cluster.
+        """
+        visited: Set[int] = set()
+        clusters: List[Set[int]] = []
+
+        for i, graph_i in enumerate(graphs):
+            if i in visited:
+                continue
+
+            cluster: Set[int] = {i}
+            visited.add(i)
+
+            for j, graph_j in enumerate(graphs):
+                if j in visited or j <= i:
+                    continue
+
+                if graph_i.isomorphism(graph_j) == 1:
+                    cluster.add(j)
+                    visited.add(j)
+
+            clusters.append(cluster)
+
+        representative_graphs = [graphs[list(cluster)[0]] for cluster in clusters]
+
+        return representative_graphs
 
     @staticmethod
     def _compose(rule_1, rule_2):
@@ -34,7 +98,9 @@ class RuleCompose:
             modRes = m.composeAll()
             valence_check = ValenceConstrain()
             goodMod, _ = valence_check.split(modRes)
-            return goodMod
+            goodMod_smallest = RuleCompose.filter_smallest_vertex(goodMod)
+            goodMod_unique = RuleCompose.rule_cluster(goodMod_smallest)
+            return goodMod_unique
         except Exception as e:
             print(e)
             return []  # Return an empty list in case of failure

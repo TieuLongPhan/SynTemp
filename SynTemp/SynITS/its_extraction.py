@@ -70,6 +70,7 @@ class ITSExtraction:
         id_column: str = "R-id",
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
+        symbol: str = ">>",
     ) -> Dict[str, any]:
         """
         Processes mapped SMILES strings representing chemical reactions by constructing
@@ -101,7 +102,7 @@ class ITSExtraction:
 
         for mapper in mapper_names:
             try:
-                reactants_side, products_side = mapped_smiles[mapper].split(">>")
+                reactants_side, products_side = mapped_smiles[mapper].split(symbol)
 
                 # Get reactants graph G
                 G = ITSExtraction.graph_from_smiles(reactants_side)
@@ -176,6 +177,7 @@ class ITSExtraction:
         export_full=False,
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
+        symbol: str = ">>",
     ) -> List[Dict[str, any],]:
         """
         Processes a list of mapped SMILES strings in parallel.
@@ -203,6 +205,7 @@ class ITSExtraction:
                 id_column,
                 ignore_aromaticity,
                 confident_mapper,
+                symbol,
             )
             for mapped_smiles in mapped_smiles_list
         )

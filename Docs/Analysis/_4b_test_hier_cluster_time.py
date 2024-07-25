@@ -20,8 +20,7 @@ from SynTemp.SynRule.rules_extraction import RuleExtraction
 
 # Load data
 data = load_from_pickle(f"{root_dir}/Data/Temp/_its_correct.pkl.gz")
-its_graphs = [value['ITSGraph'] for value in data]
+its_graphs = [value["ITSGraph"] for value in data]
 cluster = HierarchicalClustering()
 logging.info(f"Processing templates")
 cluster.fit(data)
-

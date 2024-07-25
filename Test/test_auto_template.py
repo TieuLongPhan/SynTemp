@@ -28,14 +28,15 @@ class TestAutoTemp(unittest.TestCase):
     def test_temp_extract(self):
         (rules, _, _, _, _, _) = self.auto.temp_extract(self.data, lib_path=None)
         self.assertIn("ruleID", rules[0][0])
-        self.assertEqual(len(rules[0]), 10)
+        self.assertEqual(len(rules[0]), 11)
 
-    # def test_temp_extract_lib(self):
-    #     (rules, _, _, _, _, _) = self.auto.temp_extract(
-    #         self.data, lib_path=f"{root_dir}/Data/Testcase/Compose/SingleRule"
-    #     )  # 2 rules exist
-    #     self.assertIn("ruleID", rules[0][0])
-    #     self.assertEqual(len(rules[0]), 10)
+    def test_temp_extract_lib(self):
+        print(f"{root_dir}/Data/Testcase/Compose/SingleRule")
+        (rules, _, _, _, _, _) = self.auto.temp_extract(
+            self.data, lib_path=f"{root_dir}/Data/Testcase/Compose/SingleRule"
+        )  # 1 rules exist
+        self.assertIn("ruleID", rules[0][0])
+        self.assertEqual(len(rules[0]), 9)
 
 
 if __name__ == "__main__":

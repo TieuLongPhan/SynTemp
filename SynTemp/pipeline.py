@@ -161,6 +161,7 @@ def extract_its(
     refinement_its: bool = False,
     save_dir: Optional[str] = None,
     data_name: str = "",
+    symbol: str = ">>",
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -208,6 +209,7 @@ def extract_its(
             verbose=verbose,
             export_full=False,
             check_method="RC",
+            symbol=symbol,
         )
 
         if fix_hydrogen:
@@ -237,17 +239,7 @@ def extract_its(
 
     # Combine saved batch data
     logging.info("Combine batch data.")
-    # for i in range(num_batches):
-    #     its_correct.extend(
-    #         load_from_pickle(os.path.join(temp_dir, f"batch_correct_{i}.pkl"))
-    #     )
-    #     its_incorrect.extend(
-    #         load_from_pickle(os.path.join(temp_dir, f"batch_incorrect_{i}.pkl"))
-    #     )
-    #     if fix_hydrogen:
-    #         all_uncertain_hydrogen.extend(
-    #             load_from_pickle(os.path.join(temp_dir, f"uncertain_hydrogen_{i}.pkl"))
-    #         )
+
     logging.info("Processing equivalent ITS correct")
     its_correct = collect_data(num_batches, temp_dir, "batch_correct_{}.pkl")
     logging.info("Processing unequivalent ITS correct")
