@@ -7,7 +7,7 @@ name: Test & Lint
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main", "dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -35,7 +35,7 @@ jobs:
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         ./lint.sh
-    # - name: Test with pytest
-    #   run: |
-    #     pytest Test --ignore=Test/SynComp --ignore=Test/test_auto_template.py
+    - name: Test with pytest
+      run: |
+        pytest Test --ignore=Test/SynComp --ignore=Test/test_auto_template.py
         
