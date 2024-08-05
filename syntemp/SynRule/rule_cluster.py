@@ -2,7 +2,7 @@ import networkx as nx
 from typing import List, Set, Dict, Any, Callable, Optional, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from operator import eq
-from SynTemp.SynUtils.utils import create_unique_value_dict
+from syntemp.SynUtils.utils import create_unique_value_dict
 
 
 class RuleCluster:

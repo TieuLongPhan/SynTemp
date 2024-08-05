@@ -1,9 +1,9 @@
 from typing import List, Any, Dict, Tuple
 import pandas as pd
 import copy
-from SynTemp.SynRule.rules_extraction import RuleExtraction
-from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynUtils.graph_utils import (
+from syntemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynRule.rule_cluster import RuleCluster
+from syntemp.SynUtils.graph_utils import (
     add_child_ids,
     get_descriptors,
 )

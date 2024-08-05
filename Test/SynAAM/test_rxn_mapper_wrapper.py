@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynAAM.rxn_mapper_wrapper import (
+from syntemp.SynAAM.rxn_mapper_wrapper import (
     map_with_rxn_mapper,
     map_with_rxn_mapper_batch,
 )

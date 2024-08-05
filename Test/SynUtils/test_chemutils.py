@@ -1,7 +1,7 @@
 import unittest
 from rdkit import Chem
 from pathlib import Path
-from SynTemp.SynUtils.chemutils import (
+from syntemp.SynUtils.chemutils import (
     normalize_molecule,
     canonicalize_tautomer,
     salts_remover,

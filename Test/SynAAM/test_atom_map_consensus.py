@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
+from syntemp.SynAAM.atom_map_consensus import AAMConsensus
 
 
 class TestRDT(unittest.TestCase):

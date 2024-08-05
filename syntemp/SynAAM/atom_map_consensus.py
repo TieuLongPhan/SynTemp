@@ -42,18 +42,18 @@ class AAMConsensus:
         )
         self.mapper_paths = {
             "local_mapper": [
-                "SynTemp.SynAAM.local_mapper_wrapper",
+                "syntemp.SynAAM.local_mapper_wrapper",
                 "SynAAM.local_mapper_wrapper",
             ],
             "rxn_mapper": [
-                "SynTemp.SynAAM.rxn_mapper_wrapper",
+                "syntemp.SynAAM.rxn_mapper_wrapper",
                 "SynAAM.rxn_mapper_wrapper",
             ],
             "graphormer": [
-                "SynTemp.SynAAM.graphormer_wrapper",
+                "syntemp.SynAAM.graphormer_wrapper",
                 "SynAAM.graphormer_wrapper",
             ],
-            "rdt": ["SynTemp.SynAAM.rdt_wrapper", "SynAAM.rdt_wrapper"],
+            "rdt": ["syntemp.SynAAM.rdt_wrapper", "SynAAM.rdt_wrapper"],
         }
 
     def import_mapper(self, mapper_name: str) -> Tuple[Callable, Callable]:
@@ -105,7 +105,7 @@ class AAMConsensus:
         Returns:
         - Dict: The reaction dictionary updated with the mapping results from each mapper.
         """
-        rdt_jar_path = importlib.resources.files("SynTemp.SynAAM").joinpath(
+        rdt_jar_path = importlib.resources.files("syntemp.SynAAM").joinpath(
             "RDT_2.4.1.jar"
         )
         working_dir = "./"

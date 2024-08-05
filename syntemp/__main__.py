@@ -2,8 +2,8 @@ import argparse
 import logging
 import os
 import pandas as pd
-from SynTemp.SynUtils.utils import load_database
-from SynTemp.auto_template import AutoTemp
+from syntemp.SynUtils.utils import load_database
+from syntemp.auto_template import AutoTemp
 
 
 def parse_arguments():

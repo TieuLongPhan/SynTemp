@@ -3,15 +3,15 @@ import shutil
 import logging
 import pandas as pd
 from typing import List, Any, Dict, Optional, Union, Tuple
-from SynTemp.SynChemistry.neutralize import Neutralize
-from SynTemp.SynChemistry.deionize import Deionize
-from SynTemp.SynAAM.atom_map_consensus import AAMConsensus
-from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynITS.its_refinement import ITSRefinement
-from SynTemp.SynRule.hierarchical_clustering import HierarchicalClustering
-from SynTemp.SynRule.rule_writing import RuleWriting
-from SynTemp.SynUtils.utils import save_to_pickle, collect_data
+from syntemp.SynChemistry.neutralize import Neutralize
+from syntemp.SynChemistry.deionize import Deionize
+from syntemp.SynAAM.atom_map_consensus import AAMConsensus
+from syntemp.SynITS.its_extraction import ITSExtraction
+from syntemp.SynITS.its_hadjuster import ITSHAdjuster
+from syntemp.SynITS.its_refinement import ITSRefinement
+from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
+from syntemp.SynRule.rule_writing import RuleWriting
+from syntemp.SynUtils.utils import save_to_pickle, collect_data
 from synrbl import Balancer
 
 # Configure logging

@@ -14,9 +14,9 @@ logging.basicConfig(
 )
 
 # Importing necessary functions and classes
-from SynTemp.SynUtils.utils import load_from_pickle
-from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynUtils.utils import load_from_pickle
+from syntemp.SynRule.rule_cluster import RuleCluster
+from syntemp.SynRule.rules_extraction import RuleExtraction
 
 # Load data
 data = load_from_pickle(f"{root_dir}/Data/Temp/_its_correct.pkl.gz")

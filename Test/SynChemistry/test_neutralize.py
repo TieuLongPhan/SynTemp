@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynChemistry.neutralize import Neutralize
+from syntemp.SynChemistry.neutralize import Neutralize
 
 
 class TestNeutralize(unittest.TestCase):

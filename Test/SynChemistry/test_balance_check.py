@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynChemistry.balance_checker import BalanceReactionCheck
+from syntemp.SynChemistry.balance_checker import BalanceReactionCheck
 
 
 class TestBalanceReactionCheck(unittest.TestCase):

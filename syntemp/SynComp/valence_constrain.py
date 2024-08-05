@@ -1,5 +1,5 @@
 import importlib.resources
-from SynTemp.SynUtils.utils import load_database
+from syntemp.SynUtils.utils import load_database
 from mod import BondType
 import logging
 from typing import List, Tuple
@@ -23,7 +23,7 @@ class ValenceConstrain:
             BondType.Triple: 3,
             BondType.Aromatic: 0,
         }
-        maxValence_path = importlib.resources.files("SynTemp.SynComp").joinpath(
+        maxValence_path = importlib.resources.files("syntemp.SynComp").joinpath(
             "MaxValence.json.gz"
         )
         self.maxValence = load_database(maxValence_path)[0]

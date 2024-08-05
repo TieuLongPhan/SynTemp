@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 import logging
 from typing import List, Any, Dict, Optional, Tuple
-from SynTemp.pipeline import (
+from syntemp.pipeline import (
     rebalance,
     clean,
     run_aam,
@@ -11,7 +11,7 @@ from SynTemp.pipeline import (
     rule_extract,
     write_gml,
 )
-from SynTemp.SynUtils.utils import prune_branches, reindex_data, save_database
+from syntemp.SynUtils.utils import prune_branches, reindex_data, save_database
 
 
 def setup_logger(log_file=None, log_level=logging.INFO):
@@ -205,7 +205,7 @@ class AutoTemp:
                 uncertain_hydrogen,
             )
         else:
-            from SynTemp.lib_isomorphism import LibIsomorphism
+            from syntemp.lib_isomorphism import LibIsomorphism
 
             # Generate GML rules without saving to a path
             gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)

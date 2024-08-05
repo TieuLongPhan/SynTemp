@@ -2,8 +2,8 @@ import glob
 from typing import List, Tuple
 import argparse
 from mod import ruleGMLString
-from SynTemp.SynComp.rule_compose import RuleCompose
-from SynTemp.SynUtils.graph_utils import load_gml_as_text
+from syntemp.SynComp.rule_compose import RuleCompose
+from syntemp.SynUtils.graph_utils import load_gml_as_text
 
 
 def load_compose_rules(compose_rule_path: str) -> List[Tuple[str, object]]:
@@ -39,9 +39,11 @@ def detect_isomorphic_rules(
     detected_files = []
     for double_file in glob.glob(f"{double_rule_path}/*.gml"):
         rule_double = ruleGMLString(load_gml_as_text(double_file))
-        if any(rule_double.isomorphism(rule) == 1 for _, rule in compose_rules):
-            detected_files.append(double_file)
-            print(double_file)
+        for _, rule in compose_rules:
+            if rule_double.isomorphism(rule) == 1:
+                detected_files.append(double_file)
+                print(double_file)
+                print("Composed_rule", rule)
     return detected_files
 
 

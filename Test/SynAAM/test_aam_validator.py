@@ -1,6 +1,6 @@
 import unittest
 from pathlib import Path
-from SynTemp.SynAAM.aam_validator import AMMValidator
+from syntemp.SynAAM.aam_validator import AAMValidator
 import pandas as pd
 
 root_dir = Path(__file__).parents[2]
@@ -25,12 +25,12 @@ class TestAMMValidator(unittest.TestCase):
         )
 
         self.assertTrue(
-            AMMValidator.smiles_check(
+            AAMValidator.smiles_check(
                 *true_pair, check_method="RC", ignore_aromaticity=False
             )
         )
         self.assertFalse(
-            AMMValidator.smiles_check(
+            AAMValidator.smiles_check(
                 *false_pair, check_method="RC", ignore_aromaticity=False
             )
         )
@@ -46,20 +46,20 @@ class TestAMMValidator(unittest.TestCase):
         )
 
         self.assertFalse(
-            AMMValidator.smiles_check(
+            AAMValidator.smiles_check(
                 mapped, ref, check_method="RC", ignore_aromaticity=False
             )
         )
 
         self.assertTrue(
-            AMMValidator.smiles_check_tautomer(
+            AAMValidator.smiles_check_tautomer(
                 mapped, ref, check_method="RC", ignore_aromaticity=True
             )
         )
 
     def test_validate_smiles_dataframe(self):
 
-        results, _ = AMMValidator.validate_smiles(
+        results, _ = AAMValidator.validate_smiles(
             data=self.valid_data,
             ground_truth_col="ground_truth",
             mapped_cols=["rxn_mapper", "graphormer", "local_mapper"],

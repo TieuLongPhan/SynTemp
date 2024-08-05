@@ -5,9 +5,9 @@ from rdkit import Chem
 from joblib import Parallel, delayed
 from operator import eq
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
-from SynTemp.SynITS.its_construction import ITSConstruction
-from SynTemp.SynChemistry.mol_to_graph import MolToGraph
-from SynTemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynITS.its_construction import ITSConstruction
+from syntemp.SynChemistry.mol_to_graph import MolToGraph
+from syntemp.SynRule.rules_extraction import RuleExtraction
 
 
 class ITSExtraction:

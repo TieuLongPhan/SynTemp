@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from SynTemp.SynRule.rule_decompose import RuleDecompose
+from syntemp.SynRule.rule_decompose import RuleDecompose
 
 
 class TestRuleDecompose(unittest.TestCase):

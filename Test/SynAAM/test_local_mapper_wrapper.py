@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynAAM.local_mapper_wrapper import (
+from syntemp.SynAAM.local_mapper_wrapper import (
     map_with_local_mapper,
     map_with_local_mapper_batch,
 )

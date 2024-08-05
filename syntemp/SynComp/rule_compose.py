@@ -2,8 +2,8 @@ import os
 import glob
 import logging
 from typing import List, Set
-from SynTemp.SynComp.valence_constrain import ValenceConstrain
-from SynTemp.SynUtils.graph_utils import load_gml_as_text
+from syntemp.SynComp.valence_constrain import ValenceConstrain
+from syntemp.SynUtils.graph_utils import load_gml_as_text
 from mod import RCMatch, ruleGMLString
 
 logging.basicConfig(

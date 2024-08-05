@@ -1,5 +1,5 @@
 import os
-from SynTemp.SynUtils.graph_utils import load_gml_as_text
+from syntemp.SynUtils.graph_utils import load_gml_as_text
 from mod import ruleGMLString
 
 

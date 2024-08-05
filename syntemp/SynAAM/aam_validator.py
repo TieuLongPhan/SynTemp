@@ -5,17 +5,17 @@ from rdkit import Chem
 from operator import eq
 from joblib import Parallel, delayed
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
-from SynTemp.SynITS.its_construction import ITSConstruction
-from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynChemistry.mol_to_graph import MolToGraph
-from SynTemp.SynRule.rules_extraction import RuleExtraction
-from SynTemp.SynUtils.chemutils import enumerate_tautomers, mapping_success_rate
+from syntemp.SynITS.its_construction import ITSConstruction
+from syntemp.SynITS.its_extraction import ITSExtraction
+from syntemp.SynChemistry.mol_to_graph import MolToGraph
+from syntemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynUtils.chemutils import enumerate_tautomers, mapping_success_rate
 from itertools import combinations
 
 
-class AMMValidator:
+class AAMValidator:
     def __init__(self):
-        """Initializes the AMMValidator class."""
+        """Initializes the AAMValidator class."""
         pass
 
     @staticmethod
@@ -96,8 +96,8 @@ class AMMValidator:
         try:
             for rsmi in [mapped_smile, ground_truth]:
                 reactants_side, products_side = rsmi.split(">>")
-                G = AMMValidator.graph_from_smiles(reactants_side)  # Reactants graph
-                H = AMMValidator.graph_from_smiles(products_side)  # Products graph
+                G = AAMValidator.graph_from_smiles(reactants_side)  # Reactants graph
+                H = AAMValidator.graph_from_smiles(products_side)  # Products graph
 
                 ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
                 its_graphs.append(ITS)
@@ -105,7 +105,7 @@ class AMMValidator:
                 rules = RuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
                 rules_graphs.append(rules[2])
 
-            _, equivariant = AMMValidator.check_equivariant_graph(
+            _, equivariant = AAMValidator.check_equivariant_graph(
                 rules_graphs if check_method == "RC" else its_graphs
             )
 
@@ -148,7 +148,7 @@ class AMMValidator:
         try:
             ground_truth_tautomers = enumerate_tautomers(ground_truth)
             return any(
-                AMMValidator.smiles_check(
+                AAMValidator.smiles_check(
                     mapped_smile, t, check_method, ignore_aromaticity
                 )
                 for t in ground_truth_tautomers
@@ -190,14 +190,14 @@ class AMMValidator:
         and considerations regarding aromaticity.
         """
         if ignore_tautomers:
-            return AMMValidator.smiles_check(
+            return AAMValidator.smiles_check(
                 mapping[mapped_col],
                 mapping[ground_truth_col],
                 check_method,
                 ignore_aromaticity,
             )
         else:
-            return AMMValidator.smiles_check_tautomer(
+            return AAMValidator.smiles_check_tautomer(
                 mapping[mapped_col],
                 mapping[ground_truth_col],
                 check_method,
@@ -257,7 +257,7 @@ class AMMValidator:
                 )
 
             results = Parallel(n_jobs=n_jobs, verbose=verbose)(
-                delayed(AMMValidator.check_pair)(
+                delayed(AAMValidator.check_pair)(
                     mapping,
                     mapped_col,
                     ground_truth_col,
@@ -300,7 +300,7 @@ class AMMValidator:
                     for value in data_ensemble
                 ]
                 results = Parallel(n_jobs=n_jobs, verbose=verbose)(
-                    delayed(AMMValidator.check_pair)(
+                    delayed(AAMValidator.check_pair)(
                         mapping,
                         f"ensemble_{key+1}",
                         ground_truth_col,

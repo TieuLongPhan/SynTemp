@@ -1,6 +1,6 @@
 from joblib import Parallel, delayed
 from typing import List, Dict, Union, Tuple
-from SynTemp.SynUtils.chemutils import get_combined_molecular_formula
+from syntemp.SynUtils.chemutils import get_combined_molecular_formula
 
 
 class BalanceReactionCheck:

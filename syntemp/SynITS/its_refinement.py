@@ -1,8 +1,8 @@
 from joblib import Parallel, delayed
 from typing import Dict, Tuple, List, Optional
-from SynTemp.SynITS.its_hadjuster import ITSHAdjuster
-from SynTemp.SynRule.rules_extraction import RuleExtraction
-from SynTemp.SynUtils.graph_utils import check_graph_type
+from syntemp.SynITS.its_hadjuster import ITSHAdjuster
+from syntemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynUtils.graph_utils import check_graph_type
 
 
 class ITSRefinement:

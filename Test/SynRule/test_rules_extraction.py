@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from SynTemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynRule.rules_extraction import RuleExtraction
 
 
 class TestGraphRuleExtraction(unittest.TestCase):

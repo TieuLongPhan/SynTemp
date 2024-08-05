@@ -1,6 +1,6 @@
 import unittest
-from SynTemp.SynITS.its_extraction import ITSExtraction
-from SynTemp.SynITS.its_construction import ITSConstruction
+from syntemp.SynITS.its_extraction import ITSExtraction
+from syntemp.SynITS.its_construction import ITSConstruction
 
 
 class TestITSExtraction(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 import networkx as nx
-from SynTemp.SynUtils.utils import load_from_pickle
-from SynTemp.SynRule.rule_writing import RuleWriting
+from syntemp.SynUtils.utils import load_from_pickle
+from syntemp.SynRule.rule_writing import RuleWriting
 
 
 class TestRuleWriting(unittest.TestCase):

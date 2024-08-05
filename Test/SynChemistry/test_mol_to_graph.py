@@ -1,7 +1,7 @@
 import unittest
 from rdkit import Chem
 import networkx as nx
-from SynTemp.SynChemistry.mol_to_graph import MolToGraph
+from syntemp.SynChemistry.mol_to_graph import MolToGraph
 
 
 class TestMolToGraph(unittest.TestCase):

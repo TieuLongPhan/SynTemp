@@ -37,7 +37,7 @@ class TestCMD(unittest.TestCase):
         cmd = [
             "python",
             "-m",
-            "SynTemp",
+            "syntemp",
             "--data_path",
             os.path.join(self.test_dir, "test.csv"),
             "--mapper_types",

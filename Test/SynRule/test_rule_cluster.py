@@ -1,6 +1,6 @@
 import unittest
-from SynTemp.SynRule.rule_cluster import RuleCluster
-from SynTemp.SynUtils.utils import load_from_pickle
+from syntemp.SynRule.rule_cluster import RuleCluster
+from syntemp.SynUtils.utils import load_from_pickle
 
 
 class TestRuleCluster(unittest.TestCase):

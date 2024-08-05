@@ -1,6 +1,6 @@
 import unittest
-from SynTemp.SynRule.hierarchical_clustering import HierarchicalClustering
-from SynTemp.SynUtils.utils import load_from_pickle
+from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
+from syntemp.SynUtils.utils import load_from_pickle
 
 
 class TestRuleCluster(unittest.TestCase):

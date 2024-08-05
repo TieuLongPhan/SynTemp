@@ -3,14 +3,14 @@ from typing import Dict, List, Tuple, Iterable
 import itertools
 from joblib import Parallel, delayed
 from copy import deepcopy
-from SynTemp.SynRule.rules_extraction import RuleExtraction
-from SynTemp.SynITS.its_construction import ITSConstruction
-from SynTemp.SynUtils.graph_utils import (
+from syntemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynITS.its_construction import ITSConstruction
+from syntemp.SynUtils.graph_utils import (
     check_hcount_change,
     check_explicit_hydrogen,
     get_priority,
 )
-from SynTemp.SynITS.its_extraction import ITSExtraction
+from syntemp.SynITS.its_extraction import ITSExtraction
 
 
 class ITSHAdjuster:

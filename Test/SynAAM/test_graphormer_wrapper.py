@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynAAM.graphormer_wrapper import (
+from syntemp.SynAAM.graphormer_wrapper import (
     map_with_graphormer,
     map_with_graphormer_batch,
 )

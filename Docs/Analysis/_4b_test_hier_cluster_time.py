@@ -13,10 +13,10 @@ logging.basicConfig(
 )
 
 # Importing necessary functions and classes
-from SynTemp.SynUtils.utils import load_from_pickle
+from syntemp.SynUtils.utils import load_from_pickle
 
-from SynTemp.SynRule.hierarchical_clustering import HierarchicalClustering
-from SynTemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
+from syntemp.SynRule.rules_extraction import RuleExtraction
 
 # Load data
 data = load_from_pickle(f"{root_dir}/Data/Temp/_its_correct.pkl.gz")

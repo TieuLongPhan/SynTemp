@@ -1,5 +1,5 @@
 import unittest
-from SynTemp.SynAAM.aam_postprocess import AMMPostprocessor
+from syntemp.SynAAM.aam_postprocess import AMMPostprocessor
 
 
 class TestAMMPostprocessor(unittest.TestCase):

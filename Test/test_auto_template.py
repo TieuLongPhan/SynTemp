@@ -1,6 +1,6 @@
 import unittest
-from SynTemp.auto_template import AutoTemp
-from SynTemp.SynUtils.utils import load_database
+from syntemp.auto_template import AutoTemp
+from syntemp.SynUtils.utils import load_database
 from pathlib import Path
 
 root_dir = Path(__file__).parents[1]

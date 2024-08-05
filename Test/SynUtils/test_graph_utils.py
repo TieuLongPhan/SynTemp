@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 import networkx as nx
-from SynTemp.SynUtils.graph_utils import (
+from syntemp.SynUtils.graph_utils import (
     is_acyclic_graph,
     is_single_cyclic_graph,
     is_complex_cyclic_graph,

@@ -1,6 +1,6 @@
 import unittest
 import importlib.resources
-from SynTemp.SynAAM.rdt_wrapper import map_with_rdt, map_with_rdt_batch
+from syntemp.SynAAM.rdt_wrapper import map_with_rdt, map_with_rdt_batch
 
 
 class TestRDT(unittest.TestCase):
@@ -8,7 +8,7 @@ class TestRDT(unittest.TestCase):
     def setUp(self):
         self.working_dir = "./"
         try:
-            self.rdt_jar_path = importlib.resources.files("SynTemp.SynAAM").joinpath(
+            self.rdt_jar_path = importlib.resources.files("syntemp.SynAAM").joinpath(
                 "RDT_2.4.1.jar"
             )
         except FileNotFoundError:
