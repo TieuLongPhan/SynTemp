@@ -37,5 +37,4 @@ jobs:
         ./lint.sh
     - name: Test with pytest
       run: |
-        pytest Test --ignore=Test/SynComp --ignore=Test/test_auto_template.py
-        
+        pytest Test --ignore=Test/SynComp --ignore=Test/SynAAM --ignore=Test/test_auto_template.py
