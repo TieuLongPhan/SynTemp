@@ -28,7 +28,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        conda install -c jakobandersen -c conda-forge mod 
         pip install flake8 pytest synrbl
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
