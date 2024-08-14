@@ -126,30 +126,27 @@ def remove_hydrogens_and_sanitize(mol: Chem.Mol) -> Chem.Mol:
     return mol
 
 
-def remove_atom_mapping(smiles: str) -> str:
-    """
-    Removes atom mapping numbers and simplifies atomic notation in a SMILES string.
+def remove_atom_mapping(reaction_smiles):
+    # Split the reaction SMILES into reactants and products
+    parts = reaction_smiles.split(">>")
+    if len(parts) != 2:
+        raise ValueError("Invalid reaction SMILES format.")
 
-    This function processes a SMILES string to:
-    1. Remove any atom mapping numbers denoted by ':'
-        followed by one or more digits.
-    2. Simplify the atomic notation by removing square
-        brackets around atoms that do not need them.
+    # Function to remove atom mappings from a SMILES string
+    def clean_smiles(smiles):
+        mol = Chem.MolFromSmiles(smiles)  # Convert SMILES to an RDKit mol object
+        if mol is None:
+            raise ValueError("Invalid SMILES string.")
+        for atom in mol.GetAtoms():
+            atom.SetAtomMapNum(0)  # Remove atom mapping
+        return Chem.MolToSmiles(mol, True)  # Convert mol back to SMILES
 
-    Parameters:
-    - smiles (str): The SMILES string to be processed.
+    # Apply the cleaning function to both reactants and products
+    reactants_clean = clean_smiles(parts[0])
+    products_clean = clean_smiles(parts[1])
 
-    Returns:
-    - str: The processed SMILES string with atom mappings
-            removed and simplified atomic notations.
-    """
-    # Remove atom mapping numbers
-    pattern = re.compile(r":\d+")
-    smiles = pattern.sub("", smiles)
-    # Simplify atomic notation by removing unnecessary square brackets
-    pattern = re.compile(r"\[(?P<atom>(B|C|N|O|P|S|F|Cl|Br|I){1,2})(?:H\d?)?\]")
-    smiles = pattern.sub(r"\g<atom>", smiles)
-    return smiles
+    # Combine the cleaned reactants and products back into a reaction SMILES
+    return f"{reactants_clean}>>{products_clean}"
 
 
 def mol_from_smiles(smiles: str) -> Optional[Chem.Mol]:

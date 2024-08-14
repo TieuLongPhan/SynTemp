@@ -301,7 +301,7 @@ class ITSHAdjuster:
         """
         react_graph_copy = deepcopy(react_graph)
         prod_graph_copy = deepcopy(prod_graph)
-        react_explicit_h, _ = check_explicit_hydrogen(react_graph_copy)
+        react_explicit_h, hydrogen_nodes = check_explicit_hydrogen(react_graph_copy)
         prod_explicit_h, _ = check_explicit_hydrogen(prod_graph_copy)
         hydrogen_nodes_form, hydrogen_nodes_break = [], []
 
@@ -328,22 +328,13 @@ class ITSHAdjuster:
             max(react_graph_copy.nodes, default=0),
             max(prod_graph_copy.nodes, default=0),
         )
-        permutations = list(
-            itertools.permutations(
-                range(
-                    max_index + 1 - react_explicit_h,
-                    max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
-                )
-            )
+        range_implicit_h = range(
+            max_index + 1,
+            max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
         )
-        permutations_seed = list(
-            itertools.permutations(
-                range(
-                    max_index + 1 - prod_explicit_h,
-                    max_index + 1 + len(hydrogen_nodes_break) - prod_explicit_h,
-                )
-            )
-        )[0]
+        combined_indices = list(range_implicit_h) + hydrogen_nodes
+        permutations = list(itertools.permutations(combined_indices))
+        permutations_seed = permutations[0]
 
         updated_graphs = []
         for permutation in permutations:

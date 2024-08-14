@@ -18,12 +18,12 @@ class RuleWriting:
         """
         if charge > 0:
             return (
-                "+" * charge
-            )  # Repeat the '+' symbol 'charge' times for positive charges
+                "+" if charge == 1 else f"{charge}+"
+            )  # '+' for +1, '2+', '3+', etc., for higher values
         elif charge < 0:
-            return "-" * abs(
-                charge
-            )  # Repeat the '-' symbol 'abs(charge)' times for negative charges
+            return (
+                "-" if charge == -1 else f"{-charge}-"
+            )  # '-' for -1, '2-', '3-', etc., for lower values
         else:
             return ""  # No charge symbol for neutral atoms
 
@@ -51,7 +51,11 @@ class RuleWriting:
             for node in graph.nodes(data=True):
                 if node[0] not in changed_node_ids:
                     element = node[1].get("element", "X")
-                    gml_str += f'      node [ id {node[0]} label "{element}" ]\n'
+                    charge = node[1].get("charge", 0)
+                    charge_str = RuleWriting.charge_to_string(charge)
+                    gml_str += (
+                        f'      node [ id {node[0]} label "{element}{charge_str}" ]\n'
+                    )
 
         if section != "context":
             for edge in graph.edges(data=True):
