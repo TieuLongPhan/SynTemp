@@ -162,6 +162,7 @@ def extract_its(
     save_dir: Optional[str] = None,
     data_name: str = "",
     symbol: str = ">>",
+    get_random_results: bool = False,
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -216,8 +217,13 @@ def extract_its(
             if i == 1 or (i % 10 == 0 and i >= 10):
                 logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
             batch_processed = ITSHAdjuster.process_graph_data_parallel(
-                batch_correct, "ITSGraph", n_jobs=n_jobs, verbose=verbose
+                batch_correct,
+                "ITSGraph",
+                n_jobs=n_jobs,
+                verbose=verbose,
+                get_random_results=get_random_results,
             )
+
             uncertain_hydrogen = [
                 value for value in batch_processed if value["ITSGraph"] is None
             ]

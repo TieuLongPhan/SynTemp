@@ -137,10 +137,13 @@ class ITSExtraction:
                 graphs_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_graphs.append(one_node_graph)
-        if check_method == "RC":
-            _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
-        elif check_method == "ITS":
-            _, equivariant = ITSExtraction.check_equivariant_graph(its_graphs)
+        if len(rules_graphs) > 1:
+            if check_method == "RC":
+                _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
+            elif check_method == "ITS":
+                _, equivariant = ITSExtraction.check_equivariant_graph(its_graphs)
+        else:
+            equivariant = 0
         # graphs_by_map['check_equivariant'] = classified
         graphs_by_map["equivariant"] = equivariant
 

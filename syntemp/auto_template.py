@@ -62,6 +62,7 @@ class AutoTemp:
         log_file: str = None,
         log_level: str = "INFO",
         clean_data: bool = True,
+        get_random_hydrogen: bool = False,
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
@@ -120,6 +121,7 @@ class AutoTemp:
         self.reindex = reindex
         self.rerun_aam = rerun_aam
         self.clean_data = clean_data
+        self.get_random_hydrogen = get_random_hydrogen
 
         log_level = getattr(logging, log_level.upper(), None)
         if not isinstance(log_level, int):
@@ -181,6 +183,7 @@ class AutoTemp:
             self.fix_hydrogen,
             self.refinement_its,
             self.save_dir,
+            get_random_results=self.get_random_hydrogen,
         )
 
         # Step 4: Extract rules from the correct ITS graphs
