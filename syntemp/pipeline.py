@@ -250,12 +250,15 @@ def extract_its(
     its_correct = collect_data(num_batches, temp_dir, "batch_correct_{}.pkl")
     logging.info("Processing unequivalent ITS correct")
     its_incorrect = collect_data(num_batches, temp_dir, "batch_incorrect_{}.pkl")
-    all_uncertain_hydrogen = []
-    if fix_hydrogen:
-        logging.info("Processing ambiguous hydrogen-ITS")
-        all_uncertain_hydrogen = collect_data(
-            num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
-        )
+    try:
+        all_uncertain_hydrogen = []
+        if fix_hydrogen:
+            logging.info("Processing ambiguous hydrogen-ITS")
+            all_uncertain_hydrogen = collect_data(
+                num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
+            )
+    except:
+        all_uncertain_hydrogen = []
 
     # logging.info(f"Number of correct mappers before refinement: {len(its_correct)}")
     if refinement_its:
@@ -273,7 +276,8 @@ def extract_its(
 
     logging.info(f"Number of correct mappers: {len(its_correct)}")
     logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-    logging.info(f"Number of uncertain hydrogen:{len(all_uncertain_hydrogen)}")
+    logging.info(f"Number of uncertain hydrogen:"+
+                 f"{len(data)-len(its_correct)-len(its_incorrect)}")
     if save_dir:
         logging.info("Combining and saving data")
 
