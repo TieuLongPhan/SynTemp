@@ -16,7 +16,7 @@ def parse_arguments():
     parser.add_argument(
         "--mapper_types",
         nargs="+",
-        default=["rxn_mapper", "graphormer", "local_mapper"],
+        default=["local_mapper", "rxn_mapper", "graphormer"],
         help="Types of atom map techniques used",
     )
     parser.add_argument("--id", type=str, default="R-id", help="ID column")
@@ -24,11 +24,11 @@ def parse_arguments():
         "--rsmi", type=str, default="reactions", help="Reaction SMILES column"
     )
     parser.add_argument(
-        "--n_jobs", type=int, default=4, help="Number of jobs to run in parallel"
+        "--n_jobs", type=int, default=8, help="Number of jobs to run in parallel"
     )
     parser.add_argument("--verbose", type=int, default=2, help="Verbosity level")
     parser.add_argument(
-        "--batch_size", type=int, default=200, help="Batch size for processing"
+        "--batch_size", type=int, default=1000, help="Batch size for processing"
     )
     parser.add_argument("--safe_mode", action="store_true", help="Enable safe mode")
     parser.add_argument(
@@ -50,6 +50,11 @@ def parse_arguments():
     )
     parser.add_argument(
         "--log_level", type=str, default="INFO", help="File to log the process"
+    )
+    parser.add_argument(
+        "--get_random_hydrogen",
+        action="store_true",
+        help="Get random full ITS hydrogen",
     )
     return parser.parse_args()
 
@@ -91,6 +96,7 @@ def main():
             rerun_aam=args.rerun_aam,
             log_file=args.log_file,
             log_level=args.log_level,
+            get_random_hydrogen=args.get_random_hydrogen,
         )
         auto.temp_extract(data, lib_path=args.lib_path)
         logging.info("Extraction successful.")

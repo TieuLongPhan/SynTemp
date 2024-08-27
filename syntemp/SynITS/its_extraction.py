@@ -8,6 +8,7 @@ from networkx.algorithms.isomorphism import generic_node_match, generic_edge_mat
 from syntemp.SynITS.its_construction import ITSConstruction
 from syntemp.SynChemistry.mol_to_graph import MolToGraph
 from syntemp.SynRule.rules_extraction import RuleExtraction
+from syntemp.SynUtils.chemutils import remove_atom_mapping
 
 
 class ITSExtraction:
@@ -136,10 +137,13 @@ class ITSExtraction:
                 graphs_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
                 rules_graphs.append(one_node_graph)
-        if check_method == "RC":
-            _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
-        elif check_method == "ITS":
-            _, equivariant = ITSExtraction.check_equivariant_graph(its_graphs)
+        if len(rules_graphs) > 1:
+            if check_method == "RC":
+                _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
+            elif check_method == "ITS":
+                _, equivariant = ITSExtraction.check_equivariant_graph(its_graphs)
+        else:
+            equivariant = 0
         # graphs_by_map['check_equivariant'] = classified
         graphs_by_map["equivariant"] = equivariant
 
@@ -156,13 +160,16 @@ class ITSExtraction:
 
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:
-            # Update the target dictionary based on the determined conditions
-            if confident_mapper in mapper_names:
-                target_dict["ITSGraph"] = graphs_by_map.get(confident_mapper, None)
-                target_dict["GraphRules"] = rules_by_map.get(confident_mapper, None)
-            else:
+            if "[O]" in remove_atom_mapping(mapped_smiles[mapper_names[0]]):
                 target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
                 target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
+            else:
+                if confident_mapper in mapper_names:
+                    target_dict["ITSGraph"] = graphs_by_map.get(confident_mapper, None)
+                    target_dict["GraphRules"] = rules_by_map.get(confident_mapper, None)
+                else:
+                    target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
+                    target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
 
         return graphs_by_map_correct, graphs_by_map_incorrect
 

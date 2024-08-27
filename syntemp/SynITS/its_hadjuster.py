@@ -22,6 +22,7 @@ class ITSHAdjuster:
         return_all: bool = False,
         ignore_aromaticity: bool = False,
         balance_its: bool = True,
+        get_random_results=False,
     ) -> Dict:
         """
         Processes a single dictionary containing graph information by applying
@@ -63,6 +64,7 @@ class ITSHAdjuster:
                 ignore_aromaticity,
                 return_all,
                 balance_its,
+                get_random_results,
             )
         else:
             graph_data = ITSHAdjuster.process_high_hcount_change(
@@ -73,6 +75,7 @@ class ITSHAdjuster:
                 ignore_aromaticity,
                 return_all,
                 balance_its,
+                get_random_results,
             )
 
         return graph_data
@@ -105,6 +108,7 @@ class ITSHAdjuster:
         ignore_aromaticity,
         return_all,
         balance_its,
+        get_random_results=False,
     ):
         """
         Handles cases with hydrogen count changes between 2 and 4, inclusive.
@@ -142,6 +146,7 @@ class ITSHAdjuster:
                 ignore_aromaticity,
                 return_all,
                 balance_its,
+                get_random_results,
             )
         return graph_data
 
@@ -154,6 +159,7 @@ class ITSHAdjuster:
         ignore_aromaticity,
         return_all,
         balance_its: bool = True,
+        get_random_results=False,
     ):
         """
         Handles cases with hydrogen count changes of 5 or more.
@@ -179,7 +185,11 @@ class ITSHAdjuster:
             for i in its_list
         ]
 
-        its_list, rc_list = get_priority(its_list, reaction_centers)
+        priority_indices = get_priority(reaction_centers)
+        rc_list = [reaction_centers[i] for i in priority_indices]
+        its_list = [its_list[i] for i in priority_indices]
+        combinations_solution = [combinations_solution[i] for i in priority_indices]
+
         _, equivariant = ITSExtraction.check_equivariant_graph(rc_list)
         pairwise_combinations = len(its_list) - 1
         if equivariant == pairwise_combinations:
@@ -187,12 +197,18 @@ class ITSHAdjuster:
                 graph_data, *combinations_solution[0], its_list[0]
             )
         else:
-            if return_all:
+            if get_random_results is True:
                 graph_data = ITSHAdjuster.update_graph_data(
-                    graph_data, react_graph, prod_graph, its
+                    graph_data, *combinations_solution[0], its_list[0]
                 )
+
             else:
-                graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
+                if return_all:
+                    graph_data = ITSHAdjuster.update_graph_data(
+                        graph_data, react_graph, prod_graph, its
+                    )
+                else:
+                    graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
         return graph_data
 
     @staticmethod
@@ -204,6 +220,7 @@ class ITSHAdjuster:
         return_all: bool = False,
         ignore_aromaticity: bool = False,
         balance_its: bool = True,
+        get_random_results: bool = False,
     ) -> List[Dict]:
         """
         Processes a list of dictionaries containing graph information in parallel.
@@ -220,7 +237,12 @@ class ITSHAdjuster:
         """
         processed_data = Parallel(n_jobs=n_jobs, verbose=verbose)(
             delayed(ITSHAdjuster.process_single_graph_data)(
-                graph_data, column, return_all, ignore_aromaticity, balance_its
+                graph_data,
+                column,
+                return_all,
+                ignore_aromaticity,
+                balance_its,
+                get_random_results,
             )
             for graph_data in graph_data_list
         )
@@ -301,7 +323,7 @@ class ITSHAdjuster:
         """
         react_graph_copy = deepcopy(react_graph)
         prod_graph_copy = deepcopy(prod_graph)
-        react_explicit_h, _ = check_explicit_hydrogen(react_graph_copy)
+        react_explicit_h, hydrogen_nodes = check_explicit_hydrogen(react_graph_copy)
         prod_explicit_h, _ = check_explicit_hydrogen(prod_graph_copy)
         hydrogen_nodes_form, hydrogen_nodes_break = [], []
 
@@ -328,22 +350,13 @@ class ITSHAdjuster:
             max(react_graph_copy.nodes, default=0),
             max(prod_graph_copy.nodes, default=0),
         )
-        permutations = list(
-            itertools.permutations(
-                range(
-                    max_index + 1 - react_explicit_h,
-                    max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
-                )
-            )
+        range_implicit_h = range(
+            max_index + 1,
+            max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
         )
-        permutations_seed = list(
-            itertools.permutations(
-                range(
-                    max_index + 1 - prod_explicit_h,
-                    max_index + 1 + len(hydrogen_nodes_break) - prod_explicit_h,
-                )
-            )
-        )[0]
+        combined_indices = list(range_implicit_h) + hydrogen_nodes
+        permutations = list(itertools.permutations(combined_indices))
+        permutations_seed = permutations[0]
 
         updated_graphs = []
         for permutation in permutations:

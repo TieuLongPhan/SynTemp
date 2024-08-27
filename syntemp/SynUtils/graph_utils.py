@@ -1,6 +1,6 @@
 import networkx as nx
 import copy
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 
 
 def is_acyclic_graph(G: nx.Graph) -> bool:
@@ -313,63 +313,50 @@ def check_graph_connectivity(graph):
         return "Disconnected."
 
 
-def get_priority(
-    its_list: List[Any],
-    reaction_centers: List[Any],
-    priority_ring: List[int] = [4, 5, 6],  # Standard priority rings
-    priority_pair: List[int] = [3, 5],  # Special priority requiring both rings
-    not_priority_ring: List[int] = [3],  # Non-priority ring that disqualifies alone
-) -> Tuple[List[Any], List[Any]]:
+def get_priority(reaction_centers: List[Any]) -> List[int]:
     """
-    Filters reaction centers based on their connectivity and specific ring sizes,
-    including those with both rings in the priority pair, and excluding those with non-
-    priority ring sizes,
-    unless a specific pair condition is met (e.g., 3 must appear with 5).
+    Evaluate reaction centers for specific graph characteristics, selecting indices based
+    on the shortest reaction paths and maximum ring sizes, and adjusting for certain
+    graph types by modifying the ring information.
 
     Parameters:
-    - its_list (List[Any]): List of identifiers for the reaction centers.
-    - reaction_centers (List[Any]): List of reaction centers to evaluate.
-    - priority_ring (List[int], optional): List of ring sizes given priority.
-    Defaults to [4, 6].
-    - priority_pair (List[int], optional): List of two ring sizes that must both appear
-    together to qualify. Defaults to [3, 5].
-    - not_priority_ring (List[int], optional): List of ring sizes that disqualify a center
-    unless paired appropriately. Defaults to [3].
+    - reaction_centers: List[Any], a list of reaction centers where each center should be
+    capable of being analyzed for graph type and ring sizes.
 
     Returns:
-    - Tuple[List[Any], List[Any]]: Tuple containing two lists:
-        - The first list contains the identifiers from its_list that meet all criteria.
-        - The second list contains the corresponding reaction centers that meet the
-        criteria.
+    - List[int]: A list of indices from the original list of reaction centers that meet
+    the criteria of having the shortest reaction steps and/or the largest ring sizes.
+    Returns indices with minimum reaction steps if no indices meet both criteria.
     """
-    priority_set = set(priority_ring)
-    not_priority_set = set(not_priority_ring)
-    priority_pair_set = set(priority_pair)
+    # Extract topology types and ring sizes from reaction centers
+    topo_type = [check_graph_type(center) for center in reaction_centers]
+    cyclic = [get_cycle_member_rings(center) for center in reaction_centers]
 
-    # Filter to include only connected reaction centers
-    connected_centers = []
-    connected_its_list = []
-    for index, center in enumerate(reaction_centers):
-        if check_graph_connectivity(center) == "Connected":
-            connected_centers.append(center)
-            connected_its_list.append(its_list[index])
+    # Adjust ring information based on the graph type
+    for index, graph_type in enumerate(topo_type):
+        if graph_type in ["Acyclic", "Complex Cyclic"]:
+            cyclic[index] = [0] + cyclic[index]
 
-    cyclic = [get_cycle_member_rings(center) for center in connected_centers]
-    # Filter indices based on priority and non-priority ring sizes
-    final_indices = []
-    for i, rings in enumerate(cyclic):
-        ring_set = set(rings)
-        # Check for priority conditions and special conditions for non-priority rings
-        if (
-            ring_set.intersection(priority_set) or (priority_pair_set <= ring_set)
-        ) and not (
-            ring_set.intersection(not_priority_set)
-            and not (5 in ring_set and 3 in ring_set)
-        ):
-            final_indices.append(i)
+    # Determine minimum reaction steps
+    reaction_steps = [len(rings) for rings in cyclic]
+    min_reaction_step = min(reaction_steps)
 
-    # Retrieve final lists based on filtered indices
-    final_its_list = [connected_its_list[i] for i in final_indices]
-    final_centers = [connected_centers[i] for i in final_indices]
+    # Filter indices with the minimum reaction steps
+    indices_shortest = [
+        i for i, steps in enumerate(reaction_steps) if steps == min_reaction_step
+    ]
 
-    return final_its_list, final_centers
+    # Filter indices with the maximum ring size
+    max_size = max(
+        max(rings) for rings in cyclic if rings
+    )  # Safeguard against empty sublists
+    prior_indices = [i for i, rings in enumerate(cyclic) if max(rings) == max_size]
+
+    # Combine criteria for final indices
+    final_indices = [index for index in prior_indices if index in indices_shortest]
+
+    # Fallback to shortest indices if no indices meet both criteria
+    if not final_indices:
+        return indices_shortest
+
+    return final_indices

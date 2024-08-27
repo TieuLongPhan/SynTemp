@@ -357,7 +357,7 @@ def plot_roc_curves(
     for index, type_ in enumerate(original_types):
         type_data = df[df["Type"] == type_]
         tpr = type_data["C"].tolist()
-        fpr = type_data["FPR"].tolist()
+        fpr = type_data["NR"].tolist()
         tpr = [x / 100 for x in tpr]
         fpr = [x / 100 for x in fpr]
         tpr.reverse()
@@ -384,7 +384,7 @@ def plot_roc_curves(
                 )
                 legend_handles.append(marker_handle)
 
-    ax.set_xlabel(r"$\mathcal{FPR}\ (\%)$", fontsize=fontsettings["label_size"])
+    ax.set_xlabel(r"$\mathcal{NR}\ (\%)$", fontsize=fontsettings["label_size"])
     ax.set_ylabel(r"$\mathcal{C}\ (\%)$", fontsize=fontsettings["label_size"])
     ax.set_title(rf"{title}", fontsize=fontsettings["title_size"], weight="medium")
     ax.tick_params(axis="both", which="major", labelsize=fontsettings["ticks_size"])

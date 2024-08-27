@@ -162,6 +162,7 @@ def extract_its(
     save_dir: Optional[str] = None,
     data_name: str = "",
     symbol: str = ">>",
+    get_random_results: bool = False,
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -216,8 +217,13 @@ def extract_its(
             if i == 1 or (i % 10 == 0 and i >= 10):
                 logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
             batch_processed = ITSHAdjuster.process_graph_data_parallel(
-                batch_correct, "ITSGraph", n_jobs=n_jobs, verbose=verbose
+                batch_correct,
+                "ITSGraph",
+                n_jobs=n_jobs,
+                verbose=verbose,
+                get_random_results=get_random_results,
             )
+
             uncertain_hydrogen = [
                 value for value in batch_processed if value["ITSGraph"] is None
             ]
@@ -244,12 +250,16 @@ def extract_its(
     its_correct = collect_data(num_batches, temp_dir, "batch_correct_{}.pkl")
     logging.info("Processing unequivalent ITS correct")
     its_incorrect = collect_data(num_batches, temp_dir, "batch_incorrect_{}.pkl")
-    all_uncertain_hydrogen = []
-    if fix_hydrogen:
-        logging.info("Processing ambiguous hydrogen-ITS")
-        all_uncertain_hydrogen = collect_data(
-            num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
-        )
+    try:
+        all_uncertain_hydrogen = []
+        if fix_hydrogen:
+            logging.info("Processing ambiguous hydrogen-ITS")
+            all_uncertain_hydrogen = collect_data(
+                num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
+            )
+    except Exception as e:
+        logging.error(f"{e}")
+        all_uncertain_hydrogen = []
 
     # logging.info(f"Number of correct mappers before refinement: {len(its_correct)}")
     if refinement_its:
@@ -267,7 +277,10 @@ def extract_its(
 
     logging.info(f"Number of correct mappers: {len(its_correct)}")
     logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-    logging.info(f"Number of uncertain hydrogen:{len(all_uncertain_hydrogen)}")
+    logging.info(
+        "Number of uncertain hydrogen:"
+        + f"{len(data)-len(its_correct)-len(its_incorrect)}"
+    )
     if save_dir:
         logging.info("Combining and saving data")
 

@@ -10,8 +10,8 @@ class TestRuleWriting(unittest.TestCase):
         self.data = load_from_pickle("Data/Testcase/templates.pkl.gz")[0]
 
     def test_charge_to_string(self):
-        self.assertEqual(RuleWriting.charge_to_string(3), "+++")
-        self.assertEqual(RuleWriting.charge_to_string(-2), "--")
+        self.assertEqual(RuleWriting.charge_to_string(3), "3+")
+        self.assertEqual(RuleWriting.charge_to_string(-2), "2-")
         self.assertEqual(RuleWriting.charge_to_string(0), "")
 
     def test_convert_graph_to_gml_context(self):
