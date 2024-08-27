@@ -65,20 +65,20 @@ def plot_top_rules_with_seaborn(
     # Add labels on top of each bar
     for p in barplot.patches:
         ax.annotate(
-            f"{p.get_height():.1f}%",
+            rf"{p.get_height():.1f}%",
             (p.get_x() + p.get_width() / 2.0, p.get_height()),
             ha="center",
             va="center",
             xytext=(0, 9),
             textcoords="offset points",
-            fontsize=16,
+            fontsize=20,
         )
 
     # Setting plot labels and titles
-    ax.set_xlabel("Rule ID", fontsize=18)
-    ax.set_ylabel("Percentage (%)", fontsize=18)
-    ax.set_title(f"Top {top_n} Popular Rules", fontsize=24, weight="medium")
-    ax.tick_params(axis="both", labelsize=18)
+    ax.set_xlabel(r"Rule ID", fontsize=24)
+    ax.set_ylabel(r"Percentage (\%)", fontsize=24)
+    ax.set_title(rf"Top {top_n} Popular Rules", fontsize=32, weight="medium")
+    ax.tick_params(axis="both", labelsize=24)
     plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
 
     # Show the plot if ax was not provided
@@ -131,7 +131,7 @@ def load_and_title_png(
     # Display the image on the specified axis
     ax.imshow(img)
     ax.set_title(
-        title, fontsize=24, weight="medium"
+        rf"{title}", fontsize=32, weight="medium"
     )  # Set the title with a specified fontsize
     ax.axis("off")  # Hide the axes
 

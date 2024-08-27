@@ -91,4 +91,4 @@ if __name__ == "__main__":
 
 
 # python run_compose.py -s Data/Temp/RuleComp/Single/R0
-# -c Data/Temp/RuleComp/Compose_expand -d Data/Temp/RuleComp/Double/R0/
+# -c Data/Temp/RuleComp/Compose -d Data/Temp/RuleComp/Double/R0/

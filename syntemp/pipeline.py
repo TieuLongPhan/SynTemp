@@ -257,7 +257,8 @@ def extract_its(
             all_uncertain_hydrogen = collect_data(
                 num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
             )
-    except:
+    except Exception as e:
+        logging.error(f"{e}")
         all_uncertain_hydrogen = []
 
     # logging.info(f"Number of correct mappers before refinement: {len(its_correct)}")
@@ -276,8 +277,10 @@ def extract_its(
 
     logging.info(f"Number of correct mappers: {len(its_correct)}")
     logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-    logging.info(f"Number of uncertain hydrogen:"+
-                 f"{len(data)-len(its_correct)-len(its_incorrect)}")
+    logging.info(
+        "Number of uncertain hydrogen:"
+        + f"{len(data)-len(its_correct)-len(its_incorrect)}"
+    )
     if save_dir:
         logging.info("Combining and saving data")
 
