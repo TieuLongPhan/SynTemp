@@ -142,7 +142,6 @@ def coverage_rate(
     return round(average_solutions, 2), round(coverage_rate, 2), round(average_fpr, 2)
 
 
-
 def automatic_results(
     test_types: List[str],
     temp_types: List[str],

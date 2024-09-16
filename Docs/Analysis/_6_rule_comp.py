@@ -199,7 +199,7 @@ rule [
 ]
 """
 
-os.makedirs('out', exist_ok=True)
+os.makedirs("out", exist_ok=True)
 
 for rule_var in [p_0, p_2, p_238, p_42, p_99, p_170, p_23, p_58, p_36]:
     ruleGMLString(rule_var)
