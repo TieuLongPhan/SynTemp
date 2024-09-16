@@ -126,7 +126,6 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
         raise TypeError("Input must be a networkx Graph object.")
 
     # Find cycle basis for the graph which gives non-overlapping cycles
-    #cycles = nx.cycle_basis(G)
     cycles = nx.minimum_cycle_basis(G)
     # Determine the size of each cycle (member ring)
     member_rings = [len(cycle) for cycle in cycles]

@@ -318,7 +318,36 @@ rule [
    ]
 ]
 """
+
 rule17 = """
+rule [
+   ruleID "55"
+   left [
+      edge [ source 1 target 2 label "-" ]
+      edge [ source 2 target 3 label "=" ]
+      edge [ source 4 target 5 label "-" ]
+      edge [ source 6 target 7 label "-" ]
+   ]
+   context [
+      node [ id 1 label "O" ]
+      node [ id 2 label "C" ]
+      node [ id 3 label "O" ]
+      node [ id 4 label "H" ]
+      node [ id 5 label "H" ]
+      node [ id 6 label "H" ]
+      node [ id 7 label "H" ]
+   ]
+   right [
+      edge [ source 1 target 4 label "-" ]
+      edge [ source 2 target 3 label "-" ]
+      edge [ source 2 target 6 label "-" ]
+      edge [ source 2 target 7 label "-" ]
+      edge [ source 3 target 5 label "-" ]
+   ]
+]
+"""
+
+rule18 = """
 rule [
    ruleID "44"
    left [
@@ -340,7 +369,7 @@ rule [
    ]
 ]
 """
-rule18 = """
+rule19 = """
 rule [
    ruleID "46"
    left [
@@ -359,7 +388,7 @@ rule [
    ]
 ]
 """
-rule19 = """
+rule20 = """
 rule [
    ruleID "15"
    left [
@@ -378,25 +407,7 @@ rule [
    ]
 ]
 """
-rule20 = """
-rule [
-   ruleID "37"
-   left [
-      edge [ source 1 target 4 label "-" ]
-      edge [ source 2 target 3 label "-" ]
-   ]
-   context [
-      node [ id 1 label "O" ]
-      node [ id 2 label "C" ]
-      node [ id 3 label "I" ]
-      node [ id 4 label "H" ]
-   ]
-   right [
-      edge [ source 1 target 2 label "-" ]
-      edge [ source 3 target 4 label "-" ]
-   ]
-]
-"""
+
 for i in range(1, 21):
     rule_var = locals()[f"rule{i}"]  # Access the local variable dynamically
     ruleGMLString(rule_var)  # Call the function with the dynamically accessed variable
