@@ -4,21 +4,22 @@ rule1 = """
 rule [
    ruleID "8"
    left [
+      edge [ source 1 target 3 label "-" ]
+      edge [ source 2 target 4 label "-" ]
+   ]
+   context [
+      node [ id 1 label "N" ]
+      node [ id 2 label "C" ]
+      node [ id 3 label "H" ]
+      node [ id 4 label "O" ]
+   ]
+   right [
       edge [ source 1 target 2 label "-" ]
       edge [ source 3 target 4 label "-" ]
    ]
-   context [
-      node [ id 1 label "F" ]
-      node [ id 2 label "C" ]
-      node [ id 3 label "N" ]
-      node [ id 4 label "H" ]
-   ]
-   right [
-      edge [ source 1 target 4 label "-" ]
-      edge [ source 2 target 3 label "-" ]
-   ]
 ]
 """
+
 rule2 = """
 rule [
    ruleID "2"
@@ -38,6 +39,7 @@ rule [
    ]
 ]
 """
+
 rule3 = """
 rule [
    ruleID "6"

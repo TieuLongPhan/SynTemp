@@ -1,0 +1,717 @@
+2024-05-24 16:24:41,896 - INFO - Loaded 1 reactions from ecoli
+2024-05-24 16:24:41,896 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:24:41,896 - INFO - rxn_mapper process...
+2024-05-24 16:24:43,353 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:43,353 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:43,480 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:43,480 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:43,480 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.58 seconds
+2024-05-24 16:24:43,482 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-24 16:24:43,482 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:24:43,482 - INFO - graphormer process...
+2024-05-24 16:24:43,546 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:43,546 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:43,874 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:43,874 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:43,874 - INFO - Completed consensus mapping for ecoli using graphormer in 0.39 seconds
+2024-05-24 16:24:43,876 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-24 16:24:43,876 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:24:43,876 - INFO - local_mapper process...
+2024-05-24 16:24:44,793 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.92 seconds
+2024-05-24 16:24:44,794 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-24 16:24:44,794 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:24:44,794 - INFO - rdt process...
+2024-05-24 16:24:46,519 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:46,519 - INFO - Completed consensus mapping for ecoli using rdt in 1.73 seconds
+2024-05-24 16:24:46,521 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-24 16:24:46,522 - INFO - Loaded 1 reactions from recon3d
+2024-05-24 16:24:46,522 - INFO - Starting consensus mapping for recon3d using rxn_mapper
+2024-05-24 16:24:46,522 - INFO - rxn_mapper process...
+2024-05-24 16:24:46,522 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:46,522 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:46,553 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:46,553 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:46,553 - INFO - Completed consensus mapping for recon3d using rxn_mapper in 0.03 seconds
+2024-05-24 16:24:46,555 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-24 16:24:46,555 - INFO - Starting consensus mapping for recon3d using graphormer
+2024-05-24 16:24:46,555 - INFO - graphormer process...
+2024-05-24 16:24:46,555 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:46,555 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:46,684 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:46,684 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:46,684 - INFO - Completed consensus mapping for recon3d using graphormer in 0.13 seconds
+2024-05-24 16:24:46,686 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-24 16:24:46,686 - INFO - Starting consensus mapping for recon3d using local_mapper
+2024-05-24 16:24:46,687 - INFO - local_mapper process...
+2024-05-24 16:24:46,938 - INFO - Completed consensus mapping for recon3d using local_mapper in 0.25 seconds
+2024-05-24 16:24:46,939 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-24 16:24:46,940 - INFO - Starting consensus mapping for recon3d using rdt
+2024-05-24 16:24:46,940 - INFO - rdt process...
+2024-05-24 16:24:48,494 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:48,494 - INFO - Completed consensus mapping for recon3d using rdt in 1.55 seconds
+2024-05-24 16:24:48,495 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-24 16:24:48,500 - INFO - Loaded 1 reactions from uspto_3k
+2024-05-24 16:24:48,500 - INFO - Starting consensus mapping for uspto_3k using rxn_mapper
+2024-05-24 16:24:48,500 - INFO - rxn_mapper process...
+2024-05-24 16:24:48,500 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:48,500 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:48,512 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:48,512 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:48,512 - INFO - Completed consensus mapping for uspto_3k using rxn_mapper in 0.01 seconds
+2024-05-24 16:24:48,514 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-24 16:24:48,514 - INFO - Starting consensus mapping for uspto_3k using graphormer
+2024-05-24 16:24:48,514 - INFO - graphormer process...
+2024-05-24 16:24:48,514 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:48,514 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:48,603 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:48,603 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:48,603 - INFO - Completed consensus mapping for uspto_3k using graphormer in 0.09 seconds
+2024-05-24 16:24:48,604 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-24 16:24:48,604 - INFO - Starting consensus mapping for uspto_3k using local_mapper
+2024-05-24 16:24:48,604 - INFO - local_mapper process...
+2024-05-24 16:24:48,753 - INFO - Completed consensus mapping for uspto_3k using local_mapper in 0.15 seconds
+2024-05-24 16:24:48,754 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-24 16:24:48,754 - INFO - Starting consensus mapping for uspto_3k using rdt
+2024-05-24 16:24:48,755 - INFO - rdt process...
+2024-05-24 16:24:49,882 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:49,882 - INFO - Completed consensus mapping for uspto_3k using rdt in 1.13 seconds
+2024-05-24 16:24:49,884 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-24 16:24:49,887 - INFO - Loaded 1 reactions from golden
+2024-05-24 16:24:49,887 - INFO - Starting consensus mapping for golden using rxn_mapper
+2024-05-24 16:24:49,887 - INFO - rxn_mapper process...
+2024-05-24 16:24:49,887 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:49,887 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:49,907 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:49,907 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:49,907 - INFO - Completed consensus mapping for golden using rxn_mapper in 0.02 seconds
+2024-05-24 16:24:49,909 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-24 16:24:49,909 - INFO - Starting consensus mapping for golden using graphormer
+2024-05-24 16:24:49,909 - INFO - graphormer process...
+2024-05-24 16:24:49,909 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:24:49,909 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:24:49,992 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:24:49,992 - INFO - Completed mapping all reactions.
+2024-05-24 16:24:49,992 - INFO - Completed consensus mapping for golden using graphormer in 0.08 seconds
+2024-05-24 16:24:49,994 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-24 16:24:49,994 - INFO - Starting consensus mapping for golden using local_mapper
+2024-05-24 16:24:49,994 - INFO - local_mapper process...
+2024-05-24 16:24:50,181 - INFO - Completed consensus mapping for golden using local_mapper in 0.19 seconds
+2024-05-24 16:24:50,183 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-24 16:24:50,183 - INFO - Starting consensus mapping for golden using rdt
+2024-05-24 16:24:50,183 - INFO - rdt process...
+2024-05-24 16:25:00,321 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:25:00,321 - INFO - Completed consensus mapping for golden using rdt in 10.14 seconds
+2024-05-24 16:25:00,322 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-24 16:25:00,323 - INFO - Loaded 1 reactions from natcomm
+2024-05-24 16:25:00,324 - INFO - Starting consensus mapping for natcomm using rxn_mapper
+2024-05-24 16:25:00,324 - INFO - rxn_mapper process...
+2024-05-24 16:25:00,324 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:25:00,324 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:25:00,337 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:25:00,337 - INFO - Completed mapping all reactions.
+2024-05-24 16:25:00,338 - INFO - Completed consensus mapping for natcomm using rxn_mapper in 0.01 seconds
+2024-05-24 16:25:00,339 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-24 16:25:00,339 - INFO - Starting consensus mapping for natcomm using graphormer
+2024-05-24 16:25:00,339 - INFO - graphormer process...
+2024-05-24 16:25:00,339 - INFO - Starting mapping of 1 reactions in batches of 1.
+2024-05-24 16:25:00,340 - INFO - Processing batch from index 0 to 1.
+2024-05-24 16:25:00,430 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:25:00,430 - INFO - Completed mapping all reactions.
+2024-05-24 16:25:00,430 - INFO - Completed consensus mapping for natcomm using graphormer in 0.09 seconds
+2024-05-24 16:25:00,432 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-24 16:25:00,432 - INFO - Starting consensus mapping for natcomm using local_mapper
+2024-05-24 16:25:00,432 - INFO - local_mapper process...
+2024-05-24 16:25:00,585 - INFO - Completed consensus mapping for natcomm using local_mapper in 0.15 seconds
+2024-05-24 16:25:00,587 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-24 16:25:00,587 - INFO - Starting consensus mapping for natcomm using rdt
+2024-05-24 16:25:00,587 - INFO - rdt process...
+2024-05-24 16:25:01,621 - INFO - Successfully processed Internal Batch from 0 to 1
+2024-05-24 16:25:01,621 - INFO - Completed consensus mapping for natcomm using rdt in 1.03 seconds
+2024-05-24 16:25:01,622 - INFO - Saved results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-24 16:25:01,625 - INFO - 
+          rxn_mapper  graphormer  local_mapper        rdt
+ecoli       1.584601    0.391734      0.916473   1.725465
+recon3d     0.031281    0.129568      0.251285   1.554512
+uspto_3k    0.012077    0.089396      0.148453   1.127911
+golden      0.020703    0.083720      0.187504  10.138101
+natcomm     0.014010    0.091216      0.153352   1.033796
+2024-05-24 16:27:33,448 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:27:33,449 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:27:33,449 - INFO - rxn_mapper process...
+2024-05-24 16:27:36,312 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:27:36,312 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:27:36,507 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:27:36,507 - INFO - Completed mapping all reactions.
+2024-05-24 16:27:36,507 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 3.06 seconds
+2024-05-24 16:27:36,507 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:27:36,508 - INFO - graphormer process...
+2024-05-24 16:27:36,686 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:27:36,686 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:27:37,159 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:27:37,159 - INFO - Completed mapping all reactions.
+2024-05-24 16:27:37,159 - INFO - Completed consensus mapping for ecoli using graphormer in 0.65 seconds
+2024-05-24 16:27:37,159 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:27:37,160 - INFO - local_mapper process...
+2024-05-24 16:27:39,216 - INFO - Completed consensus mapping for ecoli using local_mapper in 2.06 seconds
+2024-05-24 16:27:39,216 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:27:39,216 - INFO - rdt process...
+2024-05-24 16:27:41,836 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:27:41,836 - INFO - Completed consensus mapping for ecoli using rdt in 2.62 seconds
+2024-05-24 16:28:21,740 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:28:21,740 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:28:21,740 - INFO - rxn_mapper process...
+2024-05-24 16:28:23,136 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:28:23,136 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:28:23,255 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:28:23,256 - INFO - Completed mapping all reactions.
+2024-05-24 16:28:23,256 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.52 seconds
+2024-05-24 16:28:23,256 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:28:23,257 - INFO - graphormer process...
+2024-05-24 16:28:23,310 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:28:23,310 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:28:23,671 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:28:23,672 - INFO - Completed mapping all reactions.
+2024-05-24 16:28:23,672 - INFO - Completed consensus mapping for ecoli using graphormer in 0.42 seconds
+2024-05-24 16:28:23,672 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:28:23,672 - INFO - local_mapper process...
+2024-05-24 16:28:24,584 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.91 seconds
+2024-05-24 16:28:24,584 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:28:24,584 - INFO - rdt process...
+2024-05-24 16:28:27,017 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:28:27,018 - INFO - Completed consensus mapping for ecoli using rdt in 2.43 seconds
+2024-05-24 16:29:19,621 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:29:19,621 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:29:19,621 - INFO - rxn_mapper process...
+2024-05-24 16:29:21,474 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:29:21,474 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:29:21,613 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:29:21,613 - INFO - Completed mapping all reactions.
+2024-05-24 16:29:21,613 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.99 seconds
+2024-05-24 16:29:21,614 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:29:21,614 - INFO - graphormer process...
+2024-05-24 16:29:21,705 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:29:21,705 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:29:22,069 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:29:22,070 - INFO - Completed mapping all reactions.
+2024-05-24 16:29:22,070 - INFO - Completed consensus mapping for ecoli using graphormer in 0.46 seconds
+2024-05-24 16:29:22,070 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:29:22,070 - INFO - local_mapper process...
+2024-05-24 16:29:23,278 - INFO - Completed consensus mapping for ecoli using local_mapper in 1.21 seconds
+2024-05-24 16:29:23,278 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:29:23,278 - INFO - rdt process...
+2024-05-24 16:29:25,765 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:29:25,765 - INFO - Completed consensus mapping for ecoli using rdt in 2.49 seconds
+2024-05-24 16:30:03,163 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:30:03,163 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:30:03,163 - INFO - rxn_mapper process...
+2024-05-24 16:30:04,561 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:30:04,562 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:30:04,681 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:04,681 - INFO - Completed mapping all reactions.
+2024-05-24 16:30:04,681 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.52 seconds
+2024-05-24 16:30:04,681 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:30:04,681 - INFO - graphormer process...
+2024-05-24 16:30:04,733 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:30:04,733 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:30:05,074 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:05,075 - INFO - Completed mapping all reactions.
+2024-05-24 16:30:05,075 - INFO - Completed consensus mapping for ecoli using graphormer in 0.39 seconds
+2024-05-24 16:30:05,075 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:30:05,075 - INFO - local_mapper process...
+2024-05-24 16:30:05,986 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.91 seconds
+2024-05-24 16:30:05,987 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:30:05,987 - INFO - rdt process...
+2024-05-24 16:30:08,489 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:08,489 - INFO - Completed consensus mapping for ecoli using rdt in 2.50 seconds
+2024-05-24 16:30:40,319 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:30:40,319 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:30:40,319 - INFO - rxn_mapper process...
+2024-05-24 16:30:42,101 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:30:42,101 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:30:42,239 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:42,239 - INFO - Completed mapping all reactions.
+2024-05-24 16:30:42,239 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.92 seconds
+2024-05-24 16:30:42,240 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:30:42,240 - INFO - graphormer process...
+2024-05-24 16:30:42,338 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:30:42,338 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:30:42,728 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:42,728 - INFO - Completed mapping all reactions.
+2024-05-24 16:30:42,728 - INFO - Completed consensus mapping for ecoli using graphormer in 0.49 seconds
+2024-05-24 16:30:42,728 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:30:42,728 - INFO - local_mapper process...
+2024-05-24 16:30:43,910 - INFO - Completed consensus mapping for ecoli using local_mapper in 1.18 seconds
+2024-05-24 16:30:43,910 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:30:43,910 - INFO - rdt process...
+2024-05-24 16:30:46,411 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:30:46,411 - INFO - Completed consensus mapping for ecoli using rdt in 2.50 seconds
+2024-05-24 16:31:10,472 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:31:10,472 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:31:10,472 - INFO - rxn_mapper process...
+2024-05-24 16:31:11,888 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:31:11,888 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:31:12,008 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:12,008 - INFO - Completed mapping all reactions.
+2024-05-24 16:31:12,008 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.54 seconds
+2024-05-24 16:31:12,008 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:31:12,008 - INFO - graphormer process...
+2024-05-24 16:31:12,061 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:31:12,061 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:31:12,404 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:12,404 - INFO - Completed mapping all reactions.
+2024-05-24 16:31:12,404 - INFO - Completed consensus mapping for ecoli using graphormer in 0.40 seconds
+2024-05-24 16:31:12,404 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:31:12,405 - INFO - local_mapper process...
+2024-05-24 16:31:13,325 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.92 seconds
+2024-05-24 16:31:13,325 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:31:13,325 - INFO - rdt process...
+2024-05-24 16:31:15,866 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:15,866 - INFO - Completed consensus mapping for ecoli using rdt in 2.54 seconds
+2024-05-24 16:31:34,058 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:31:34,058 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:31:34,058 - INFO - rxn_mapper process...
+2024-05-24 16:31:35,451 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:31:35,451 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:31:35,570 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:35,570 - INFO - Completed mapping all reactions.
+2024-05-24 16:31:35,570 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.51 seconds
+2024-05-24 16:31:35,570 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:31:35,570 - INFO - graphormer process...
+2024-05-24 16:31:35,623 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:31:35,623 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:31:35,965 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:35,966 - INFO - Completed mapping all reactions.
+2024-05-24 16:31:35,966 - INFO - Completed consensus mapping for ecoli using graphormer in 0.40 seconds
+2024-05-24 16:31:35,966 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:31:35,966 - INFO - local_mapper process...
+2024-05-24 16:31:36,885 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.92 seconds
+2024-05-24 16:31:36,885 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:31:36,885 - INFO - rdt process...
+2024-05-24 16:31:39,401 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:31:39,401 - INFO - Completed consensus mapping for ecoli using rdt in 2.52 seconds
+2024-05-24 16:33:04,565 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:33:04,565 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:33:04,565 - INFO - rxn_mapper process...
+2024-05-24 16:33:06,481 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:33:06,481 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:33:06,620 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:06,620 - INFO - Completed mapping all reactions.
+2024-05-24 16:33:06,621 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 2.06 seconds
+2024-05-24 16:33:06,621 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:33:06,621 - INFO - graphormer process...
+2024-05-24 16:33:06,719 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:33:06,719 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:33:07,090 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:07,090 - INFO - Completed mapping all reactions.
+2024-05-24 16:33:07,090 - INFO - Completed consensus mapping for ecoli using graphormer in 0.47 seconds
+2024-05-24 16:33:07,091 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:33:07,091 - INFO - local_mapper process...
+2024-05-24 16:33:08,374 - INFO - Completed consensus mapping for ecoli using local_mapper in 1.28 seconds
+2024-05-24 16:33:08,374 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:33:08,374 - INFO - rdt process...
+2024-05-24 16:33:10,874 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:10,874 - INFO - Completed consensus mapping for ecoli using rdt in 2.50 seconds
+2024-05-24 16:33:19,797 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:33:19,797 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:33:19,797 - INFO - rxn_mapper process...
+2024-05-24 16:33:21,168 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:33:21,168 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:33:21,288 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:21,288 - INFO - Completed mapping all reactions.
+2024-05-24 16:33:21,288 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 1.49 seconds
+2024-05-24 16:33:21,289 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:33:21,289 - INFO - graphormer process...
+2024-05-24 16:33:21,341 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:33:21,341 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:33:21,696 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:21,696 - INFO - Completed mapping all reactions.
+2024-05-24 16:33:21,696 - INFO - Completed consensus mapping for ecoli using graphormer in 0.41 seconds
+2024-05-24 16:33:21,734 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:33:21,735 - INFO - local_mapper process...
+2024-05-24 16:33:22,661 - INFO - Completed consensus mapping for ecoli using local_mapper in 0.93 seconds
+2024-05-24 16:33:22,661 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:33:22,661 - INFO - rdt process...
+2024-05-24 16:33:25,225 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:33:25,225 - INFO - Completed consensus mapping for ecoli using rdt in 2.56 seconds
+2024-05-24 16:34:45,842 - INFO - Loaded 2 reactions from ecoli
+2024-05-24 16:34:45,842 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-24 16:34:45,843 - INFO - rxn_mapper process...
+2024-05-24 16:34:47,728 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:47,728 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:47,873 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:47,873 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:47,873 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 2.03 seconds
+2024-05-24 16:34:47,873 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-24 16:34:47,873 - INFO - graphormer process...
+2024-05-24 16:34:47,968 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:47,969 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:48,324 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:48,324 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:48,324 - INFO - Completed consensus mapping for ecoli using graphormer in 0.45 seconds
+2024-05-24 16:34:48,324 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-24 16:34:48,325 - INFO - local_mapper process...
+2024-05-24 16:34:49,562 - INFO - Completed consensus mapping for ecoli using local_mapper in 1.24 seconds
+2024-05-24 16:34:49,562 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-24 16:34:49,562 - INFO - rdt process...
+2024-05-24 16:34:52,031 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:52,031 - INFO - Completed consensus mapping for ecoli using rdt in 2.47 seconds
+2024-05-24 16:34:52,033 - INFO - Saved AAM ecoli results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-24 16:34:52,034 - INFO - Loaded 2 reactions from recon3d
+2024-05-24 16:34:52,034 - INFO - Starting consensus mapping for recon3d using rxn_mapper
+2024-05-24 16:34:52,034 - INFO - rxn_mapper process...
+2024-05-24 16:34:52,034 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:52,035 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:52,074 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:52,074 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:52,074 - INFO - Completed consensus mapping for recon3d using rxn_mapper in 0.04 seconds
+2024-05-24 16:34:52,075 - INFO - Starting consensus mapping for recon3d using graphormer
+2024-05-24 16:34:52,075 - INFO - graphormer process...
+2024-05-24 16:34:52,075 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:52,075 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:52,276 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:52,276 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:52,276 - INFO - Completed consensus mapping for recon3d using graphormer in 0.20 seconds
+2024-05-24 16:34:52,277 - INFO - Starting consensus mapping for recon3d using local_mapper
+2024-05-24 16:34:52,277 - INFO - local_mapper process...
+2024-05-24 16:34:52,645 - INFO - Completed consensus mapping for recon3d using local_mapper in 0.37 seconds
+2024-05-24 16:34:52,645 - INFO - Starting consensus mapping for recon3d using rdt
+2024-05-24 16:34:52,645 - INFO - rdt process...
+2024-05-24 16:34:55,791 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:55,791 - INFO - Completed consensus mapping for recon3d using rdt in 3.15 seconds
+2024-05-24 16:34:55,793 - INFO - Saved AAM recon3d results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-24 16:34:55,798 - INFO - Loaded 2 reactions from uspto_3k
+2024-05-24 16:34:55,798 - INFO - Starting consensus mapping for uspto_3k using rxn_mapper
+2024-05-24 16:34:55,799 - INFO - rxn_mapper process...
+2024-05-24 16:34:55,799 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:55,799 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:55,839 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:55,839 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:55,839 - INFO - Completed consensus mapping for uspto_3k using rxn_mapper in 0.04 seconds
+2024-05-24 16:34:55,840 - INFO - Starting consensus mapping for uspto_3k using graphormer
+2024-05-24 16:34:55,840 - INFO - graphormer process...
+2024-05-24 16:34:55,840 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:34:55,840 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:34:56,028 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:34:56,028 - INFO - Completed mapping all reactions.
+2024-05-24 16:34:56,029 - INFO - Completed consensus mapping for uspto_3k using graphormer in 0.19 seconds
+2024-05-24 16:34:56,029 - INFO - Starting consensus mapping for uspto_3k using local_mapper
+2024-05-24 16:34:56,029 - INFO - local_mapper process...
+2024-05-24 16:34:56,316 - INFO - Completed consensus mapping for uspto_3k using local_mapper in 0.29 seconds
+2024-05-24 16:34:56,316 - INFO - Starting consensus mapping for uspto_3k using rdt
+2024-05-24 16:34:56,316 - INFO - rdt process...
+2024-05-24 16:35:05,136 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:05,136 - INFO - Completed consensus mapping for uspto_3k using rdt in 8.82 seconds
+2024-05-24 16:35:05,138 - INFO - Saved AAM uspto_3k results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-24 16:35:05,141 - INFO - Loaded 2 reactions from golden
+2024-05-24 16:35:05,141 - INFO - Starting consensus mapping for golden using rxn_mapper
+2024-05-24 16:35:05,141 - INFO - rxn_mapper process...
+2024-05-24 16:35:05,141 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:35:05,141 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:35:05,168 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:05,169 - INFO - Completed mapping all reactions.
+2024-05-24 16:35:05,169 - INFO - Completed consensus mapping for golden using rxn_mapper in 0.03 seconds
+2024-05-24 16:35:05,169 - INFO - Starting consensus mapping for golden using graphormer
+2024-05-24 16:35:05,169 - INFO - graphormer process...
+2024-05-24 16:35:05,169 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:35:05,170 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:35:05,348 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:05,348 - INFO - Completed mapping all reactions.
+2024-05-24 16:35:05,348 - INFO - Completed consensus mapping for golden using graphormer in 0.18 seconds
+2024-05-24 16:35:05,348 - INFO - Starting consensus mapping for golden using local_mapper
+2024-05-24 16:35:05,348 - INFO - local_mapper process...
+2024-05-24 16:35:05,579 - INFO - Completed consensus mapping for golden using local_mapper in 0.23 seconds
+2024-05-24 16:35:05,579 - INFO - Starting consensus mapping for golden using rdt
+2024-05-24 16:35:05,579 - INFO - rdt process...
+2024-05-24 16:35:16,331 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:16,331 - INFO - Completed consensus mapping for golden using rdt in 10.75 seconds
+2024-05-24 16:35:16,333 - INFO - Saved AAM golden results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-24 16:35:16,334 - INFO - Loaded 2 reactions from natcomm
+2024-05-24 16:35:16,334 - INFO - Starting consensus mapping for natcomm using rxn_mapper
+2024-05-24 16:35:16,334 - INFO - rxn_mapper process...
+2024-05-24 16:35:16,334 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:35:16,334 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:35:16,356 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:16,356 - INFO - Completed mapping all reactions.
+2024-05-24 16:35:16,356 - INFO - Completed consensus mapping for natcomm using rxn_mapper in 0.02 seconds
+2024-05-24 16:35:16,357 - INFO - Starting consensus mapping for natcomm using graphormer
+2024-05-24 16:35:16,357 - INFO - graphormer process...
+2024-05-24 16:35:16,357 - INFO - Starting mapping of 2 reactions in batches of 2.
+2024-05-24 16:35:16,357 - INFO - Processing batch from index 0 to 2.
+2024-05-24 16:35:16,496 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:16,496 - INFO - Completed mapping all reactions.
+2024-05-24 16:35:16,496 - INFO - Completed consensus mapping for natcomm using graphormer in 0.14 seconds
+2024-05-24 16:35:16,496 - INFO - Starting consensus mapping for natcomm using local_mapper
+2024-05-24 16:35:16,497 - INFO - local_mapper process...
+2024-05-24 16:35:16,707 - INFO - Completed consensus mapping for natcomm using local_mapper in 0.21 seconds
+2024-05-24 16:35:16,708 - INFO - Starting consensus mapping for natcomm using rdt
+2024-05-24 16:35:16,708 - INFO - rdt process...
+2024-05-24 16:35:18,627 - INFO - Successfully processed Internal Batch from 0 to 2
+2024-05-24 16:35:18,627 - INFO - Completed consensus mapping for natcomm using rdt in 1.92 seconds
+2024-05-24 16:35:18,628 - INFO - Saved AAM natcomm results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-24 16:35:18,632 - INFO - 
+          rxn_mapper  graphormer  local_mapper        rdt
+ecoli       2.030231    0.450678      1.237711   2.468720
+recon3d     0.039867    0.201821      0.368284   3.146037
+uspto_3k    0.040858    0.188781      0.287116   8.820613
+golden      0.027248    0.178757      0.230980  10.751661
+natcomm     0.022060    0.139443      0.210926   1.919264
+2024-05-25 08:51:37,970 - INFO - Loaded 273 reactions from ecoli
+2024-05-25 08:51:37,970 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-25 08:51:37,970 - INFO - rxn_mapper process...
+2024-05-25 08:51:37,989 - INFO - Starting mapping of 273 reactions in batches of 273.
+2024-05-25 08:51:37,989 - INFO - Processing batch from index 0 to 273.
+2024-05-25 08:51:43,161 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-25 08:51:43,162 - INFO - Completed mapping all reactions.
+2024-05-25 08:51:43,163 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 5.19 seconds
+2024-05-25 08:51:43,163 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-25 08:51:43,163 - INFO - graphormer process...
+2024-05-25 08:51:43,164 - INFO - Starting mapping of 273 reactions in batches of 273.
+2024-05-25 08:51:43,164 - INFO - Processing batch from index 0 to 273.
+2024-05-25 08:52:07,875 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-25 08:52:07,875 - INFO - Completed mapping all reactions.
+2024-05-25 08:52:07,875 - INFO - Completed consensus mapping for ecoli using graphormer in 24.71 seconds
+2024-05-25 08:52:07,875 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-25 08:52:07,875 - INFO - local_mapper process...
+2024-05-25 08:52:44,839 - INFO - Completed consensus mapping for ecoli using local_mapper in 36.96 seconds
+2024-05-25 08:52:44,839 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-25 08:52:44,839 - INFO - rdt process...
+2024-05-25 09:12:36,279 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-25 09:12:36,280 - INFO - Completed consensus mapping for ecoli using rdt in 1191.44 seconds
+2024-05-25 09:12:36,391 - INFO - Saved AAM ecoli results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-25 09:12:36,396 - INFO - Loaded 382 reactions from recon3d
+2024-05-25 09:12:36,396 - INFO - Starting consensus mapping for recon3d using rxn_mapper
+2024-05-25 09:12:36,396 - INFO - rxn_mapper process...
+2024-05-25 09:12:36,396 - INFO - Starting mapping of 382 reactions in batches of 382.
+2024-05-25 09:12:36,397 - INFO - Processing batch from index 0 to 382.
+2024-05-25 09:12:46,326 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-25 09:12:46,326 - INFO - Completed mapping all reactions.
+2024-05-25 09:12:46,327 - INFO - Completed consensus mapping for recon3d using rxn_mapper in 9.93 seconds
+2024-05-25 09:12:46,327 - INFO - Starting consensus mapping for recon3d using graphormer
+2024-05-25 09:12:46,328 - INFO - graphormer process...
+2024-05-25 09:12:46,328 - INFO - Starting mapping of 382 reactions in batches of 382.
+2024-05-25 09:12:46,328 - INFO - Processing batch from index 0 to 382.
+2024-05-25 09:13:31,734 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-25 09:13:31,734 - INFO - Completed mapping all reactions.
+2024-05-25 09:13:31,735 - INFO - Completed consensus mapping for recon3d using graphormer in 45.41 seconds
+2024-05-25 09:13:31,736 - INFO - Starting consensus mapping for recon3d using local_mapper
+2024-05-25 09:13:31,736 - INFO - local_mapper process...
+2024-05-25 09:14:48,893 - INFO - Completed consensus mapping for recon3d using local_mapper in 77.16 seconds
+2024-05-25 09:14:48,894 - INFO - Starting consensus mapping for recon3d using rdt
+2024-05-25 09:14:48,894 - INFO - rdt process...
+2024-05-25 10:06:31,398 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-25 10:06:31,399 - INFO - Completed consensus mapping for recon3d using rdt in 3102.51 seconds
+2024-05-25 10:06:31,470 - INFO - Saved AAM recon3d results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-25 10:06:31,481 - INFO - Loaded 3000 reactions from uspto_3k
+2024-05-25 10:06:31,481 - INFO - Starting consensus mapping for uspto_3k using rxn_mapper
+2024-05-25 10:06:31,481 - INFO - rxn_mapper process...
+2024-05-25 10:06:31,482 - INFO - Starting mapping of 3000 reactions in batches of 3000.
+2024-05-25 10:06:31,482 - INFO - Processing batch from index 0 to 3000.
+2024-05-25 10:07:10,986 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-25 10:07:10,986 - INFO - Completed mapping all reactions.
+2024-05-25 10:07:11,033 - INFO - Completed consensus mapping for uspto_3k using rxn_mapper in 39.55 seconds
+2024-05-25 10:07:11,034 - INFO - Starting consensus mapping for uspto_3k using graphormer
+2024-05-25 10:07:11,034 - INFO - graphormer process...
+2024-05-25 10:07:11,035 - INFO - Starting mapping of 3000 reactions in batches of 3000.
+2024-05-25 10:07:11,035 - INFO - Processing batch from index 0 to 3000.
+2024-05-25 10:11:13,092 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-25 10:11:13,093 - INFO - Completed mapping all reactions.
+2024-05-25 10:11:13,142 - INFO - Completed consensus mapping for uspto_3k using graphormer in 242.11 seconds
+2024-05-25 10:11:13,143 - INFO - Starting consensus mapping for uspto_3k using local_mapper
+2024-05-25 10:11:13,143 - INFO - local_mapper process...
+2024-05-25 10:16:24,385 - INFO - Completed consensus mapping for uspto_3k using local_mapper in 311.24 seconds
+2024-05-25 10:16:24,386 - INFO - Starting consensus mapping for uspto_3k using rdt
+2024-05-25 10:16:24,386 - INFO - rdt process...
+2024-05-25 13:41:17,866 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-25 13:41:17,914 - INFO - Completed consensus mapping for uspto_3k using rdt in 12293.53 seconds
+2024-05-25 13:41:18,333 - INFO - Saved AAM uspto_3k results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-25 13:41:18,342 - INFO - Loaded 1758 reactions from golden
+2024-05-25 13:41:18,342 - INFO - Starting consensus mapping for golden using rxn_mapper
+2024-05-25 13:41:18,342 - INFO - rxn_mapper process...
+2024-05-25 13:41:18,343 - INFO - Starting mapping of 1758 reactions in batches of 1758.
+2024-05-25 13:41:18,343 - INFO - Processing batch from index 0 to 1758.
+2024-05-25 13:41:38,748 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-25 13:41:38,748 - INFO - Completed mapping all reactions.
+2024-05-25 13:41:38,765 - INFO - Completed consensus mapping for golden using rxn_mapper in 20.42 seconds
+2024-05-25 13:41:38,766 - INFO - Starting consensus mapping for golden using graphormer
+2024-05-25 13:41:38,766 - INFO - graphormer process...
+2024-05-25 13:41:38,767 - INFO - Starting mapping of 1758 reactions in batches of 1758.
+2024-05-25 13:41:38,767 - INFO - Processing batch from index 0 to 1758.
+2024-05-25 13:43:39,879 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-25 13:43:39,879 - INFO - Completed mapping all reactions.
+2024-05-25 13:43:39,897 - INFO - Completed consensus mapping for golden using graphormer in 121.13 seconds
+2024-05-25 13:43:39,897 - INFO - Starting consensus mapping for golden using local_mapper
+2024-05-25 13:43:39,898 - INFO - local_mapper process...
+2024-05-25 13:46:08,117 - INFO - Completed consensus mapping for golden using local_mapper in 148.22 seconds
+2024-05-25 13:46:08,117 - INFO - Starting consensus mapping for golden using rdt
+2024-05-25 13:46:08,118 - INFO - rdt process...
+2024-05-25 14:31:43,093 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 14:32:08,382 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:09:49,151 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:09:49,245 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:09:50,272 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-25 15:09:50,288 - INFO - Completed consensus mapping for golden using rdt in 5022.17 seconds
+2024-05-25 15:09:50,397 - INFO - Saved AAM golden results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-25 15:09:50,398 - INFO - Loaded 491 reactions from natcomm
+2024-05-25 15:09:50,398 - INFO - Starting consensus mapping for natcomm using rxn_mapper
+2024-05-25 15:09:50,398 - INFO - rxn_mapper process...
+2024-05-25 15:09:50,398 - INFO - Starting mapping of 491 reactions in batches of 491.
+2024-05-25 15:09:50,398 - INFO - Processing batch from index 0 to 491.
+2024-05-25 15:09:55,800 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-25 15:09:55,800 - INFO - Completed mapping all reactions.
+2024-05-25 15:09:55,802 - INFO - Completed consensus mapping for natcomm using rxn_mapper in 5.40 seconds
+2024-05-25 15:09:55,803 - INFO - Starting consensus mapping for natcomm using graphormer
+2024-05-25 15:09:55,803 - INFO - graphormer process...
+2024-05-25 15:09:55,803 - INFO - Starting mapping of 491 reactions in batches of 491.
+2024-05-25 15:09:55,803 - INFO - Processing batch from index 0 to 491.
+2024-05-25 15:10:27,009 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-25 15:10:27,009 - INFO - Completed mapping all reactions.
+2024-05-25 15:10:27,010 - INFO - Completed consensus mapping for natcomm using graphormer in 31.21 seconds
+2024-05-25 15:10:27,010 - INFO - Starting consensus mapping for natcomm using local_mapper
+2024-05-25 15:10:27,011 - INFO - local_mapper process...
+2024-05-25 15:11:04,420 - INFO - Completed consensus mapping for natcomm using local_mapper in 37.41 seconds
+2024-05-25 15:11:04,420 - INFO - Starting consensus mapping for natcomm using rdt
+2024-05-25 15:11:04,420 - INFO - rdt process...
+2024-05-25 15:13:48,449 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:17:44,631 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:18:05,505 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:18:24,251 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-25 15:28:37,290 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-25 15:28:37,292 - INFO - Completed consensus mapping for natcomm using rdt in 1052.87 seconds
+2024-05-25 15:28:37,326 - INFO - Saved AAM natcomm results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-25 15:28:37,331 - INFO - 
+          rxn_mapper  graphormer  local_mapper           rdt
+ecoli       5.192616   24.712734     36.963480   1191.440930
+recon3d     9.931395   45.408187     77.157520   3102.505229
+uspto_3k   39.552069  242.108209    311.241907  12293.527838
+golden     20.423181  121.131330    148.219056   5022.170804
+natcomm     5.404484   31.207542     37.409376   1052.871712
+2024-05-27 19:42:32,584 - INFO - Loaded 273 reactions from ecoli
+2024-05-27 19:42:32,584 - INFO - Starting consensus mapping for ecoli using rxn_mapper
+2024-05-27 19:42:32,584 - INFO - rxn_mapper process...
+2024-05-27 19:42:32,611 - INFO - Starting mapping of 273 reactions in batches of 273.
+2024-05-27 19:42:32,611 - INFO - Processing batch from index 0 to 273.
+2024-05-27 19:42:37,714 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-27 19:42:37,715 - INFO - Completed mapping all reactions.
+2024-05-27 19:42:37,715 - INFO - Completed consensus mapping for ecoli using rxn_mapper in 5.13 seconds
+2024-05-27 19:42:37,715 - INFO - Starting consensus mapping for ecoli using graphormer
+2024-05-27 19:42:37,715 - INFO - graphormer process...
+2024-05-27 19:42:37,716 - INFO - Starting mapping of 273 reactions in batches of 273.
+2024-05-27 19:42:37,716 - INFO - Processing batch from index 0 to 273.
+2024-05-27 19:43:02,428 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-27 19:43:02,428 - INFO - Completed mapping all reactions.
+2024-05-27 19:43:02,428 - INFO - Completed consensus mapping for ecoli using graphormer in 24.71 seconds
+2024-05-27 19:43:02,428 - INFO - Starting consensus mapping for ecoli using local_mapper
+2024-05-27 19:43:02,429 - INFO - local_mapper process...
+2024-05-27 19:43:42,721 - INFO - Completed consensus mapping for ecoli using local_mapper in 40.29 seconds
+2024-05-27 19:43:42,722 - INFO - Starting consensus mapping for ecoli using rdt
+2024-05-27 19:43:42,722 - INFO - rdt process...
+2024-05-27 20:03:32,650 - INFO - Successfully processed Internal Batch from 0 to 273
+2024-05-27 20:03:32,652 - INFO - Completed consensus mapping for ecoli using rdt in 1189.93 seconds
+2024-05-27 20:03:32,667 - INFO - Saved AAM ecoli results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/ecoli/ecoli_aam_reactions.json.gz
+2024-05-27 20:03:32,670 - INFO - Loaded 382 reactions from recon3d
+2024-05-27 20:03:32,670 - INFO - Starting consensus mapping for recon3d using rxn_mapper
+2024-05-27 20:03:32,670 - INFO - rxn_mapper process...
+2024-05-27 20:03:32,670 - INFO - Starting mapping of 382 reactions in batches of 382.
+2024-05-27 20:03:32,670 - INFO - Processing batch from index 0 to 382.
+2024-05-27 20:03:42,544 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-27 20:03:42,544 - INFO - Completed mapping all reactions.
+2024-05-27 20:03:42,545 - INFO - Completed consensus mapping for recon3d using rxn_mapper in 9.88 seconds
+2024-05-27 20:03:42,545 - INFO - Starting consensus mapping for recon3d using graphormer
+2024-05-27 20:03:42,545 - INFO - graphormer process...
+2024-05-27 20:03:42,545 - INFO - Starting mapping of 382 reactions in batches of 382.
+2024-05-27 20:03:42,545 - INFO - Processing batch from index 0 to 382.
+2024-05-27 20:04:28,260 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-27 20:04:28,260 - INFO - Completed mapping all reactions.
+2024-05-27 20:04:28,261 - INFO - Completed consensus mapping for recon3d using graphormer in 45.72 seconds
+2024-05-27 20:04:28,261 - INFO - Starting consensus mapping for recon3d using local_mapper
+2024-05-27 20:04:28,261 - INFO - local_mapper process...
+2024-05-27 20:05:51,951 - INFO - Completed consensus mapping for recon3d using local_mapper in 83.69 seconds
+2024-05-27 20:05:51,952 - INFO - Starting consensus mapping for recon3d using rdt
+2024-05-27 20:05:51,952 - INFO - rdt process...
+2024-05-27 20:58:28,915 - INFO - Successfully processed Internal Batch from 0 to 382
+2024-05-27 20:58:28,917 - INFO - Completed consensus mapping for recon3d using rdt in 3156.96 seconds
+2024-05-27 20:58:28,989 - INFO - Saved AAM recon3d results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/recon3d/recon3d_aam_reactions.json.gz
+2024-05-27 20:58:28,997 - INFO - Loaded 3000 reactions from uspto_3k
+2024-05-27 20:58:28,997 - INFO - Starting consensus mapping for uspto_3k using rxn_mapper
+2024-05-27 20:58:28,997 - INFO - rxn_mapper process...
+2024-05-27 20:58:28,997 - INFO - Starting mapping of 3000 reactions in batches of 3000.
+2024-05-27 20:58:28,997 - INFO - Processing batch from index 0 to 3000.
+2024-05-27 20:59:09,325 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-27 20:59:09,325 - INFO - Completed mapping all reactions.
+2024-05-27 20:59:09,373 - INFO - Completed consensus mapping for uspto_3k using rxn_mapper in 40.38 seconds
+2024-05-27 20:59:09,373 - INFO - Starting consensus mapping for uspto_3k using graphormer
+2024-05-27 20:59:09,373 - INFO - graphormer process...
+2024-05-27 20:59:09,373 - INFO - Starting mapping of 3000 reactions in batches of 3000.
+2024-05-27 20:59:09,374 - INFO - Processing batch from index 0 to 3000.
+2024-05-27 21:03:14,776 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-27 21:03:14,776 - INFO - Completed mapping all reactions.
+2024-05-27 21:03:14,825 - INFO - Completed consensus mapping for uspto_3k using graphormer in 245.45 seconds
+2024-05-27 21:03:14,826 - INFO - Starting consensus mapping for uspto_3k using local_mapper
+2024-05-27 21:03:14,826 - INFO - local_mapper process...
+2024-05-27 21:08:26,003 - INFO - Completed consensus mapping for uspto_3k using local_mapper in 311.18 seconds
+2024-05-27 21:08:26,003 - INFO - Starting consensus mapping for uspto_3k using rdt
+2024-05-27 21:08:26,004 - INFO - rdt process...
+2024-05-28 00:33:07,446 - INFO - Successfully processed Internal Batch from 0 to 3000
+2024-05-28 00:33:07,494 - INFO - Completed consensus mapping for uspto_3k using rdt in 12281.49 seconds
+2024-05-28 00:33:07,590 - INFO - Saved AAM uspto_3k results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/uspto_3k/uspto_3k_aam_reactions.json.gz
+2024-05-28 00:33:07,594 - INFO - Loaded 1758 reactions from golden
+2024-05-28 00:33:07,594 - INFO - Starting consensus mapping for golden using rxn_mapper
+2024-05-28 00:33:07,594 - INFO - rxn_mapper process...
+2024-05-28 00:33:07,594 - INFO - Starting mapping of 1758 reactions in batches of 1758.
+2024-05-28 00:33:07,594 - INFO - Processing batch from index 0 to 1758.
+2024-05-28 00:33:27,873 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-28 00:33:27,873 - INFO - Completed mapping all reactions.
+2024-05-28 00:33:27,891 - INFO - Completed consensus mapping for golden using rxn_mapper in 20.30 seconds
+2024-05-28 00:33:27,891 - INFO - Starting consensus mapping for golden using graphormer
+2024-05-28 00:33:27,891 - INFO - graphormer process...
+2024-05-28 00:33:27,891 - INFO - Starting mapping of 1758 reactions in batches of 1758.
+2024-05-28 00:33:27,891 - INFO - Processing batch from index 0 to 1758.
+2024-05-28 00:35:28,514 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-28 00:35:28,515 - INFO - Completed mapping all reactions.
+2024-05-28 00:35:28,532 - INFO - Completed consensus mapping for golden using graphormer in 120.64 seconds
+2024-05-28 00:35:28,533 - INFO - Starting consensus mapping for golden using local_mapper
+2024-05-28 00:35:28,533 - INFO - local_mapper process...
+2024-05-28 00:38:03,365 - INFO - Completed consensus mapping for golden using local_mapper in 154.83 seconds
+2024-05-28 00:38:03,366 - INFO - Starting consensus mapping for golden using rdt
+2024-05-28 00:38:03,366 - INFO - rdt process...
+2024-05-28 01:23:39,814 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 01:24:04,990 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:01:50,555 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:01:50,686 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:01:51,742 - INFO - Successfully processed Internal Batch from 0 to 1758
+2024-05-28 02:01:51,759 - INFO - Completed consensus mapping for golden using rdt in 5028.39 seconds
+2024-05-28 02:01:51,811 - INFO - Saved AAM golden results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/golden/golden_aam_reactions.json.gz
+2024-05-28 02:01:51,813 - INFO - Loaded 491 reactions from natcomm
+2024-05-28 02:01:51,813 - INFO - Starting consensus mapping for natcomm using rxn_mapper
+2024-05-28 02:01:51,814 - INFO - rxn_mapper process...
+2024-05-28 02:01:51,814 - INFO - Starting mapping of 491 reactions in batches of 491.
+2024-05-28 02:01:51,814 - INFO - Processing batch from index 0 to 491.
+2024-05-28 02:01:57,151 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-28 02:01:57,151 - INFO - Completed mapping all reactions.
+2024-05-28 02:01:57,153 - INFO - Completed consensus mapping for natcomm using rxn_mapper in 5.34 seconds
+2024-05-28 02:01:57,153 - INFO - Starting consensus mapping for natcomm using graphormer
+2024-05-28 02:01:57,154 - INFO - graphormer process...
+2024-05-28 02:01:57,154 - INFO - Starting mapping of 491 reactions in batches of 491.
+2024-05-28 02:01:57,154 - INFO - Processing batch from index 0 to 491.
+2024-05-28 02:02:28,044 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-28 02:02:28,044 - INFO - Completed mapping all reactions.
+2024-05-28 02:02:28,045 - INFO - Completed consensus mapping for natcomm using graphormer in 30.89 seconds
+2024-05-28 02:02:28,045 - INFO - Starting consensus mapping for natcomm using local_mapper
+2024-05-28 02:02:28,045 - INFO - local_mapper process...
+2024-05-28 02:03:06,893 - INFO - Completed consensus mapping for natcomm using local_mapper in 38.85 seconds
+2024-05-28 02:03:06,894 - INFO - Starting consensus mapping for natcomm using rdt
+2024-05-28 02:03:06,894 - INFO - rdt process...
+2024-05-28 02:05:52,774 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:09:48,921 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:10:10,265 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:10:28,958 - ERROR - Error in original SMILES, could have ~ in reaction smiles
+2024-05-28 02:20:40,211 - INFO - Successfully processed Internal Batch from 0 to 491
+2024-05-28 02:20:40,213 - INFO - Completed consensus mapping for natcomm using rdt in 1053.32 seconds
+2024-05-28 02:20:40,283 - INFO - Saved AAM natcomm results to /homes/biertank/tieu/Documents/Project/TACsy/SynTemp/Data/AAM/unbalance/natcomm/natcomm_aam_reactions.json.gz
+2024-05-28 02:20:40,289 - INFO - 
+          rxn_mapper  graphormer  local_mapper           rdt
+ecoli       5.130781   24.713289     40.292902   1189.930139
+recon3d     9.875396   45.715260     83.690366   3156.964881
+uspto_3k   40.375809  245.452059    311.176631  12281.490290
+golden     20.297005  120.641184    154.832556   5028.393047
+natcomm     5.339799   30.891627     38.848256   1053.318801

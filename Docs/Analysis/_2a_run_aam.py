@@ -77,4 +77,4 @@ df = pd.DataFrame(time_dict)
 logger.info("\n" + df.to_string())
 
 # Optionally, save the DataFrame to a file for further analysis
-df.to_csv(f"{root_dir}/Data/AAM/unbalance/mapping_times.csv")
+df.to_csv(f"{root_dir}/Data/AAM/results_benchmark/mapping_times.csv")

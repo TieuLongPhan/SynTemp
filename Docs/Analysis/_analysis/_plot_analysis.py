@@ -381,7 +381,7 @@ def plot_rules_distribution(
         ax.set_title(title, fontsize=24)
     else:
         ax.set_title(f"Distribution of {rule_type.capitalize()} Rules", fontsize=16)
-    ax.set_xlabel("Type of Rings", fontsize=18)
+    ax.set_xlabel("Cycle length", fontsize=18)
     ax.set_ylabel(r"Percentage (\%)", fontsize=18)
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
 
