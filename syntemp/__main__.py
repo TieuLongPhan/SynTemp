@@ -25,6 +25,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--n_jobs", type=int, default=1, help="Number of jobs to run in parallel"
+        "--n_jobs", type=int, default=1, help="Number of jobs to run in parallel"
     )
     parser.add_argument("--verbose", type=int, default=2, help="Verbosity level")
     parser.add_argument(
@@ -82,7 +83,7 @@ def read_data(filepath):
 def main():
     args = parse_arguments()
 
-    data = read_data(args.data_path)[0:200000]
+    data = read_data(args.data_path)[0:]
 
     try:
         auto = AutoTemp(
