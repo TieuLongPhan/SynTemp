@@ -3,6 +3,24 @@ import copy
 from typing import List, Dict, Any
 
 
+def is_graph_empty(graph):
+    # Handle different types of graph representations
+    if isinstance(graph, nx.Graph):
+        # For NetworkX graphs
+        return graph.number_of_nodes() == 0
+    elif isinstance(graph, dict):
+        # For adjacency list represented as a dictionary
+        return len(graph) == 0
+    elif isinstance(graph, list):
+        # For adjacency list represented as a list of lists
+        return all(len(row) == 0 for row in graph)
+    elif hasattr(graph, "is_empty"):
+        # For custom graph class with an is_empty method
+        return graph.is_empty()
+    else:
+        raise TypeError("Unsupported graph representation")
+
+
 def is_acyclic_graph(G: nx.Graph) -> bool:
     """
     Determines if the given graph is acyclic.

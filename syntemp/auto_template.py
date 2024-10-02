@@ -1,7 +1,6 @@
 import os
 import glob
 import pandas as pd
-import logging
 from typing import List, Any, Dict, Optional, Tuple
 from syntemp.pipeline import (
     rebalance,
@@ -11,31 +10,12 @@ from syntemp.pipeline import (
     rule_extract,
     write_gml,
 )
-from syntemp.SynUtils.utils import prune_branches, reindex_data, save_database
-
-
-def setup_logger(log_file=None, log_level=logging.INFO):
-    """Setup logging configuration with the ability to handle multiple calls and ensure
-    that directories are created if they don't exist."""
-    log_format = "%(asctime)s - %(levelname)s - %(message)s"
-
-    # Clear all handlers if any exist, to reconfigure logging
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-
-    if log_file:
-        # Check and create the directory path if it doesn't exist
-        log_dir = os.path.dirname(log_file)
-        if log_dir and not os.path.exists(log_dir):
-            os.makedirs(log_dir, exist_ok=True)
-
-        # Configure logging to file
-        logging.basicConfig(
-            filename=log_file, level=log_level, format=log_format, filemode="w"
-        )
-    else:
-        # Configure logging to stdout
-        logging.basicConfig(level=log_level, format=log_format)
+from syntemp.SynUtils.utils import (
+    prune_branches,
+    reindex_data,
+    save_database,
+    setup_logging,
+)
 
 
 class AutoTemp:
@@ -63,6 +43,7 @@ class AutoTemp:
         log_level: str = "INFO",
         clean_data: bool = True,
         get_random_hydrogen: bool = False,
+        fast_process: bool = False,
     ):
         """
         Initializes the AutoTemp class with specified settings for processing chemical
@@ -122,11 +103,12 @@ class AutoTemp:
         self.rerun_aam = rerun_aam
         self.clean_data = clean_data
         self.get_random_hydrogen = get_random_hydrogen
+        self.fast_process = fast_process
 
-        log_level = getattr(logging, log_level.upper(), None)
-        if not isinstance(log_level, int):
-            raise ValueError(f"Invalid log level: {log_level}")
-        setup_logger(log_file, log_level)
+        # log_level = getattr(logging, log_level.upper(), None)
+        # if not isinstance(log_level, int):
+        #     raise ValueError(f"Invalid log level: {log_level}")
+        self.logger = setup_logging("INFO", log_file)
 
     def temp_extract(
         self, data: List[Dict[str, Any]], lib_path: str = None
@@ -147,7 +129,7 @@ class AutoTemp:
 
         if isinstance(data, pd.DataFrame):
             data = data.to_dict("records")
-            logging.info("Data converted to list of dictionaries.")
+            self.logger.info("Data converted to list of dictionaries.")
 
         # Step 1: rebalance and clean the data
         if self.rerun_aam:
@@ -173,7 +155,7 @@ class AutoTemp:
             save_database(aam_data, f"{self.save_dir}/aam.json.gz")
 
         # Step 3: Extract ITS graphs and categorize them
-        logging.info("Extract ITS graphs and categorize them.")
+        self.logger.info("Extract ITS graphs and categorize them.")
         its_correct, its_incorrect, uncertain_hydrogen = extract_its(
             aam_data,
             self.mapper_types,
@@ -184,10 +166,11 @@ class AutoTemp:
             self.refinement_its,
             self.save_dir,
             get_random_results=self.get_random_hydrogen,
+            fast_process=self.fast_process,
         )
 
         # Step 4: Extract rules from the correct ITS graphs
-        logging.info("Extract rules from the correct ITS graphs.")
+        self.logger.info("Extract rules from the correct ITS graphs.")
         reaction_dicts, templates, hier_templates = rule_extract(
             its_correct,
             self.node_label_names,
@@ -197,7 +180,7 @@ class AutoTemp:
             self.save_dir,
         )
         if lib_path is None:
-            logging.info("Write Rules.")
+            self.logger.info("Write Rules.")
             gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
             return (
                 gml_rules,
