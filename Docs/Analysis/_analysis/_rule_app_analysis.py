@@ -233,7 +233,7 @@ def plot_percentage(
     df["Radii"] = [int(i.split("_")[1]) for i in df.index]
 
     # Sort data to group by type and then by radii
-    df = df.sort_values(by=["Type", "Radii"])
+    df = df.sort_values(by=["Radii"])
 
     # Prepare color map for radii using coolwarm
     if color_map is None:
@@ -250,6 +250,7 @@ def plot_percentage(
 
     for i, t in enumerate(df["Type"].unique()):
         for j, r in enumerate(df["Radii"].unique()):
+            # print(t)
             bar_positions = type_positions[i] + j * width
             heights = df[(df["Type"] == t) & (df["Radii"] == r)][column]
             ax.bar(

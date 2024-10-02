@@ -5,6 +5,7 @@
 __pycache__
 *.tar.gz
 *pkl.gz
+*json.gz
 *txt
 _test.py
 *pkl

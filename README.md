@@ -143,13 +143,33 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
   python -m SynTemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
   ```
 
+### Reproduce templates extraction
+  Run these commands from the root of the cloned repository.
+  ```bash
+  python -m syntemp --data_path Data/USPTO_50K_original.csv --log_file Data/Test/log.txt --save_dir Data/Test/ --rebalancing --fix_hydrogen --rerun_aam --n_jobs 3 --batch_size 1000 --rsmi reactions --id ID
+  ```
+    
+## Publication
 
+[SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases](https://chemrxiv.org/engage/chemrxiv/article-details/66f677b751558a15ef4cf5f7)
 
-## Features
+1. . . . 2024; doi:10.26434/chemrxiv-2024-tkm36  This content is a preprint and has not been peer-reviewed.
 
-TODO
+### Citation
+```
+@Article{Phan2024,
+  author={Phan T-L, Weinbauer K, Gonzalez Laffitte ME, Pan Y, Merkle D, Andersen JL, et al},
+  title={SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases},
+  journal={ChemRxiv},
+  year={2024},
+  doi={10.26434/chemrxiv-2024-tkm36},
+  url={https://chemrxiv.org/engage/chemrxiv/article-details/66f677b751558a15ef4cf5f7}
+}
+```
+
 
 ## Contributing
+- [Tieu-Long Phan](https://tieulongphan.github.io/)
 
 
 ## License
@@ -158,4 +178,4 @@ This project is licensed under MIT License - see the [License](LICENSE) file for
 
 ## Acknowledgments
 
-- TODO
+This project has received funding from the European Unions Horizon Europe Doctoral Network programme under the Marie-Skłodowska-Curie grant agreement No 101072930 (TACsy -- Training Alliance for Computational)
