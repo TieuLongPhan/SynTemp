@@ -4,8 +4,6 @@
 *.gml
 .pytest_cache
 __pycache__
-
-
 *.tar.gz
 *pkl.gz
 *json.gz
@@ -13,4 +11,5 @@ __pycache__
 Data/DPO/*
 _test.py
 *pkl
-Backup/*
+Data/Classification/*
+Data/Report/*

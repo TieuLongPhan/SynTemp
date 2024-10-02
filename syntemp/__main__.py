@@ -41,6 +41,11 @@ def parse_arguments():
         "--refinement_its", action="store_true", help="Refine non-equivalent ITS"
     )
     parser.add_argument(
+        "--fast_process",
+        action="store_true",
+        help="Ignore hydrogen adjustment" + " with num_h >= 5",
+    )
+    parser.add_argument(
         "--rerun_aam", action="store_true", help="Run AAM based on mapper types input"
     )
     parser.add_argument("--lib_path", type=str, default=None, help="Library path")
@@ -77,7 +82,7 @@ def read_data(filepath):
 def main():
     args = parse_arguments()
 
-    data = read_data(args.data_path)[:1]
+    data = read_data(args.data_path)[0:200000]
 
     try:
         auto = AutoTemp(
@@ -97,6 +102,7 @@ def main():
             log_file=args.log_file,
             log_level=args.log_level,
             get_random_hydrogen=args.get_random_hydrogen,
+            fast_process=args.fast_process,
         )
         auto.temp_extract(data, lib_path=args.lib_path)
         logging.info("Extraction successful.")

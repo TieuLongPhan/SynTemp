@@ -9,6 +9,9 @@ from syntemp.SynITS.its_construction import ITSConstruction
 from syntemp.SynChemistry.mol_to_graph import MolToGraph
 from syntemp.SynRule.rules_extraction import RuleExtraction
 from syntemp.SynUtils.chemutils import remove_atom_mapping
+from syntemp.SynUtils.utils import setup_logging
+
+logger = setup_logging()
 
 
 class ITSExtraction:
@@ -126,7 +129,7 @@ class ITSExtraction:
                 rules_graphs.append(rules)
 
             except Exception as e:
-                print(f"Error processing {mapper}: {e}")
+                logger.info(f"Error processing {mapper}: {e}")
 
                 # Fallback: Create a one-node graph for ITS and Rules
                 one_node_graph = nx.Graph()
@@ -149,8 +152,10 @@ class ITSExtraction:
 
         graphs_by_map_correct = deepcopy(graphs_by_map)
         graphs_by_map_incorrect = deepcopy(graphs_by_map)
-
-        is_empty_graph_present = any(len(graph.nodes()) == 0 for graph in rules_graphs)
+        is_empty_graph_present = any(
+            (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
+            for graph in rules_graphs
+        )
         # Determine the target dictionary based on conditions
         target_dict = (
             graphs_by_map_incorrect

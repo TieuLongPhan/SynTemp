@@ -11,6 +11,10 @@ from syntemp.SynUtils.graph_utils import (
     get_priority,
 )
 from syntemp.SynITS.its_extraction import ITSExtraction
+from syntemp.SynUtils.utils import setup_logging
+from multiprocessing import Pool
+
+logger = setup_logging()
 
 
 class ITSHAdjuster:
@@ -23,6 +27,7 @@ class ITSHAdjuster:
         ignore_aromaticity: bool = False,
         balance_its: bool = True,
         get_random_results=False,
+        fast_process: bool = False,
     ) -> Dict:
         """
         Processes a single dictionary containing graph information by applying
@@ -48,7 +53,17 @@ class ITSHAdjuster:
         hydrogen counts and aromaticity considerations.
         """
         graphs = deepcopy(graph_data)
+        logger.info(f"{graphs}")
         react_graph, prod_graph, its = graphs[column]
+        is_empty_graph_present = any(
+            (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
+            for graph in graphs[column]
+        )
+
+        if is_empty_graph_present:
+            # Update graph data if any graph is empty
+            graphs["ITSGraph"], graphs["GraphRules"] = None, None
+            return graphs
 
         hcount_change = check_hcount_change(react_graph, prod_graph)
         if hcount_change == 0:
@@ -67,21 +82,32 @@ class ITSHAdjuster:
                 get_random_results,
             )
         else:
-            graph_data = ITSHAdjuster.process_high_hcount_change(
-                graphs,
-                react_graph,
-                prod_graph,
-                its,
-                ignore_aromaticity,
-                return_all,
-                balance_its,
-                get_random_results,
+            if fast_process:
+                graphs["ITSGraph"], graphs["GraphRules"] = None, None
+                return graphs
+            else:
+                graph_data = ITSHAdjuster.process_high_hcount_change(
+                    graphs,
+                    react_graph,
+                    prod_graph,
+                    its,
+                    ignore_aromaticity,
+                    return_all,
+                    balance_its,
+                    get_random_results,
+                )
+        if graph_data["GraphRules"] is not None:
+            is_empty_rc_present = any(
+                (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
+                for graph in graph_data["GraphRules"]
             )
-
+            if is_empty_rc_present:
+                graph_data["ITSGraph"] = None
+                graph_data["GraphRules"] = None
         return graph_data
 
     @staticmethod
-    def update_graph_data(graph_data, react_graph, prod_graph, its):
+    def update_graph_data(graph_data, react_graph, prod_graph, its, ignore=False):
         """
         Update graph data dictionary with new ITS and GraphRules based on the graphs
         provided.
@@ -97,6 +123,8 @@ class ITSHAdjuster:
         graph_data["GraphRules"] = RuleExtraction.extract_reaction_rules(
             react_graph, prod_graph, its, extend=False, n_knn=1
         )
+        if ignore:
+            graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
         return graph_data
 
     @staticmethod
@@ -174,6 +202,7 @@ class ITSHAdjuster:
         combinations_solution = ITSHAdjuster.add_hydrogen_nodes_multiple(
             react_graph, prod_graph
         )
+
         its_list = [
             ITSConstruction.ITSGraph(
                 i[0], i[1], ignore_aromaticity, balance_its=balance_its
@@ -185,17 +214,37 @@ class ITSHAdjuster:
             for i in its_list
         ]
 
+        filtered_reaction_centers = [
+            rc
+            for rc in reaction_centers
+            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0
+        ]
+
+        filtered_combinations_solution = [
+            comb
+            for rc, comb in zip(reaction_centers, combinations_solution)
+            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0
+        ]
+
+        # Update the original lists with the filtered results
+        reaction_centers, combinations_solution = (
+            filtered_reaction_centers,
+            filtered_combinations_solution,
+        )
+
         priority_indices = get_priority(reaction_centers)
         rc_list = [reaction_centers[i] for i in priority_indices]
         its_list = [its_list[i] for i in priority_indices]
         combinations_solution = [combinations_solution[i] for i in priority_indices]
-
         _, equivariant = ITSExtraction.check_equivariant_graph(rc_list)
         pairwise_combinations = len(its_list) - 1
+
         if equivariant == pairwise_combinations:
+
             graph_data = ITSHAdjuster.update_graph_data(
                 graph_data, *combinations_solution[0], its_list[0]
             )
+
         else:
             if get_random_results is True:
                 graph_data = ITSHAdjuster.update_graph_data(
@@ -212,6 +261,48 @@ class ITSHAdjuster:
         return graph_data
 
     @staticmethod
+    def process_single_graph_data_safe(
+        graph_data: Dict,
+        column: str,
+        return_all: bool = False,
+        ignore_aromaticity: bool = False,
+        balance_its: bool = True,
+        get_random_results=False,
+        fast_process: bool = False,
+        job_timeout: int = 1,
+    ) -> Dict:
+        # pool = multiprocessing.pool.ThreadPool(1)
+        pool = Pool(processes=1)
+        try:
+            async_result = pool.apply_async(
+                ITSHAdjuster.process_single_graph_data,
+                (
+                    graph_data,
+                    column,
+                    return_all,
+                    ignore_aromaticity,
+                    balance_its,
+                    get_random_results,
+                    fast_process,
+                ),
+            )
+            graph_data = async_result.get(job_timeout)
+            pool.terminate()
+            pool.join()
+        except Exception as e:
+            logger.error(
+                f"Issue processing graph data: {e} with time-out {job_timeout}s",
+                exc_info=True,
+            )
+            graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
+            pool.terminate()  # Terminate the problematic pool.
+            pool.join()
+        finally:
+            pool.close()
+            pool.join()
+        return graph_data
+
+    @staticmethod
     def process_graph_data_parallel(
         graph_data_list: List[Dict],
         column: str,
@@ -221,6 +312,8 @@ class ITSHAdjuster:
         ignore_aromaticity: bool = False,
         balance_its: bool = True,
         get_random_results: bool = False,
+        fast_process: bool = False,
+        job_timeout: int = 1,
     ) -> List[Dict]:
         """
         Processes a list of dictionaries containing graph information in parallel.
@@ -236,13 +329,15 @@ class ITSHAdjuster:
         - List[Dict]: A list of dictionaries with the updated graph data.
         """
         processed_data = Parallel(n_jobs=n_jobs, verbose=verbose)(
-            delayed(ITSHAdjuster.process_single_graph_data)(
+            delayed(ITSHAdjuster.process_single_graph_data_safe)(
                 graph_data,
                 column,
                 return_all,
                 ignore_aromaticity,
                 balance_its,
                 get_random_results,
+                fast_process,
+                job_timeout,
             )
             for graph_data in graph_data_list
         )

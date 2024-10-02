@@ -1,6 +1,5 @@
 import os
 import shutil
-import logging
 import pandas as pd
 from typing import List, Any, Dict, Optional, Union, Tuple
 from syntemp.SynChemistry.neutralize import Neutralize
@@ -11,13 +10,11 @@ from syntemp.SynITS.its_hadjuster import ITSHAdjuster
 from syntemp.SynITS.its_refinement import ITSRefinement
 from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
 from syntemp.SynRule.rule_writing import RuleWriting
-from syntemp.SynUtils.utils import save_to_pickle, collect_data
+from syntemp.SynUtils.utils import save_to_pickle, collect_data, setup_logging
 from synrbl import Balancer
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+
+logger = setup_logging()
 
 
 def rebalance(
@@ -44,12 +41,12 @@ def rebalance(
     Returns:
     - List[Dict[str, Any]]: A list of dictionaries containing the balanced reactions.
     """
-    logging.info("Starting the rebalancing process.")
+    logger.info("Starting the rebalancing process.")
 
     # Convert DataFrame to list of dictionaries if necessary
     if isinstance(data, pd.DataFrame):
         data = data.to_dict("records")
-        logging.info("Data converted to list of dictionaries.")
+        logger.info("Data converted to list of dictionaries.")
 
     # Initialize the Balancer class with specified parameters
     synrbl = Balancer(
@@ -68,7 +65,7 @@ def rebalance(
         for idx, entry in enumerate(data)
     ]
 
-    logging.info("Rebalancing process completed.")
+    logger.info("Rebalancing process completed.")
     return new_data
 
 
@@ -96,20 +93,20 @@ def clean(
     - List[Dict[str, Any]]: A list of dictionaries with cleaned and standardized
     reaction data.
     """
-    logging.info("Starting the cleaning process.")
+    logger.info("Starting the cleaning process.")
     if isinstance(data, pd.DataFrame):
         data = data.to_dict("records")
-        logging.info("Data converted to list of dictionaries.")
+        logger.info("Data converted to list of dictionaries.")
     data = [{"R-id": value[id], "reactions": value[rsmi]} for value in data]
     data = Neutralize.parallel_fix_unbalanced_charge(data, "reactions", n_jobs)
-    logging.info("Neutralization process completed.")
+    logger.info("Neutralization process completed.")
     data = Deionize.apply_uncharge_smiles_to_reactions(data, Deionize.uncharge_smiles)
-    logging.info("Deionization process completed.")
+    logger.info("Deionization process completed.")
     data = [
         {"R-id": value["R-id"], "reactions": value["standardized_reactions"]}
         for value in data
     ]
-    logging.info("Cleaning process completed.")
+    logger.info("Cleaning process completed.")
     return data
 
 
@@ -138,7 +135,7 @@ def run_aam(
     - List[Dict[str, Any]]: Results of the atom mapping process as a list of
     dictionaries.
     """
-    logging.info("Starting atom mapping consensus process.")
+    logger.info("Starting atom mapping consensus process.")
     aam = AAMConsensus(data, mappers=mapper_types)
     results = aam.batch_consensus(
         data,
@@ -147,7 +144,7 @@ def run_aam(
         job_timeout=job_timeout,
         safe_mode=safe_mode,
     )
-    logging.info("Atom mapping consensus process completed.")
+    logger.info("Atom mapping consensus process completed.")
     return results
 
 
@@ -163,6 +160,8 @@ def extract_its(
     data_name: str = "",
     symbol: str = ">>",
     get_random_results: bool = False,
+    fast_process: bool = False,
+    job_timeout: int = 1,
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -187,18 +186,18 @@ def extract_its(
     - List[dict]: A list of dictionaries containing the processed ITS graph data,
     with keys for correct, incorrect, and uncertain mappings.
     """
-    logging.info(f"Extracting ITS graph with {n_jobs} CPUs.")
+    logger.info(f"Extracting ITS graph with {n_jobs} CPUs.")
 
     if not mapper_types:
         mapper_types = ["rxn_mapper", "graphormer", "local_mapper"]
-        logging.info("No mapper_types provided. Using default mappers.")
+        logger.info("No mapper_types provided. Using default mappers.")
 
     temp_dir = os.path.join(save_dir, "temp_batches") if save_dir else "temp_batches"
     os.makedirs(temp_dir, exist_ok=True)
 
     num_batches = len(data) // batch_size + (len(data) % batch_size > 0)
     for i in range(num_batches):
-        logging.debug(f"Processing batch {i + 1}/{num_batches}")
+        logger.info(f"Processing batch {i + 1}/{num_batches}")
         start_index = i * batch_size
         end_index = min((i + 1) * batch_size, len(data))
         batch_data = data[start_index:end_index]
@@ -215,13 +214,15 @@ def extract_its(
 
         if fix_hydrogen:
             if i == 1 or (i % 10 == 0 and i >= 10):
-                logging.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
+                logger.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
             batch_processed = ITSHAdjuster.process_graph_data_parallel(
                 batch_correct,
                 "ITSGraph",
                 n_jobs=n_jobs,
                 verbose=verbose,
                 get_random_results=get_random_results,
+                fast_process=fast_process,
+                job_timeout=job_timeout,
             )
 
             uncertain_hydrogen = [
@@ -244,26 +245,26 @@ def extract_its(
         )
 
     # Combine saved batch data
-    logging.info("Combine batch data.")
+    logger.info("Combine batch data.")
 
-    logging.info("Processing equivalent ITS correct")
+    logger.info("Processing equivalent ITS correct")
     its_correct = collect_data(num_batches, temp_dir, "batch_correct_{}.pkl")
-    logging.info("Processing unequivalent ITS correct")
+    logger.info("Processing unequivalent ITS correct")
     its_incorrect = collect_data(num_batches, temp_dir, "batch_incorrect_{}.pkl")
     try:
         all_uncertain_hydrogen = []
         if fix_hydrogen:
-            logging.info("Processing ambiguous hydrogen-ITS")
+            logger.info("Processing ambiguous hydrogen-ITS")
             all_uncertain_hydrogen = collect_data(
                 num_batches, temp_dir, "uncertain_hydrogen_{}.pkl"
             )
     except Exception as e:
-        logging.error(f"{e}")
+        logger.error(f"{e}")
         all_uncertain_hydrogen = []
 
-    # logging.info(f"Number of correct mappers before refinement: {len(its_correct)}")
+    # logger.info(f"Number of correct mappers before refinement: {len(its_correct)}")
     if refinement_its:
-        logging.info("Refining unequivalent ITS correct")
+        logger.info("Refining unequivalent ITS correct")
         its_refine = ITSRefinement.process_graphs_in_parallel(
             its_incorrect, mapper_types, n_jobs, verbose
         )
@@ -275,14 +276,14 @@ def extract_its(
 
         its_correct.extend(its_refine)
 
-    logging.info(f"Number of correct mappers: {len(its_correct)}")
-    logging.info(f"Number of incorrect mappers: {len(its_incorrect)}")
-    logging.info(
+    logger.info(f"Number of correct mappers: {len(its_correct)}")
+    logger.info(f"Number of incorrect mappers: {len(its_incorrect)}")
+    logger.info(
         "Number of uncertain hydrogen:"
         + f"{len(data)-len(its_correct)-len(its_incorrect)}"
     )
     if save_dir:
-        logging.info("Combining and saving data")
+        logger.info("Combining and saving data")
 
         save_to_pickle(
             its_correct, os.path.join(save_dir, f"{data_name}_its_correct.pkl.gz")
@@ -331,9 +332,9 @@ def rule_extract(
         hier_cluster = HierarchicalClustering(
             node_label_names, node_label_default, edge_attribute, max_radius
         )
-        logging.info("Hierarchical clustering initialized successfully.")
+        logger.info("Hierarchical clustering initialized successfully.")
         reaction_dicts, templates, hier_templates = hier_cluster.fit(data)
-        logging.info("Clustering completed and data extracted.")
+        logger.info("Clustering completed and data extracted.")
 
         if save_path:
             for obj, name in zip(
@@ -341,11 +342,11 @@ def rule_extract(
                 ["data_cluster.pkl.gz", "templates.pkl.gz", "hier_templates.pkl.gz"],
             ):
                 save_to_pickle(obj, f"{save_path}/{name}")
-                logging.info(f"{name} successfully saved.")
+                logger.info(f"{name} successfully saved.")
 
         return reaction_dicts, templates, hier_templates
     except Exception as e:
-        logging.error("An error occurred during template generation: %s", e)
+        logger.error("An error occurred during template generation: %s", e)
         return None, None, None
 
 
@@ -367,7 +368,6 @@ def write_gml(
     Returns:
     - List: A list of results from the rule extraction process.
     """
-    logging.basicConfig(level=logging.INFO)  # Configuring logging level to INFO
     rules = []
     for radius, template in enumerate(template_data):
         directory_path = None
@@ -376,9 +376,9 @@ def write_gml(
             try:
                 # Ensure directory exists
                 os.makedirs(directory_path, exist_ok=True)
-                logging.info(f"Ensured directory exists at {directory_path}")
+                logger.info(f"Ensured directory exists at {directory_path}")
             except Exception as e:
-                logging.error(f"Failed to create directory {directory_path}: {e}")
+                logger.error(f"Failed to create directory {directory_path}: {e}")
                 continue  # Skip this iteration on failure to create directory
 
         try:
@@ -390,8 +390,8 @@ def write_gml(
                 save_path=directory_path,
             )
             rules.append(write)
-            logging.info(f"Rules extracted for template at radius {radius}")
+            logger.info(f"Rules extracted for template at radius {radius}")
         except Exception as e:
-            logging.error(f"Error extracting rules for radius {radius}: {e}")
+            logger.error(f"Error extracting rules for radius {radius}: {e}")
 
     return rules
