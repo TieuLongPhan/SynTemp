@@ -1,42 +1,32 @@
 # SynTemp
-Graph based Reaction Template Extraction 
+Graph-based Reaction Templates/Rules Extraction 
 
 ## Overview
-This repository is dedicated to the systematic extraction of reaction rules from chemical processes. The primary focus lies in the computational analysis and transformation of molecular reactions into a structured set of rules, facilitating a deeper understanding of reaction mechanisms and pathways.
 
-![screenshot](./Docs/Image/template_extraction_example.png)
+This repository is dedicated to the systematic extraction of reaction rules from reaction databases. Our primary focus is the computational analysis and transformation of molecular reactions into a structured set of rules. This work facilitates a deeper understanding of reaction mechanisms and pathways. The `SynTemp` framework is organized into four main phases:
 
-### Step 1: Reaction Representation
-The initial step involves the representation of chemical reactions, as illustrated below:
-![Chemical Reactions](./Docs/Image/reactions.png)
+1. **AAMs Inference**: Based on ensemble AAMs for accurate atom mapping.
+2. **Imaginary Transition State (ITS) Completion**: Enhances ITS by incorporating hydrogen inference to fully capture the reaction mechanism.
+3. **Reaction Center Detection and Extension**: Focuses on identifying and extending the core active sites of reactions.
+4. **Hierarchical Clustering**: Groups extended reaction centers or partial ITS to analyze reaction patterns.
 
-In this stage, we detail the reactants, products, and the overall reaction scheme, laying the foundation for subsequent computational analysis.
+The general framework and its components are depicted in Figures A, B, and C below.
 
-### Step 2: Atom-Atom Mapping (AAM) and ITS Graph Generation
-Utilizing the Atom-Atom Mapping (AAM) technique, we identify and map corresponding atoms across reactants and products. This mapping is crucial for accurately delineating the Imaginary Transitional State (ITS) of the reaction. The ITS graph, derived from AAM, represents the transitional phase of the reaction, highlighting key changes and interactions at the atomic level.
-![Imaginary Transitional State Graph](./Docs/Image/graph_its.png)
+![screenshot](./Docs/Image/TOC.png)
 
-### Step 3: Rules Extraction
-In the final step, we focus on extracting the underlying rules from the ITS graph. This involves identifying significant nodes and edges that represent the core transformation mechanisms within the reaction. The extracted rules provide a concise and quantifiable description of the reaction process, instrumental for further analysis and application in computational chemistry.
-![Extracted Rules](./Docs/Image/rules.png)
+### Downstream Applications
 
-### Step 4: Rules Application
-![DPO](./Docs/Image/dpo_example.png)
+- **Templates Analysis**: We have developed topological descriptors for ITS graphs to encapsulate the essential information of templates.
+- **Rules Application**: Observes the trade-off between radii and coverage/novelty metrics. Increased coverage tends to reduce the number of output solutions due to the complexities of subgraph matching within the DPO framework. However, it also decreases novelty. This trade-off serves as a precursor to our forthcoming research, which will focus on developing a constrained framework for synthesis planning.
 
 
 ## Table of Contents
-- [Repository Structure](#repository-structure)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Features](#features)
 - [Contributing](#contributing)
+- [Publication](#publication)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
-
-
-## Repository Structure
-
-SynTemp is organized into several key components, each dedicated to a specific aspect of chemical data processing:
 
 
 ## Installation
