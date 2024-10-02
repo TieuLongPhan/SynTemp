@@ -36,8 +36,24 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
 ### Prerequisites
 
 - Python 3.11
-- RDKit 2023.9.5
-- networkx 3.2.1
+- rdkit>=2023.9.5
+- networkx>=3.3
+- fgutils==0.0.17
+- seaborn==0.13.2
+- joblib==1.3.2
+
+If you want to run ensemble AAMs
+
+- dgl==2.1.0
+- dgllife==0.3.2
+- localmapper==0.1.3
+- rxn-chem-utils==1.5.0
+- rxn-utils==2.0.0
+- rxnmapper==0.3.0
+- chython==1.75
+- chytorch==1.60
+- chytorch-rxnmap==1.4
+- torchdata==0.7.1
 
 
 ### Step-by-Step Installation Guide
@@ -69,10 +85,11 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
   ```
 
 4. **Verify Installation:**
-  After installation, you can verify that SynTemp is correctly installed by running a simple test or checking the package version.
+  After installation, you can verify that SynTemp is correctly installed by running a simple test
 
-  ```python
-  python -c "import SynTemp; print(SynTemp.__version__)"
+  ```bash
+  echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" > test.csv
+  python -m syntemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
   ```
 
 ## Usage
@@ -130,7 +147,7 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
 ### Use in command line
   ```bash
   echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" > test.csv
-  python -m SynTemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
+  python -m syntemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
   ```
 
 ### Reproduce templates extraction
@@ -143,7 +160,6 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
 
 [SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases](https://chemrxiv.org/engage/chemrxiv/article-details/66f677b751558a15ef4cf5f7)
 
-1. . . . 2024; doi:10.26434/chemrxiv-2024-tkm36  This content is a preprint and has not been peer-reviewed.
 
 ### Citation
 ```
