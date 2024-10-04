@@ -12,7 +12,7 @@ This repository is dedicated to the systematic extraction of reaction rules from
 
 The general framework and its components are depicted in Figures A, B, and C below.
 
-![screenshot](./Docs/Image/TOC.png)
+![screenshot](https://github.com/TieuLongPhan/SynTemp/raw/main/Docs/Image/TOC.png)
 
 ### Downstream Applications
 
@@ -75,21 +75,20 @@ If you want to run ensemble AAMs
   conda activate syntemp-env
   ```
 
-3. **Cloning and Installing SynTemp:**
-  Clone the SynTemp repository from GitHub and install it:
+3. **Install from PyPi:**
+  The easiest way to use SynTemp is by installing the PyPI package 
+  [syntemp](https://pypi.org/project/syntemp/).
 
-  ```bash
-  git clone https://github.com/TieuLongPhan/SynTemp.git
-  cd SynTemp
-  pip install -r requirements.txt
+  ```
+  pip install syntemp
   ```
 
 4. **Verify Installation:**
-  After installation, you can verify that SynTemp is correctly installed by running a simple test
+  After installation, you can verify that Syn Temp is correctly installed by running a simple test
 
   ```bash
   echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" > test.csv
-  python -m syntemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log log.txt --save_dir ./
+  python -m syntemp --data_path test.csv --rebalancing --id 'R-id' --rsmi 'reaction' --rerun_aam --fix_hydrogen --log_file ./log.txt --save_dir ./
   ```
 
 ## Usage
