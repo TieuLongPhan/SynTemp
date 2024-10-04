@@ -101,7 +101,7 @@ class Tautomerize:
         Returns:
         - str: Canonical SMILES string of the standardized molecule.
         """
-        query = FGQuery(use_smiles=True)
+        query = FGQuery()
         fg = query.get(smiles)
         for item in fg:
             if "hemiketal" in item:
