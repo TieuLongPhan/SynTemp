@@ -27,11 +27,11 @@ dependencies = [
     "chytorch==1.60",
     "chytorch-rxnmap==1.4",
     "torchdata==0.7.1",
-    "rdkit>=2023.9.5",
+    "rdkit>=2024.3.3",
     "networkx>=3.3",
     "seaborn>=0.13.2",
     "joblib>=1.3.2",
-    "synrbl>=0.0.24",
+    "synrbl>=0.0.25",
 ]
 
 [project.urls]
