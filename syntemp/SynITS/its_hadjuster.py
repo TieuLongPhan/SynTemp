@@ -313,7 +313,7 @@ class ITSHAdjuster:
         balance_its: bool = True,
         get_random_results: bool = False,
         fast_process: bool = False,
-        job_timeout: int = 1,
+        job_timeout: int = 5,
     ) -> List[Dict]:
         """
         Processes a list of dictionaries containing graph information in parallel.

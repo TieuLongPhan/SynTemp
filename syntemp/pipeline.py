@@ -161,7 +161,7 @@ def extract_its(
     symbol: str = ">>",
     get_random_results: bool = False,
     fast_process: bool = False,
-    job_timeout: int = 1,
+    job_timeout: int = 5,
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
