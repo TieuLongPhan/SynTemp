@@ -5,7 +5,6 @@ import subprocess
 import tempfile
 
 
-
 class TestCMD(unittest.TestCase):
 
     def setUp(self):

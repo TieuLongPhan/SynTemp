@@ -12,7 +12,6 @@ from syntemp.SynITS.its_construction import ITSConstruction
 from syntemp.SynRule.rules_extraction import RuleExtraction
 
 
-
 logger = setup_logging()
 
 
@@ -178,7 +177,9 @@ class ITSExtraction:
 
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:
-            if "[O]" in Standardize().remove_atom_mapping(mapped_smiles[mapper_names[0]]):
+            if "[O]" in Standardize().remove_atom_mapping(
+                mapped_smiles[mapper_names[0]]
+            ):
                 target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
                 target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
             else:
@@ -220,7 +221,8 @@ class ITSExtraction:
         - export_full (bool): Whether to export the full results. Defaults to False.
         - ignore_aromaticity (bool): Whether to ignore aromaticity in the graph.
         Defaults to False.
-        - confident_mapper (str): The mapper name to use if the check_method is 'RC'. Defaults to 'graphormer'.
+        - confident_mapper (str): The mapper name to use if the check_method is 'RC'.
+        Defaults to 'graphormer'.
         - symbol (str): The symbol to use if the check_method is 'RC'. Defaults to '>>'.
         - sanitize (bool): Whether to sanitize the molecule(s). Defaults to True.
 
