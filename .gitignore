@@ -14,3 +14,4 @@ Data/Report/*
 Data/Temp/Benchmark/Complete/*
 Data/Temp/Benchmark/Hier/*
 Data/Temp/Benchmark/Raw/*
+*.ipynb

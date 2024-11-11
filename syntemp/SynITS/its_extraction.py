@@ -5,11 +5,13 @@ from rdkit import Chem
 from joblib import Parallel, delayed
 from operator import eq
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
+from synutility.SynIO.debug import setup_logging
+from synutility.SynIO.Format.mol_to_graph import MolToGraph
+from synutility.SynChem.Reaction.standardize import Standardize
 from syntemp.SynITS.its_construction import ITSConstruction
-from syntemp.SynChemistry.mol_to_graph import MolToGraph
 from syntemp.SynRule.rules_extraction import RuleExtraction
-from syntemp.SynUtils.chemutils import remove_atom_mapping
-from syntemp.SynUtils.utils import setup_logging
+
+
 
 logger = setup_logging()
 
@@ -19,18 +21,19 @@ class ITSExtraction:
         pass
 
     @staticmethod
-    def graph_from_smiles(smiles: str) -> nx.Graph:
+    def graph_from_smiles(smiles: str, sanitize: bool = True) -> nx.Graph:
         """
         Constructs a graph representation from a SMILES string.
 
         Parameters:
         - smiles (str): A SMILES string representing a molecule or a set of molecules.
+        - sanitize (bool): Whether to sanitize the molecule(s).
 
         Returns:
         - nx.Graph: A graph representation of the molecule(s).
         """
 
-        mol = Chem.MolFromSmiles(smiles)
+        mol = Chem.MolFromSmiles(smiles, sanitize=sanitize)
         graph = MolToGraph().mol_to_graph(mol, drop_non_aam=True)
         return graph
 
@@ -75,6 +78,7 @@ class ITSExtraction:
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
         symbol: str = ">>",
+        sanitize: bool = True,
     ) -> Dict[str, any]:
         """
         Processes mapped SMILES strings representing chemical reactions by constructing
@@ -89,6 +93,15 @@ class ITSExtraction:
         - mapper_names (List[str]): A list of mapper names to be processed.
         - check_method (str): A method to check for isomorphism among the ITS graphs.
         Either 'RC' or 'ITS'. Defaults to 'RC'.
+        - id_column (str): The name of the column in the dataframe that contains the
+        reaction ID. Defaults to 'R-id'.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the reaction
+        graphs. Defaults to False.
+        - confident_mapper (str): The name of the mapper that was used to generate the
+        reaction graphs. Defaults to 'graphormer'.
+        - symbol (str): The symbol used to separate reactants and products in the
+        reaction SMILES string. Defaults to '>>'.
+        - sanitize (bool): Whether to sanitize the molecule(s).
 
         Returns:
         - Dict[str, any]: A dictionary containing graph representations for each reaction
@@ -109,10 +122,10 @@ class ITSExtraction:
                 reactants_side, products_side = mapped_smiles[mapper].split(symbol)
 
                 # Get reactants graph G
-                G = ITSExtraction.graph_from_smiles(reactants_side)
+                G = ITSExtraction.graph_from_smiles(reactants_side, sanitize)
 
                 # Get products graph H
-                H = ITSExtraction.graph_from_smiles(products_side)
+                H = ITSExtraction.graph_from_smiles(products_side, sanitize)
 
                 # Construct the ITS graph
                 ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
@@ -165,7 +178,7 @@ class ITSExtraction:
 
         # Check if mapper_names is not empty to avoid IndexError
         if mapper_names:
-            if "[O]" in remove_atom_mapping(mapped_smiles[mapper_names[0]]):
+            if "[O]" in Standardize().remove_atom_mapping(mapped_smiles[mapper_names[0]]):
                 target_dict["ITSGraph"] = graphs_by_map.get(mapper_names[0], None)
                 target_dict["GraphRules"] = rules_by_map.get(mapper_names[0], None)
             else:
@@ -190,6 +203,7 @@ class ITSExtraction:
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
         symbol: str = ">>",
+        sanitize: bool = True,
     ) -> List[Dict[str, any],]:
         """
         Processes a list of mapped SMILES strings in parallel.
@@ -203,6 +217,12 @@ class ITSExtraction:
         - verbose (int): The verbosity level of the parallel processing.
         - check_method (str): A method to check for isomorphism among the ITS graphs.
         Either 'RC' or 'ITS'. Defaults to 'RC'.
+        - export_full (bool): Whether to export the full results. Defaults to False.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graph.
+        Defaults to False.
+        - confident_mapper (str): The mapper name to use if the check_method is 'RC'. Defaults to 'graphormer'.
+        - symbol (str): The symbol to use if the check_method is 'RC'. Defaults to '>>'.
+        - sanitize (bool): Whether to sanitize the molecule(s). Defaults to True.
 
         Returns:
         - List[Dict[str, any]]: A list of dictionaries containing graph representations
@@ -218,6 +238,7 @@ class ITSExtraction:
                 ignore_aromaticity,
                 confident_mapper,
                 symbol,
+                sanitize,
             )
             for mapped_smiles in mapped_smiles_list
         )

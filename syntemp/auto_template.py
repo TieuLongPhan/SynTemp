@@ -13,9 +13,9 @@ from syntemp.pipeline import (
 from syntemp.SynUtils.utils import (
     prune_branches,
     reindex_data,
-    save_database,
-    setup_logging,
 )
+from synutility.SynIO.data_type import save_database
+from synutility.SynIO.debug import setup_logging
 
 
 class AutoTemp:

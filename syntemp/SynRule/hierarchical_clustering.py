@@ -7,11 +7,16 @@ from syntemp.SynUtils.graph_utils import (
     add_child_ids,
     get_descriptors,
 )
-import logging
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from synutility.SynIO.debug import setup_logging
+
+logger = setup_logging()
+
+# import logging
+
+# logging.basicConfig(
+#     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+# )
 
 
 class HierarchicalClustering(RuleCluster):
@@ -222,8 +227,8 @@ class HierarchicalClustering(RuleCluster):
             reaction_dicts = copy.deepcopy(original_reaction_dicts)
             its_graphs = [value[its_column] for value in reaction_dicts]
 
-            logging.info("Processing with templates")
-            logging.info("Parent level")
+            logger.info("Processing with templates")
+            logger.info("Parent level")
             cluster_indices_0, templates_0 = self.process_level(
                 its_graphs,
                 0,
@@ -239,7 +244,7 @@ class HierarchicalClustering(RuleCluster):
             parent_cluster_indices = cluster_indices_0
             for k in self.radius:
                 if k > 0:
-                    logging.info(f"Child level with radius {k}")
+                    logger.info(f"Child level with radius {k}")
                     cluster_indices_k, templates_k = self.process_child_level(
                         its_graphs,
                         parent_cluster_indices,
