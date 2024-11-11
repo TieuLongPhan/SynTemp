@@ -13,3 +13,4 @@ networkx>=3.3
 seaborn>=0.13.2
 joblib>=1.3.2
 synrbl>=0.0.25
+synutility>=0.0.10

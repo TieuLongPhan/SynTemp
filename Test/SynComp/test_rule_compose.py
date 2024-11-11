@@ -3,7 +3,7 @@ import glob
 import unittest
 from syntemp.SynComp.rule_compose import RuleCompose
 from pathlib import Path
-from syntemp.SynUtils.graph_utils import load_gml_as_text
+from synutility.SynIO.data_type import load_gml_as_text
 from mod import ruleGMLString
 
 root_dir = Path(__file__).parents[2]

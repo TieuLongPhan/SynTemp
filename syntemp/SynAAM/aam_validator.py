@@ -5,9 +5,10 @@ from rdkit import Chem
 from operator import eq
 from joblib import Parallel, delayed
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
+from synutility.SynIO.Format.mol_to_graph import MolToGraph
 from syntemp.SynITS.its_construction import ITSConstruction
+
 from syntemp.SynITS.its_extraction import ITSExtraction
-from syntemp.SynChemistry.mol_to_graph import MolToGraph
 from syntemp.SynRule.rules_extraction import RuleExtraction
 from syntemp.SynUtils.chemutils import enumerate_tautomers, mapping_success_rate
 from itertools import combinations

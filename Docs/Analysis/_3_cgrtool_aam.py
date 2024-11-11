@@ -31,9 +31,12 @@ def parse_reactions(
                 except StopIteration:
                     break
     elif input_file.endswith(".smi") or input_file.endswith(".smiles"):
-        with SMILESRead(
-            input_file, ignore=True, store_log=True, remap=False, header=True
-        ) as ifile, open(input_file) as meta_searcher:
+        with (
+            SMILESRead(
+                input_file, ignore=True, store_log=True, remap=False, header=True
+            ) as ifile,
+            open(input_file) as meta_searcher,
+        ):
             id_tag_position = meta_searcher.readline().strip().split().index(id_tag)
             if id_tag_position is None or id_tag_position == 0:
                 logging.critical(f"No reaction ID tag was found in the header!")

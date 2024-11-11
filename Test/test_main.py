@@ -1,8 +1,8 @@
-import unittest
 import os
+import shutil
+import unittest
 import subprocess
 import tempfile
-import shutil
 
 
 class TestCMD(unittest.TestCase):

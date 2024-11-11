@@ -53,7 +53,6 @@ class ITSHAdjuster:
         hydrogen counts and aromaticity considerations.
         """
         graphs = deepcopy(graph_data)
-        logger.info(f"{graphs}")
         react_graph, prod_graph, its = graphs[column]
         is_empty_graph_present = any(
             (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
