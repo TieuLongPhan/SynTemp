@@ -10,7 +10,6 @@ from synutility.SynIO.debug import setup_logging
 from syntemp.SynAAM.atom_map_consensus import AAMConsensus
 from syntemp.SynITS.its_extraction import ITSExtraction
 from syntemp.SynITS.its_hadjuster import ITSHAdjuster
-from syntemp.SynITS.its_refinement import ITSRefinement
 from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
 from syntemp.SynRule.rule_writing import RuleWriting
 
@@ -158,7 +157,6 @@ def extract_its(
     verbose: int = 1,
     n_jobs: int = 4,
     fix_hydrogen: bool = True,
-    refinement_its: bool = False,
     save_dir: Optional[str] = None,
     data_name: str = "",
     symbol: str = ">>",
@@ -264,20 +262,6 @@ def extract_its(
     except Exception as e:
         logger.error(f"{e}")
         all_uncertain_hydrogen = []
-
-    # logger.info(f"Number of correct mappers before refinement: {len(its_correct)}")
-    if refinement_its:
-        logger.info("Refining unequivalent ITS correct")
-        its_refine = ITSRefinement.process_graphs_in_parallel(
-            its_incorrect, mapper_types, n_jobs, verbose
-        )
-        its_refine = [value for value in its_refine if value]
-        refined_ids = {value["R-id"] for value in its_refine}
-        its_incorrect = [
-            value for value in its_incorrect if value["R-id"] not in refined_ids
-        ]
-
-        its_correct.extend(its_refine)
 
     logger.info(f"Number of correct mappers: {len(its_correct)}")
     logger.info(f"Number of incorrect mappers: {len(its_incorrect)}")

@@ -1,14 +1,16 @@
 import networkx as nx
-from typing import Dict, List, Tuple
-from copy import deepcopy
 from rdkit import Chem
-from joblib import Parallel, delayed
 from operator import eq
+from copy import deepcopy
+from joblib import Parallel, delayed
+from typing import Dict, List, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
+
 from synutility.SynIO.debug import setup_logging
 from synutility.SynIO.Format.mol_to_graph import MolToGraph
+from synutility.SynAAM.its_construction import ITSConstruction
 from synutility.SynChem.Reaction.standardize import Standardize
-from syntemp.SynITS.its_construction import ITSConstruction
+
 from syntemp.SynRule.rules_extraction import RuleExtraction
 
 

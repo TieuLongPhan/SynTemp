@@ -3,7 +3,7 @@ import glob
 import logging
 from typing import List, Set
 from syntemp.SynComp.valence_constrain import ValenceConstrain
-from syntemp.SynUtils.graph_utils import load_gml_as_text
+from synutility.SynIO.data_type import load_gml_as_text
 from mod import RCMatch, ruleGMLString
 
 logging.basicConfig(

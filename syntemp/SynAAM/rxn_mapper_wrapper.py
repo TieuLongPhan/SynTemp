@@ -1,8 +1,7 @@
 from rxnmapper import RXNMapper
-import logging
+from synutility.SynIO.debug import setup_logging
 
-logger = logging.getLogger("rxnmapper")
-logging.basicConfig(level=logging.INFO)
+logger = setup_logging()
 
 rxn_mapper = RXNMapper()
 

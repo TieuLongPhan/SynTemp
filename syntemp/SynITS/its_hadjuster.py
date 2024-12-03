@@ -1,18 +1,21 @@
-import networkx as nx
-from typing import Dict, List, Tuple, Iterable
 import itertools
-from joblib import Parallel, delayed
+import networkx as nx
 from copy import deepcopy
+from multiprocessing import Pool
+from joblib import Parallel, delayed
+from typing import Dict, List, Tuple, Iterable
+
+from synutility.SynIO.debug import setup_logging
+from synutility.SynAAM.its_construction import ITSConstruction
+
+from syntemp.SynITS.its_extraction import ITSExtraction
 from syntemp.SynRule.rules_extraction import RuleExtraction
-from syntemp.SynITS.its_construction import ITSConstruction
 from syntemp.SynUtils.graph_utils import (
     check_hcount_change,
     check_explicit_hydrogen,
     get_priority,
 )
-from syntemp.SynITS.its_extraction import ITSExtraction
-from syntemp.SynUtils.utils import setup_logging
-from multiprocessing import Pool
+
 
 logger = setup_logging()
 

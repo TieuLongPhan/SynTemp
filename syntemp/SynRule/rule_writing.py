@@ -1,7 +1,7 @@
+import os
 import networkx as nx
 from typing import Tuple, Dict, List, Optional
 from joblib import Parallel, delayed
-import os
 
 
 class RuleWriting:

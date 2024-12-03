@@ -1,9 +1,8 @@
 from multiprocessing import Pool, TimeoutError
 from localmapper import localmapper
-import logging
+from synutility.SynIO.debug import setup_logging
 
-logger = logging.getLogger("LocalMapper")
-logging.basicConfig(level=logging.INFO)
+logger = setup_logging()
 
 
 def map_with_local_mapper(batch):

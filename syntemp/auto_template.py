@@ -32,7 +32,6 @@ class AutoTemp:
         safe_mode: bool = False,
         save_dir: Optional[str] = None,
         fix_hydrogen: bool = True,
-        refinement_its: bool = False,
         node_label_names: List[str] = ["element", "charge"],
         node_label_default: List[Any] = ["*", 0],
         edge_attribute: str = "order",
@@ -68,8 +67,6 @@ class AutoTemp:
         None means results are not saved.
         - fix_hydrogen (bool): Whether to fix hydrogen atoms in the ITS graphs.
         Defaults to True.
-        - refinement_its (bool): Whether to refine incorrect ITS graphs.
-        Defaults to False.
         - node_label_names (List[str]): Names of node labels in the graph.
         Defaults to ["element", "charge"].
         - node_label_default (List[Any]): Default values for node labels if unspecified.
@@ -94,7 +91,6 @@ class AutoTemp:
         self.safe_mode = safe_mode
         self.save_dir = save_dir
         self.fix_hydrogen = fix_hydrogen
-        self.refinement_its = refinement_its
         self.node_label_names = node_label_names
         self.node_label_default = node_label_default
         self.edge_attribute = edge_attribute
@@ -163,7 +159,6 @@ class AutoTemp:
             self.verbose,
             self.n_jobs,
             self.fix_hydrogen,
-            self.refinement_its,
             self.save_dir,
             get_random_results=self.get_random_hydrogen,
             fast_process=self.fast_process,

@@ -12,12 +12,6 @@ from synutility.SynIO.debug import setup_logging
 
 logger = setup_logging()
 
-# import logging
-
-# logging.basicConfig(
-#     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-# )
-
 
 class HierarchicalClustering(RuleCluster):
     def __init__(
