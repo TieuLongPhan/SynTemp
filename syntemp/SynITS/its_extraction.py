@@ -1,5 +1,4 @@
 import networkx as nx
-from rdkit import Chem
 from operator import eq
 from copy import deepcopy
 from joblib import Parallel, delayed
@@ -7,12 +6,13 @@ from typing import Dict, List, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 
 from synutility.SynIO.debug import setup_logging
-from synutility.SynIO.Format.mol_to_graph import MolToGraph
 from synutility.SynAAM.its_construction import ITSConstruction
+from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
 from synutility.SynChem.Reaction.standardize import Standardize
+from synutility.SynGraph.Descriptor.graph_signature import GraphSignature
+
 
 from syntemp.SynRule.rules_extraction import RuleExtraction
-
 
 logger = setup_logging()
 
@@ -20,23 +20,6 @@ logger = setup_logging()
 class ITSExtraction:
     def __init__(self):
         pass
-
-    @staticmethod
-    def graph_from_smiles(smiles: str, sanitize: bool = True) -> nx.Graph:
-        """
-        Constructs a graph representation from a SMILES string.
-
-        Parameters:
-        - smiles (str): A SMILES string representing a molecule or a set of molecules.
-        - sanitize (bool): Whether to sanitize the molecule(s).
-
-        Returns:
-        - nx.Graph: A graph representation of the molecule(s).
-        """
-
-        mol = Chem.MolFromSmiles(smiles, sanitize=sanitize)
-        graph = MolToGraph().mol_to_graph(mol, drop_non_aam=True)
-        return graph
 
     @staticmethod
     def check_equivariant_graph(
@@ -52,6 +35,11 @@ class ITSExtraction:
         - List[Tuple[int, int]]: A list of tuples representing pairs of indices of
         isomorphic graphs.
         """
+        # If there's only one graph, no comparison is possible
+        if len(its_graphs) == 1:
+            return [], 0
+
+        # Define node and edge matchers for graph isomorphism check
         nodeLabelNames = ["typesGH"]
         nodeLabelDefault = [()]
         nodeLabelOperator = [eq]
@@ -60,14 +48,18 @@ class ITSExtraction:
         )
         edgeMatch = generic_edge_match("order", 1, eq)
 
+        # List to store classified isomorphic pairs
         classified = []
 
+        # Compare each graph to the first one
         for i in range(1, len(its_graphs)):
-            # Compare the first graph with each subsequent graph
-            if nx.is_isomorphic(
+            if not nx.is_isomorphic(
                 its_graphs[0], its_graphs[i], node_match=nodeMatch, edge_match=edgeMatch
             ):
-                classified.append((0, i))
+                return [], -1  # Early exit if no isomorphism is found
+
+            classified.append((0, i))
+
         return classified, len(classified)
 
     @staticmethod
@@ -78,7 +70,6 @@ class ITSExtraction:
         id_column: str = "R-id",
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
-        symbol: str = ">>",
         sanitize: bool = True,
     ) -> Dict[str, any]:
         """
@@ -114,56 +105,56 @@ class ITSExtraction:
         """
         threshold = len(mapper_names) - 1
         graphs_by_map = {id_column: mapped_smiles.get(id_column, "N/A")}
+        for mapper in mapper_names:
+            graphs_by_map[mapper] = (None, None, None)
         rules_by_map = {id_column: mapped_smiles.get(id_column, "N/A")}
         its_graphs = []
         rules_graphs = []
-
+        sig = []
         for mapper in mapper_names:
             try:
-                reactants_side, products_side = mapped_smiles[mapper].split(symbol)
-
-                # Get reactants graph G
-                G = ITSExtraction.graph_from_smiles(reactants_side, sanitize)
-
-                # Get products graph H
-                H = ITSExtraction.graph_from_smiles(products_side, sanitize)
+                # reactants_side, products_side = mapped_smiles[mapper].split(symbol)
+                G, H = rsmi_to_graph(
+                    mapped_smiles[mapper],
+                    drop_non_aam=True,
+                    light_weight=True,
+                    sanitize=sanitize,
+                )
 
                 # Construct the ITS graph
                 ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
                 its_graphs.append(ITS)
+                graph_rules = RuleExtraction.extract_reaction_rules(
+                    G, H, ITS, extend=False
+                )
+                rc = graph_rules[2]
+                sig_rc = GraphSignature(rc).create_graph_signature()
+                if len(sig) > 0:
+                    if sig[-1] != sig_rc:
+                        rules_graphs = []
+                        break
 
                 # Store graphs and ITS
                 graphs_by_map[mapper] = (G, H, ITS)
 
                 # Extract reaction rules
-                rules_by_map[mapper] = RuleExtraction.extract_reaction_rules(
-                    G, H, ITS, extend=False
-                )
+                rules_by_map[mapper] = graph_rules
                 _, _, rules = rules_by_map[mapper]
                 rules_graphs.append(rules)
 
             except Exception as e:
                 logger.info(f"Error processing {mapper}: {e}")
+                rules_graphs = []
+                break
 
-                # Fallback: Create a one-node graph for ITS and Rules
-                one_node_graph = nx.Graph()
-                one_node_graph.add_node(0)  # Create a graph with a single node
-
-                # Use the one-node graph for ITS and Rules
-                its_graphs.append(one_node_graph)
-                graphs_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
-                rules_by_map[mapper] = (one_node_graph, one_node_graph, one_node_graph)
-                rules_graphs.append(one_node_graph)
-        if len(rules_graphs) > 1:
+        if len(rules_graphs) == len(mapper_names):
             if check_method == "RC":
                 _, equivariant = ITSExtraction.check_equivariant_graph(rules_graphs)
             elif check_method == "ITS":
                 _, equivariant = ITSExtraction.check_equivariant_graph(its_graphs)
         else:
-            equivariant = 0
-        # graphs_by_map['check_equivariant'] = classified
+            equivariant = -1
         graphs_by_map["equivariant"] = equivariant
-
         graphs_by_map_correct = deepcopy(graphs_by_map)
         graphs_by_map_incorrect = deepcopy(graphs_by_map)
         is_empty_graph_present = any(
@@ -198,14 +189,13 @@ class ITSExtraction:
     def parallel_process_smiles(
         mapped_smiles_list: List[Dict[str, str]],
         mapper_names: List[str],
-        n_jobs: int = -1,
-        verbose: int = 10,
+        n_jobs: int = 1,
+        verbose: int = 0,
         id_column: str = "R-id",
         check_method="RC",
         export_full=False,
         ignore_aromaticity: bool = False,
         confident_mapper: str = "graphormer",
-        symbol: str = ">>",
         sanitize: bool = True,
     ) -> List[Dict[str, any],]:
         """
@@ -241,7 +231,6 @@ class ITSExtraction:
                 id_column,
                 ignore_aromaticity,
                 confident_mapper,
-                symbol,
                 sanitize,
             )
             for mapped_smiles in mapped_smiles_list

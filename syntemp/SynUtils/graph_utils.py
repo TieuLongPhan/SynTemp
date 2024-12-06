@@ -128,7 +128,7 @@ def check_graph_type(G: nx.Graph) -> str:
         return "Complex Cyclic"
 
 
-def get_cycle_member_rings(G: nx.Graph) -> List[int]:
+def get_cycle_member_rings(G: nx.Graph, type="minimal") -> List[int]:
     """
     Identifies all cycles in the given graph using cycle bases to ensure no overlap
     and returns a list of the sizes of these cycles (member rings),
@@ -144,7 +144,10 @@ def get_cycle_member_rings(G: nx.Graph) -> List[int]:
         raise TypeError("Input must be a networkx Graph object.")
 
     # Find cycle basis for the graph which gives non-overlapping cycles
-    cycles = nx.minimum_cycle_basis(G)
+    if type == "minimal":
+        cycles = nx.minimum_cycle_basis(G)
+    else:
+        cycles = nx.cycle_basis(G)
     # Determine the size of each cycle (member ring)
     member_rings = [len(cycle) for cycle in cycles]
 
@@ -347,7 +350,9 @@ def get_priority(reaction_centers: List[Any]) -> List[int]:
     """
     # Extract topology types and ring sizes from reaction centers
     topo_type = [check_graph_type(center) for center in reaction_centers]
-    cyclic = [get_cycle_member_rings(center) for center in reaction_centers]
+    cyclic = [
+        get_cycle_member_rings(center, "fundamental") for center in reaction_centers
+    ]
 
     # Adjust ring information based on the graph type
     for index, graph_type in enumerate(topo_type):

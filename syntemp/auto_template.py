@@ -153,15 +153,14 @@ class AutoTemp:
         # Step 3: Extract ITS graphs and categorize them
         self.logger.info("Extract ITS graphs and categorize them.")
         its_correct, its_incorrect, uncertain_hydrogen = extract_its(
-            aam_data,
-            self.mapper_types,
-            self.batch_size,
-            self.verbose,
-            self.n_jobs,
-            self.fix_hydrogen,
-            self.save_dir,
-            get_random_results=self.get_random_hydrogen,
-            fast_process=self.fast_process,
+            data=aam_data,
+            mapper_types=self.mapper_types,
+            batch_size=self.batch_size,
+            verbose=self.verbose,
+            n_jobs=self.n_jobs,
+            fix_hydrogen=self.fix_hydrogen,
+            save_dir=self.save_dir,
+
         )
 
         # Step 4: Extract rules from the correct ITS graphs

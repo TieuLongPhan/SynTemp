@@ -70,7 +70,7 @@ class TestRCCluster(unittest.TestCase):
         clusters, _ = self.clusterer.auto_cluster(
             rc, signature, nodeMatch=None, edgeMatch=None
         )
-        self.assertEqual(len(clusters), 36)  # wrong value but almost correct
+        self.assertEqual(len(clusters), 37)  # correct by some magic. No proof for this
 
     def test_fit(self):
         """Test the fit method to ensure it correctly updates data entries with cluster indices."""

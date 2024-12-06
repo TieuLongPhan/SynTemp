@@ -147,3 +147,37 @@ class RCCluster:
             value["class"] = cluster_indices[key]
 
         return new_data
+
+    def fit_graphs(
+        self, graphs_data: List[nx.Graph], attribute: List[str]
+    ) -> Tuple[List[int], List[Dict[str, Any]]]:
+        """
+        Automatically clusters the input graphs based on provided attributes and
+        determines the cluster indices for each graph. The method may use existing
+        templates for clustering or generate new ones.
+
+        Parameters:
+        - graphs_data (List[nx.Graph]): A list of NetworkX graph objects to cluster.
+        - attribute (List[str]): A list of attributes associated with each graph,
+        used for clustering comparisons.
+
+        Returns:
+        - Tuple[List[int], List[Dict[str, Any]]]:
+            - A list of cluster indices (List[int]) corresponding to each graph in
+            the input list, indicating which cluster each graph belongs to.
+            - A list of updated or newly generated templates (List[Dict[str, Any]]),
+            representing the cluster information or other relevant data for each
+            group of graphs.
+        """
+
+        # Perform clustering without predefined templates
+        _, graph_to_cluster_dict = self.auto_cluster(
+            graphs_data, attribute, self.nodeMatch, self.edgeMatch
+        )
+
+        # Generate the cluster indices based on the clustering result
+        cluster_indices = [
+            graph_to_cluster_dict.get(i, None) for i in range(len(graphs_data))
+        ]
+
+        return cluster_indices
