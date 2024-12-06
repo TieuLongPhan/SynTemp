@@ -59,6 +59,7 @@ class ITSHAdjuster:
         ignore_aromaticity: bool = False,
         balance_its: bool = True,
         get_priority_graph: bool = False,
+        max_hydrogen: int = 7,
     ) -> Dict:
         """
         Processes a single graph data dictionary, applying modifications based on
@@ -73,6 +74,8 @@ class ITSHAdjuster:
         - balance_its (bool): Flag to balance the ITS. Default is True.
         - get_priority_graph (bool): Flag to determine if priority graphs should be
         considered. Default is False.
+        - max_hydrogen (int): Number of hydrogen can be handled in inference step.
+        Number of combination is `max_hydrogen!`.
 
         Returns:
         - Dict: Updated graph data dictionary, reflecting changes based on
@@ -94,7 +97,7 @@ class ITSHAdjuster:
             graph_data = ITSHAdjuster.update_graph_data(
                 graphs, react_graph, prod_graph, its
             )
-        else:
+        elif hcount_change <= max_hydrogen:
             graph_data = ITSHAdjuster.process_multiple_hydrogens(
                 graphs,
                 react_graph,
@@ -103,6 +106,8 @@ class ITSHAdjuster:
                 balance_its,
                 get_priority_graph,
             )
+        else:
+            graphs["ITSGraph"], graphs["GraphRules"] = None, None
         if graph_data["GraphRules"] is not None:
             is_empty_rc_present = any(
                 (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
@@ -121,6 +126,7 @@ class ITSHAdjuster:
         balance_its: bool = True,
         job_timeout: int = 1,
         get_priority_graph: bool = False,
+        max_hydrogen: int = 7,
     ) -> Dict:
         """
         Processes a single graph data dictionary asynchronously, handling potential
@@ -136,6 +142,8 @@ class ITSHAdjuster:
         Default is 1 second.
         - get_priority_graph (bool): Flag to include priority graph processing.
         Default is False.
+        - max_hydrogen (int): Number of hydrogen can be handled in inference step.
+        Number of combination is `max_hydrogen!`.
 
         Returns:
         - Dict: Processed graph data dictionary.
@@ -150,6 +158,7 @@ class ITSHAdjuster:
                     ignore_aromaticity,
                     balance_its,
                     get_priority_graph,
+                    max_hydrogen,
                 ),
             )
             graph_data = async_result.get(job_timeout)
@@ -179,6 +188,7 @@ class ITSHAdjuster:
         job_timeout: int = 5,
         safe: bool = False,
         get_priority_graph: bool = False,
+        max_hydrogen: int = 7,
     ) -> List[Dict]:
         """
         Processes a list of graph data dictionaries in parallel, utilizing multiple jobs
@@ -199,6 +209,8 @@ class ITSHAdjuster:
         Default is False.
         - get_priority_graph (bool): Flag to prioritize graphs.
         Default is False.
+         - max_hydrogen (int): Number of hydrogen can be handled in inference step.
+        Number of combination is `max_hydrogen!`.
 
         Returns:
         - List[Dict]: A list of processed graph data dictionaries.
@@ -212,6 +224,7 @@ class ITSHAdjuster:
                     balance_its,
                     job_timeout,
                     get_priority_graph,
+                    max_hydrogen,
                 )
                 for graph_data in graph_data_list
             )
@@ -223,6 +236,7 @@ class ITSHAdjuster:
                     ignore_aromaticity,
                     balance_its,
                     get_priority_graph,
+                    max_hydrogen,
                 )
                 for graph_data in graph_data_list
             )

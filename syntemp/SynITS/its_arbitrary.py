@@ -49,38 +49,31 @@ class ITSArbitrary:
                 )[2]
                 for i in its_list
             ]
-            return list(rc_list), list(its_list)
+            sigs = [GraphSignature(i).create_graph_signature() for i in rc_list]
+            return list(rc_list), list(its_list), sigs
 
         combinations_solution = ITSHAdjuster.add_hydrogen_nodes_multiple(
-            react_graph, prod_graph
+            react_graph,
+            prod_graph,
+            ignore_aromaticity=ignore_aromaticity,
+            balance_its=balance_its,
+            get_priority_graph=True,
         )
+        # logger.info(5)
+        # logger.info(combinations_solution)
 
-        # Create ITS graphs for each combination solution
-        its_list = [
-            ITSConstruction.ITSGraph(
-                i[0], i[1], ignore_aromaticity, balance_its=balance_its
-            )
-            for i in combinations_solution
-        ]
+        rc_list = []
+        its_list = []
+        rc_sig = []
 
-        # Extract reaction rules for each ITS graph
-        rc_list = [
-            RuleExtraction.extract_reaction_rules(react_graph, prod_graph, i, False, 1)[
-                2
-            ]
-            for i in its_list
-        ]
-
-        # Filter valid reaction graphs and ITS graphs
-        valid_rc_its = [
-            (rc, its)
-            for rc, its in zip(rc_list, its_list)
-            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0
-        ]
-
-        # Unzip valid results
-        rc_list, its_list = zip(*valid_rc_its) if valid_rc_its else ([], [])
-        return list(rc_list), list(its_list)
+        for _, _, its, rc, sig in combinations_solution:
+            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0:
+                rc_list.append(rc)
+                its_list.append(its)
+                rc_sig.append(sig)
+        # logger.info(4)
+        # logger.info(rc_sig)
+        return rc_list, its_list, rc_sig
 
     @staticmethod
     def process_non_equivalent_map(
@@ -105,7 +98,7 @@ class ITSArbitrary:
         - Tuple of (List[nx.Graph], List[nx.Graph]): Lists of reaction graphs and
         ITS graphs.
         """
-        rc_list, its_list = [], []
+        rc_list, its_list, rc_sig = [], [], []
         for mapper in mapped_key:
             try:
                 # Convert SMILES to graphs
@@ -116,15 +109,16 @@ class ITSArbitrary:
                     sanitize=sanitize,
                 )
                 # Process equivalent maps
-                rc, its = ITSArbitrary.process_equivalent_map(
+                rc, its, sig = ITSArbitrary.process_equivalent_map(
                     G, H, ignore_aromaticity, balance_its
                 )
                 # print(rc)
                 rc_list.extend(rc)
                 its_list.extend(its)
+                rc_sig.extend(sig)
             except Exception as e:
                 logger.warning(f"Error processing {mapper}: {e}")
-        return rc_list, its_list
+        return rc_list, its_list, rc_sig
 
     @staticmethod
     def get_unique_graphs_for_clusters(
@@ -197,6 +191,7 @@ class ITSArbitrary:
                 confident_mapper,
                 sanitize,
             )
+            # logger.info(good)
 
             # Ensure equivalence check is valid
             if "equivariant" not in good:
@@ -207,17 +202,20 @@ class ITSArbitrary:
             # Process based on equivalence check
             if good["equivariant"] != (len(mapped_key) - 1):
                 # print(1)
-                rc_list, its_list = ITSArbitrary.process_non_equivalent_map(
+                # logger.info(1)
+                rc_list, its_list, rc_sig = ITSArbitrary.process_non_equivalent_map(
                     data, mapped_key, sanitize, ignore_aromaticity, balance_its
                 )
             else:
+                # logger.info(2)
                 r, p = good[confident_mapper][0], good[confident_mapper][1]
-                rc_list, its_list = ITSArbitrary.process_equivalent_map(
+                rc_list, its_list, rc_sig = ITSArbitrary.process_equivalent_map(
                     r, p, ignore_aromaticity, balance_its
                 )
-
-            sig = [GraphSignature(i).create_graph_signature() for i in rc_list]
-            cluster_indices = RCCluster().fit_graphs(rc_list, sig)
+            # logger.info(3)
+            # logger.info(rc_list)
+            # sig = [GraphSignature(i).create_graph_signature() for i in rc_list]
+            cluster_indices = RCCluster().fit_graphs(rc_list, rc_sig)
 
             new_rc = ITSArbitrary.get_unique_graphs_for_clusters(
                 rc_list, cluster_indices
@@ -268,7 +266,7 @@ class ITSArbitrary:
         RC and ITS graphs for each reaction.
         """
 
-        logger.info(f"Starting parallel ITS graph expansion with {n_jobs} jobs.")
+        # logger.info(f"Starting parallel ITS graph expansion with {n_jobs} jobs.")
 
         try:
             results = Parallel(n_jobs=n_jobs, verbose=verbose)(
@@ -296,9 +294,9 @@ class ITSArbitrary:
                 )
                 data[key]["RC"] = rc
                 data[key]["ITS"] = its
-                logger.info(
-                    f"Processed reaction {data[key].get(id_column)} successfully."
-                )
+                # logger.info(
+                #     f"Processed reaction {data[key].get(id_column)} successfully."
+                # )
             except Exception as e:
                 logger.warning(f"Error processing reaction at index {key}: {e}")
                 data[key]["RC"] = []
