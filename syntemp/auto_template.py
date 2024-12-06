@@ -160,7 +160,6 @@ class AutoTemp:
             n_jobs=self.n_jobs,
             fix_hydrogen=self.fix_hydrogen,
             save_dir=self.save_dir,
-
         )
 
         # Step 4: Extract rules from the correct ITS graphs

@@ -1,11 +1,10 @@
 import itertools
 import networkx as nx
-from operator import eq
-from copy import deepcopy
+from copy import deepcopy, copy
 from multiprocessing import Pool
 from joblib import Parallel, delayed
 from typing import Dict, List, Tuple, Iterable
-from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
+
 
 from synutility.SynIO.debug import setup_logging
 from synutility.SynAAM.its_construction import ITSConstruction
@@ -16,6 +15,7 @@ from syntemp.SynITS.hydrogen_utils import (
     check_hcount_change,
     check_explicit_hydrogen,
     get_priority,
+    check_equivariant_graph,
 )
 
 
@@ -26,38 +26,6 @@ class ITSHAdjuster:
     """
     A class for infering hydrogen to complete reaction center or ITS graph.
     """
-
-    @staticmethod
-    def check_equivariant_graph(
-        its_graphs: List[nx.Graph],
-    ) -> Tuple[List[Tuple[int, int]], int]:
-        """
-        Checks for isomorphism among a list of ITS graphs.
-
-        Parameters:
-        - its_graphs (List[nx.Graph]): A list of ITS graphs.
-
-        Returns:
-        - List[Tuple[int, int]]: A list of tuples representing pairs of indices of
-        isomorphic graphs.
-        """
-        nodeLabelNames = ["typesGH"]
-        nodeLabelDefault = [()]
-        nodeLabelOperator = [eq]
-        nodeMatch = generic_node_match(
-            nodeLabelNames, nodeLabelDefault, nodeLabelOperator
-        )
-        edgeMatch = generic_edge_match("order", 1, eq)
-
-        classified = []
-
-        for i in range(1, len(its_graphs)):
-            # Compare the first graph with each subsequent graph
-            if nx.is_isomorphic(
-                its_graphs[0], its_graphs[i], node_match=nodeMatch, edge_match=edgeMatch
-            ):
-                classified.append((0, i))
-        return classified, len(classified)
 
     @staticmethod
     def update_graph_data(
@@ -110,7 +78,7 @@ class ITSHAdjuster:
         - Dict: Updated graph data dictionary, reflecting changes based on
         hydrogen counts and aromaticity.
         """
-        graphs = deepcopy(graph_data)
+        graphs = copy(graph_data)
         react_graph, prod_graph, its = graphs[column]
         is_empty_graph_present = any(
             (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
@@ -286,48 +254,41 @@ class ITSHAdjuster:
         - Dict: Updated graph data after handling hydrogen node adjustments.
         """
         combinations_solution = ITSHAdjuster.add_hydrogen_nodes_multiple(
-            react_graph, prod_graph
+            react_graph,
+            prod_graph,
+            ignore_aromaticity,
+            balance_its,
+            get_priority_graph,
         )
-        # print("length original:", len(combinations_solution))
-        its_list = [
-            ITSConstruction.ITSGraph(
-                i[0], i[1], ignore_aromaticity, balance_its=balance_its
-            )
-            for i in combinations_solution
-        ]
-        # rc_list = [get_rc(i) for i in its_list]
-        rc_list = [
-            RuleExtraction.extract_reaction_rules(react_graph, prod_graph, i, False, 1)[
-                2
-            ]
-            for i in its_list
-        ]
-        rc_list = [
-            rc
-            for rc in rc_list
-            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0
-        ]
-        rc_sig = [GraphSignature(i).create_graph_signature() for i in rc_list]
-        combinations_solution = [
-            comb
-            for rc, comb in zip(rc_list, combinations_solution)
-            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0
-        ]
-        its_list = [
-            ITSConstruction.ITSGraph(
-                i[0], i[1], ignore_aromaticity, balance_its=balance_its
-            )
-            for i in combinations_solution
-        ]
-        if len(rc_sig) != len(set(rc_sig)):
-            _, equivariant = ITSHAdjuster.check_equivariant_graph(rc_list)
-        else:
+        if len(combinations_solution) == 0:
+            graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
+            return graph_data
+
+        filtered_combinations_solution = []
+        react_list = []
+        prod_list = []
+        rc_list = []
+        its_list = []
+        rc_sig = []
+
+        for react, prod, its, rc, sig in combinations_solution:
+            if rc is not None and isinstance(rc, nx.Graph) and rc.number_of_nodes() > 0:
+                filtered_combinations_solution.append((react, prod, rc, its, sig))
+                react_list.append(react)
+                prod_list.append(prod)
+                rc_list.append(rc)
+                its_list.append(its)
+                rc_sig.append(sig)
+
+        if len(set(rc_sig)) != 1:
             equivariant = 0
+        else:
+            _, equivariant = check_equivariant_graph(rc_list)
 
         pairwise_combinations = len(rc_list) - 1
         if equivariant == pairwise_combinations:
             graph_data = ITSHAdjuster.update_graph_data(
-                graph_data, *combinations_solution[0], its_list[0]
+                graph_data, react_list[0], prod_list[0], its_list[0]
             )
         else:
             graph_data["ITSGraph"], graph_data["GraphRules"] = None, None
@@ -336,15 +297,14 @@ class ITSHAdjuster:
                 rc_list = [rc_list[i] for i in priority_indices]
                 rc_sig = [rc_sig[i] for i in priority_indices]
                 its_list = [its_list[i] for i in priority_indices]
-                combinations_solution = [
-                    combinations_solution[i] for i in priority_indices
-                ]
-                if len(rc_sig) != len(set(rc_sig)):
-                    _, equivariant = ITSHAdjuster.check_equivariant_graph(rc_list)
+                react_list = [react_list[i] for i in priority_indices]
+                prod_list = [prod_list[i] for i in priority_indices]
+                if len(set(rc_sig)) == 1:
+                    _, equivariant = check_equivariant_graph(rc_list)
                 pairwise_combinations = len(rc_list) - 1
                 if equivariant == pairwise_combinations:
                     graph_data = ITSHAdjuster.update_graph_data(
-                        graph_data, *combinations_solution[0], its_list[0]
+                        graph_data, react_list[0], prod_list[0], its_list[0]
                     )
         return graph_data
 
@@ -352,6 +312,9 @@ class ITSHAdjuster:
     def add_hydrogen_nodes_multiple(
         react_graph: nx.Graph,
         prod_graph: nx.Graph,
+        ignore_aromaticity: bool,
+        balance_its: bool,
+        get_priority_graph: bool = False,
     ) -> List[Tuple[nx.Graph, nx.Graph]]:
         """
         Adds hydrogen nodes to the copies of the reactant and product graphs based on the
@@ -368,8 +331,8 @@ class ITSHAdjuster:
         - List[Tuple[nx.Graph, nx.Graph]]: A list of tuples, each containing a pair of
         updated reactant and product graphs.
         """
-        react_graph_copy = deepcopy(react_graph)
-        prod_graph_copy = deepcopy(prod_graph)
+        react_graph_copy = react_graph.copy()
+        prod_graph_copy = prod_graph.copy()
         react_explicit_h, hydrogen_nodes = check_explicit_hydrogen(react_graph_copy)
         prod_explicit_h, _ = check_explicit_hydrogen(prod_graph_copy)
         hydrogen_nodes_form, hydrogen_nodes_break = [], []
@@ -407,9 +370,7 @@ class ITSHAdjuster:
 
         updated_graphs = []
         for permutation in permutations:
-            current_react_graph, current_prod_graph = deepcopy(
-                react_graph_copy
-            ), deepcopy(prod_graph_copy)
+            current_react_graph, current_prod_graph = react_graph_copy, prod_graph_copy
 
             new_hydrogen_node_ids = [i for i in permutations_seed]
 
@@ -423,7 +384,23 @@ class ITSHAdjuster:
             current_prod_graph = ITSHAdjuster.add_hydrogen_nodes_multiple_utils(
                 current_prod_graph, zip(hydrogen_nodes_form, permutation)
             )
-            updated_graphs.append((current_react_graph, current_prod_graph))
+            its = ITSConstruction.ITSGraph(
+                current_react_graph,
+                current_prod_graph,
+                ignore_aromaticity=ignore_aromaticity,
+                balance_its=balance_its,
+            )
+            rc = RuleExtraction.extract_reaction_rules(
+                current_react_graph, current_prod_graph, its, False, 1
+            )[2]
+            sig = GraphSignature(rc).create_graph_signature()
+            if get_priority_graph is False:
+                if len(updated_graphs) > 0:
+                    if sig != updated_graphs[-1][-1]:
+                        return []
+            updated_graphs.append(
+                (current_react_graph, current_prod_graph, its, rc, sig)
+            )
         return updated_graphs
 
     @staticmethod
@@ -460,20 +437,20 @@ class ITSHAdjuster:
                 aromatic=False,
                 element="H",
                 atom_map=atom_map_val,
-                isomer="N",
-                partial_charge=0,
-                hybridization=0,
-                in_ring=False,
-                explicit_valence=0,
-                implicit_hcount=0,
+                # isomer="N",
+                # partial_charge=0,
+                # hybridization=0,
+                # in_ring=False,
+                # explicit_valence=0,
+                # implicit_hcount=0,
             )
             new_graph.add_edge(
                 node_id,
                 new_hydrogen_node_id,
                 order=1.0,
-                ez_isomer="N",
+                # ez_isomer="N",
                 bond_type="SINGLE",
-                conjugated=False,
-                in_ring=False,
+                # conjugated=False,
+                # in_ring=False,
             )
         return new_graph

@@ -1,6 +1,39 @@
 import networkx as nx
-from typing import List, Any
+from operator import eq
+from typing import List, Any, Tuple
+from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
+
 from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
+
+
+def check_equivariant_graph(
+    its_graphs: List[nx.Graph],
+) -> Tuple[List[Tuple[int, int]], int]:
+    """
+    Checks for isomorphism among a list of ITS graphs.
+
+    Parameters:
+    - its_graphs (List[nx.Graph]): A list of ITS graphs.
+
+    Returns:
+    - List[Tuple[int, int]]: A list of tuples representing pairs of indices of
+    isomorphic graphs.
+    """
+    nodeLabelNames = ["typesGH"]
+    nodeLabelDefault = [()]
+    nodeLabelOperator = [eq]
+    nodeMatch = generic_node_match(nodeLabelNames, nodeLabelDefault, nodeLabelOperator)
+    edgeMatch = generic_edge_match("order", 1, eq)
+
+    classified = []
+
+    for i in range(1, len(its_graphs)):
+        # Compare the first graph with each subsequent graph
+        if nx.is_isomorphic(
+            its_graphs[0], its_graphs[i], node_match=nodeMatch, edge_match=edgeMatch
+        ):
+            classified.append((0, i))
+    return classified, len(classified)
 
 
 def check_explicit_hydrogen(graph: nx.Graph) -> tuple:
