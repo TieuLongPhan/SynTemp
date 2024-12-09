@@ -82,6 +82,8 @@ If you want to run ensemble AAMs
   ```
   pip install syntemp
   ```
+  pip install syntemp[all]
+  ```
 
 4. **Verify Installation:**
   After installation, you can verify that Syn Temp is correctly installed by running a simple test
