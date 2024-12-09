@@ -85,6 +85,21 @@ class TestITSExtraction(unittest.TestCase):
         self.assertEqual(len(its_true["ITSGraph"][2].nodes()), 2)
         self.assertEqual(len(its_false["ITSGraph"][2].nodes()), 4)
 
+    def test_unsanitize_smiles(self):
+        test_2 = {
+            "R_ID": "R_1",
+            "Map": "[CH2:1]=[CH2:2].[H:3][H:4]>>[CH2:1]([H:3])[CH2:2]([H:4])",
+        }
+        its_true, _ = ITSExtraction.process_mapped_smiles(test_2, ["Map"])
+        its_false, _ = ITSExtraction.process_mapped_smiles(
+            test_2, ["Map"], sanitize=False
+        )
+        self.assertNotEqual(
+            len(its_true["ITSGraph"][2].nodes()), len(its_false["ITSGraph"][2].nodes())
+        )
+        self.assertEqual(len(its_true["ITSGraph"][2].nodes()), 2)
+        self.assertEqual(len(its_false["ITSGraph"][2].nodes()), 4)
+
 
 if __name__ == "__main__":
     unittest.main()

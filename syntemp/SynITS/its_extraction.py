@@ -94,6 +94,15 @@ class ITSExtraction:
         - symbol (str): The symbol used to separate reactants and products in the
         reaction SMILES string. Defaults to '>>'.
         - sanitize (bool): Whether to sanitize the molecule(s).
+        - id_column (str): The name of the column in the dataframe that contains the
+        reaction ID. Defaults to 'R-id'.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the reaction
+        graphs. Defaults to False.
+        - confident_mapper (str): The name of the mapper that was used to generate the
+        reaction graphs. Defaults to 'graphormer'.
+        - symbol (str): The symbol used to separate reactants and products in the
+        reaction SMILES string. Defaults to '>>'.
+        - sanitize (bool): Whether to sanitize the molecule(s).
 
         Returns:
         - Dict[str, any]: A dictionary containing graph representations for each reaction
@@ -210,6 +219,13 @@ class ITSExtraction:
         - verbose (int): The verbosity level of the parallel processing.
         - check_method (str): A method to check for isomorphism among the ITS graphs.
         Either 'RC' or 'ITS'. Defaults to 'RC'.
+        - export_full (bool): Whether to export the full results. Defaults to False.
+        - ignore_aromaticity (bool): Whether to ignore aromaticity in the graph.
+        Defaults to False.
+        - confident_mapper (str): The mapper name to use if the check_method is 'RC'.
+        Defaults to 'graphormer'.
+        - symbol (str): The symbol to use if the check_method is 'RC'. Defaults to '>>'.
+        - sanitize (bool): Whether to sanitize the molecule(s). Defaults to True.
         - export_full (bool): Whether to export the full results. Defaults to False.
         - ignore_aromaticity (bool): Whether to ignore aromaticity in the graph.
         Defaults to False.
