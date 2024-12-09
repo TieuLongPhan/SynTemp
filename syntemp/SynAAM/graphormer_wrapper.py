@@ -1,8 +1,7 @@
-import logging
+from synutility.SynIO.debug import setup_logging
 from chython import smiles
 
-logger = logging.getLogger("graphormer")
-logging.basicConfig(level=logging.INFO)
+logger = setup_logging()
 
 
 def map_with_graphormer(reaction_smiles: str) -> str:

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "syntemp"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
     {name="Tieu Long Phan", email="tieu@bioinf.uni-leipzig.de"}
 ]
@@ -13,10 +13,21 @@ readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
+    "rdkit>=2024.3.3",
+    "networkx>=3.3",
+    "seaborn>=0.13.2",
+    "joblib>=1.3.2",
+    "synrbl>=0.0.25",
+    "synutility>=0.0.13"
+]
+
+[project.optional-dependencies]
+all = [
     "dgl==2.1.0",
     "dgllife==0.3.2",
     "localmapper==0.1.3",
@@ -26,12 +37,7 @@ dependencies = [
     "chython==1.75",
     "chytorch==1.60",
     "chytorch-rxnmap==1.4",
-    "torchdata==0.7.1",
-    "rdkit>=2024.3.3",
-    "networkx>=3.3",
-    "seaborn>=0.13.2",
-    "joblib>=1.3.2",
-    "synrbl>=0.0.25",
+    "torchdata==0.7.1"
 ]
 
 [project.urls]

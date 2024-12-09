@@ -32,7 +32,6 @@ class AutoTemp:
         safe_mode: bool = False,
         save_dir: Optional[str] = None,
         fix_hydrogen: bool = True,
-        refinement_its: bool = False,
         node_label_names: List[str] = ["element", "charge"],
         node_label_default: List[Any] = ["*", 0],
         edge_attribute: str = "order",
@@ -68,8 +67,6 @@ class AutoTemp:
         None means results are not saved.
         - fix_hydrogen (bool): Whether to fix hydrogen atoms in the ITS graphs.
         Defaults to True.
-        - refinement_its (bool): Whether to refine incorrect ITS graphs.
-        Defaults to False.
         - node_label_names (List[str]): Names of node labels in the graph.
         Defaults to ["element", "charge"].
         - node_label_default (List[Any]): Default values for node labels if unspecified.
@@ -94,7 +91,6 @@ class AutoTemp:
         self.safe_mode = safe_mode
         self.save_dir = save_dir
         self.fix_hydrogen = fix_hydrogen
-        self.refinement_its = refinement_its
         self.node_label_names = node_label_names
         self.node_label_default = node_label_default
         self.edge_attribute = edge_attribute
@@ -157,16 +153,13 @@ class AutoTemp:
         # Step 3: Extract ITS graphs and categorize them
         self.logger.info("Extract ITS graphs and categorize them.")
         its_correct, its_incorrect, uncertain_hydrogen = extract_its(
-            aam_data,
-            self.mapper_types,
-            self.batch_size,
-            self.verbose,
-            self.n_jobs,
-            self.fix_hydrogen,
-            self.refinement_its,
-            self.save_dir,
-            get_random_results=self.get_random_hydrogen,
-            fast_process=self.fast_process,
+            data=aam_data,
+            mapper_types=self.mapper_types,
+            batch_size=self.batch_size,
+            verbose=self.verbose,
+            n_jobs=self.n_jobs,
+            fix_hydrogen=self.fix_hydrogen,
+            save_dir=self.save_dir,
         )
 
         # Step 4: Extract rules from the correct ITS graphs

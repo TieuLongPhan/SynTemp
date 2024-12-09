@@ -2,6 +2,8 @@ import unittest
 from syntemp.SynITS.its_extraction import ITSExtraction
 from syntemp.SynITS.its_construction import ITSConstruction
 
+from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
+
 
 class TestITSExtraction(unittest.TestCase):
 
@@ -29,31 +31,15 @@ class TestITSExtraction(unittest.TestCase):
         ]
         self.mapper_names = ["local_mapper", "rxn_mapper", "graphormer"]
 
-    def test_graph_from_smiles(self):
-        graph = ITSExtraction.graph_from_smiles(self.smiles1)
-        self.assertEqual(len(graph.nodes()), 4)
-        self.assertEqual(len(graph.edges()), 3)
-
     def test_check_equivariant_graph(self):
-        react_local_mapper, prod_local_mapper = self.mapped_smiles_list[0][
-            "local_mapper"
-        ].split(">>")
-        G_local = ITSExtraction.graph_from_smiles(react_local_mapper)
-        H_local = ITSExtraction.graph_from_smiles(prod_local_mapper)
+        G_local, H_local = rsmi_to_graph(self.mapped_smiles_list[0]["local_mapper"])
         ITS_local = ITSConstruction.ITSGraph(G_local, H_local)
-
-        react_rxn_mapper, prod_rxn_mapper = self.mapped_smiles_list[0][
-            "rxn_mapper"
-        ].split(">>")
-        G_rxn = ITSExtraction.graph_from_smiles(react_rxn_mapper)
-        H_rxn = ITSExtraction.graph_from_smiles(prod_rxn_mapper)
+        G_rxn, H_rxn = rsmi_to_graph(self.mapped_smiles_list[0]["rxn_mapper"])
         ITS_rxn = ITSConstruction.ITSGraph(G_rxn, H_rxn)
 
-        react_graphormer, prod_graphormer = self.mapped_smiles_list[0][
-            "graphormer"
-        ].split(">>")
-        G_graphormer = ITSExtraction.graph_from_smiles(react_graphormer)
-        H_graphormer = ITSExtraction.graph_from_smiles(prod_graphormer)
+        G_graphormer, H_graphormer = rsmi_to_graph(
+            self.mapped_smiles_list[0]["graphormer"]
+        )
         ITS_graphormer = ITSConstruction.ITSGraph(G_graphormer, H_graphormer)
 
         classified, equivariant = ITSExtraction.check_equivariant_graph(
@@ -82,7 +68,7 @@ class TestITSExtraction(unittest.TestCase):
         self.assertIsNotNone(results[0]["GraphRules"])
 
         # Inequivalent AAM
-        self.assertEqual(results_wrong[0]["equivariant"], 0)
+        self.assertEqual(results_wrong[0]["equivariant"], -1)  # -1 mean exit early
 
     def test_unsanitize_smiles(self):
         test_2 = {

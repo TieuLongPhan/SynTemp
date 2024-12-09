@@ -1,7 +1,7 @@
 import networkx as nx
-from typing import List, Set, Dict, Any
-from joblib import Parallel, delayed
 from itertools import chain
+from joblib import Parallel, delayed
+from typing import List, Set, Dict, Any
 
 
 class RuleExtraction:

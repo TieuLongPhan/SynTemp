@@ -3,9 +3,9 @@ import shutil
 from uuid import uuid4
 from contextlib import contextmanager
 from typing import List
-import logging
+from synutility.SynIO.debug import setup_logging
 
-logger = logging.getLogger("RDT")
+logger = setup_logging()
 
 
 @contextmanager

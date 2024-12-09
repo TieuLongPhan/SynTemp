@@ -82,6 +82,10 @@ If you want to run ensemble AAMs
   ```
   pip install syntemp
   ```
+  Optional if you want to install full version
+  ```
+  pip install syntemp[all]
+  ```
 
 4. **Verify Installation:**
   After installation, you can verify that Syn Temp is correctly installed by running a simple test
@@ -116,7 +120,6 @@ If you want to run ensemble AAMs
       safe_mode=False,
       save_dir=None,
       fix_hydrogen=True,
-      refinement_its=False,
   )
 
   (gml_rules, reaction_dicts, templates, hier_templates,

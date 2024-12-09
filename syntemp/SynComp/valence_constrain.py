@@ -1,8 +1,12 @@
 import importlib.resources
-from syntemp.SynUtils.utils import load_database
-from mod import BondType
-import logging
 from typing import List, Tuple
+from synutility.SynIO.debug import setup_logging
+from synutility.SynIO.data_type import load_database
+
+from mod import BondType
+
+
+logger = setup_logging()
 
 
 class ValenceConstrain:
@@ -70,7 +74,7 @@ class ValenceConstrain:
                     left_label, 0
                 ) or right_valence > self.maxValence.get(right_label, 0):
                     if verbose:
-                        logging.info(
+                        logger.info(
                             f"Bad Rule for vertex {left_label} --->"
                             + "Exceeds max chemical valence"
                         )
@@ -78,7 +82,7 @@ class ValenceConstrain:
             return True
         except Exception as e:
             if log_error:
-                logging.error(f"Error checking rule {rule}: {e}")
+                logger.error(f"Error checking rule {rule}: {e}")
             return False
 
     def split(self, rules: List) -> Tuple[List, List]:

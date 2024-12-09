@@ -24,7 +24,7 @@ def parse_arguments():
         "--rsmi", type=str, default="reactions", help="Reaction SMILES column"
     )
     parser.add_argument(
-        "--n_jobs", type=int, default=1, help="Number of jobs to run in parallel"
+        "--n_jobs", type=int, default=4, help="Number of jobs to run in parallel"
     )
     parser.add_argument("--verbose", type=int, default=2, help="Verbosity level")
     parser.add_argument(
@@ -36,9 +36,6 @@ def parse_arguments():
     )
     parser.add_argument(
         "--fix_hydrogen", action="store_true", help="Enable fixing hydrogen"
-    )
-    parser.add_argument(
-        "--refinement_its", action="store_true", help="Refine non-equivalent ITS"
     )
     parser.add_argument(
         "--fast_process",
@@ -97,7 +94,6 @@ def main():
             safe_mode=args.safe_mode,
             save_dir=args.save_dir,
             fix_hydrogen=args.fix_hydrogen,
-            refinement_its=args.refinement_its,
             rerun_aam=args.rerun_aam,
             log_file=args.log_file,
             log_level=args.log_level,

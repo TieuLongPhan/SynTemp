@@ -1,10 +1,10 @@
-import logging
+from synutility.SynIO.debug import setup_logging
 from typing import List, Dict, Tuple, Callable
 from importlib import import_module
 import importlib.resources
 
 
-logger = logging.getLogger("Consensus")
+logger = setup_logging()
 
 
 class AAMConsensus:

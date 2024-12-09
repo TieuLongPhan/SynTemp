@@ -10,7 +10,6 @@ from synutility.SynIO.debug import setup_logging
 from syntemp.SynAAM.atom_map_consensus import AAMConsensus
 from syntemp.SynITS.its_extraction import ITSExtraction
 from syntemp.SynITS.its_hadjuster import ITSHAdjuster
-from syntemp.SynITS.its_refinement import ITSRefinement
 from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
 from syntemp.SynRule.rule_writing import RuleWriting
 
@@ -158,13 +157,9 @@ def extract_its(
     verbose: int = 1,
     n_jobs: int = 4,
     fix_hydrogen: bool = True,
-    refinement_its: bool = False,
     save_dir: Optional[str] = None,
     data_name: str = "",
-    symbol: str = ">>",
-    get_random_results: bool = False,
-    fast_process: bool = False,
-    job_timeout: int = 5,
+    job_timeout: int = 60,
 ) -> List[dict]:
     """
     Executes the extraction of ITS graphs from reaction data in batches,
@@ -212,19 +207,16 @@ def extract_its(
             verbose=verbose,
             export_full=False,
             check_method="RC",
-            symbol=symbol,
         )
 
         if fix_hydrogen:
             if i == 1 or (i % 10 == 0 and i >= 10):
                 logger.info(f"Fixing hydrogen for batch {i + 1}/{num_batches}.")
-            batch_processed = ITSHAdjuster.process_graph_data_parallel(
+            batch_processed = ITSHAdjuster().process_graph_data_parallel(
                 batch_correct,
                 "ITSGraph",
-                n_jobs=n_jobs,
+                n_jobs=1,
                 verbose=verbose,
-                get_random_results=get_random_results,
-                fast_process=fast_process,
                 job_timeout=job_timeout,
             )
 
@@ -264,20 +256,6 @@ def extract_its(
     except Exception as e:
         logger.error(f"{e}")
         all_uncertain_hydrogen = []
-
-    # logger.info(f"Number of correct mappers before refinement: {len(its_correct)}")
-    if refinement_its:
-        logger.info("Refining unequivalent ITS correct")
-        its_refine = ITSRefinement.process_graphs_in_parallel(
-            its_incorrect, mapper_types, n_jobs, verbose
-        )
-        its_refine = [value for value in its_refine if value]
-        refined_ids = {value["R-id"] for value in its_refine}
-        its_incorrect = [
-            value for value in its_incorrect if value["R-id"] not in refined_ids
-        ]
-
-        its_correct.extend(its_refine)
 
     logger.info(f"Number of correct mappers: {len(its_correct)}")
     logger.info(f"Number of incorrect mappers: {len(its_incorrect)}")
