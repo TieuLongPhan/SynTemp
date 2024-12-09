@@ -1,6 +1,6 @@
+from copy import copy
 import networkx as nx
 from operator import eq
-from copy import deepcopy
 from joblib import Parallel, delayed
 from typing import Dict, List, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
@@ -155,8 +155,8 @@ class ITSExtraction:
         else:
             equivariant = -1
         graphs_by_map["equivariant"] = equivariant
-        graphs_by_map_correct = deepcopy(graphs_by_map)
-        graphs_by_map_incorrect = deepcopy(graphs_by_map)
+        graphs_by_map_correct = copy(graphs_by_map)
+        graphs_by_map_incorrect = copy(graphs_by_map)
         is_empty_graph_present = any(
             (not isinstance(graph, nx.Graph) or graph.number_of_nodes() == 0)
             for graph in rules_graphs
