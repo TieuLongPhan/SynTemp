@@ -287,7 +287,7 @@ def modify_smiles(smiles):
 
 
 def prune_branches(
-    data: List[List[Dict[str, Optional[int]]]]
+    data: List[List[Dict[str, Optional[int]]]],
 ) -> List[List[Dict[str, Optional[int]]]]:
     """
     Prunes branches in a hierarchical structure where any parent does not exist in the

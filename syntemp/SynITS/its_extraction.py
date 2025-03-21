@@ -5,11 +5,11 @@ from joblib import Parallel, delayed
 from typing import Dict, List, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 
-from synutility.SynIO.debug import setup_logging
-from synutility.SynAAM.its_construction import ITSConstruction
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
-from synutility.SynChem.Reaction.standardize import Standardize
-from synutility.SynGraph.Descriptor.graph_signature import GraphSignature
+from synkit.IO.debug import setup_logging
+from synkit.Graph.ITS.its_construction import ITSConstruction
+from synkit.IO.chem_converter import rsmi_to_graph
+from synkit.Chem.Reaction.standardize import Standardize
+from synkit.Graph.Feature.graph_signature import GraphSignature
 
 
 from syntemp.SynRule.rules_extraction import RuleExtraction

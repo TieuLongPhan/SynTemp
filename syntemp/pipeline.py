@@ -2,10 +2,10 @@ import os
 import shutil
 import pandas as pd
 from typing import List, Any, Dict, Optional, Union, Tuple
-from synutility.SynChem.Reaction.neutralize import Neutralize
-from synutility.SynChem.Reaction.deionize import Deionize
-from synutility.SynIO.data_type import save_to_pickle, collect_data
-from synutility.SynIO.debug import setup_logging
+from synkit.Chem.Reaction.neutralize import Neutralize
+from synkit.Chem.Reaction.deionize import Deionize
+from synkit.IO.data_io import save_to_pickle, collect_data
+from synkit.IO.debug import setup_logging
 
 from syntemp.SynAAM.atom_map_consensus import AAMConsensus
 from syntemp.SynITS.its_extraction import ITSExtraction

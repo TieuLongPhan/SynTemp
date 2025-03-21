@@ -1,6 +1,13 @@
 # Changelog
+All notable changes to this project will be documented in this file. 
 
-All notable changes to this project will be documented in this file.  
+## [1.0.0] - 2025-03-21
+
+### Maintainance:
+- Resolve the conflict of Pytorch version, keep 2.2.0 for consistency
+- Update version of mapper, cannot make sure the reproducibility of the paper. For reproducibility, please refer to version 0.0.6 and below.
+
+ 
 
 ## [0.0.6] - 2024-12-09
 

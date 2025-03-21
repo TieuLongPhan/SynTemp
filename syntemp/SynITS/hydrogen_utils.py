@@ -3,7 +3,7 @@ from operator import eq
 from typing import List, Any, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 
-from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
+from synkit.Graph.Feature.graph_descriptors import GraphDescriptor
 
 
 def check_equivariant_graph(

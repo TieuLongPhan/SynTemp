@@ -1,4 +1,4 @@
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 from typing import List, Dict, Tuple, Callable
 from importlib import import_module
 import importlib.resources

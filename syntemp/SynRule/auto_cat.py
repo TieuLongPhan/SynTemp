@@ -3,7 +3,7 @@ import networkx as nx
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from typing import List, Dict, Any, Callable, Optional, Tuple
 
-from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
+from synkit.Graph.Feature.graph_descriptors import GraphDescriptor
 
 
 class AutoCat:

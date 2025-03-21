@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from synutility.SynIO.data_type import load_from_pickle
+from synkit.IO.data_io import load_from_pickle
 from syntemp.SynITS.hydrogen_utils import (
     check_explicit_hydrogen,
     check_hcount_change,

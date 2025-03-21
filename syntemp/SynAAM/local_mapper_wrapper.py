@@ -1,6 +1,6 @@
 from multiprocessing import Pool, TimeoutError
 from localmapper import localmapper
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 
 logger = setup_logging()
 

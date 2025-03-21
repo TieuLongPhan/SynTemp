@@ -1,4 +1,4 @@
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 from chython import smiles
 
 logger = setup_logging()

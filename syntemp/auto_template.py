@@ -14,8 +14,8 @@ from syntemp.SynUtils.utils import (
     prune_branches,
     reindex_data,
 )
-from synutility.SynIO.data_type import save_database
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.data_io import save_database
+from synkit.IO.debug import setup_logging
 
 
 class AutoTemp:

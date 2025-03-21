@@ -8,7 +8,7 @@ from syntemp.SynUtils.graph_utils import (
     get_descriptors,
 )
 
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 
 logger = setup_logging()
 
