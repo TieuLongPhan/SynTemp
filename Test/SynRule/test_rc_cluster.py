@@ -1,8 +1,8 @@
 import time
 import unittest
 from syntemp.SynRule.rc_cluster import RCCluster
-from synutility.SynIO.data_type import load_from_pickle
-from synutility.SynGraph.Descriptor.graph_descriptors import GraphDescriptor
+from synkit.IO.data_io import load_from_pickle
+from synkit.Graph.Feature.graph_descriptors import GraphDescriptor
 
 
 class TestRCCluster(unittest.TestCase):

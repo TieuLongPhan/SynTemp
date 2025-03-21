@@ -6,9 +6,9 @@ from joblib import Parallel, delayed
 from typing import Dict, List, Tuple, Iterable
 
 
-from synutility.SynIO.debug import setup_logging
-from synutility.SynAAM.its_construction import ITSConstruction
-from synutility.SynGraph.Descriptor.graph_signature import GraphSignature
+from synkit.IO.debug import setup_logging
+from synkit.Graph.ITS.its_construction import ITSConstruction
+from synkit.Graph.Feature.graph_signature import GraphSignature
 
 from syntemp.SynRule.rules_extraction import RuleExtraction
 from syntemp.SynITS.hydrogen_utils import (

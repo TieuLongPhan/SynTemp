@@ -1,38 +1,22 @@
-import networkx as nx
 import pandas as pd
-from typing import Dict, List, Tuple, Union, Optional
-from rdkit import Chem
+import networkx as nx
 from operator import eq
+from itertools import combinations
 from joblib import Parallel, delayed
+from typing import Dict, List, Tuple, Union, Optional
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
-from synutility.SynIO.Format.mol_to_graph import MolToGraph
-from syntemp.SynITS.its_construction import ITSConstruction
+
+from synkit.IO.chem_converter import rsmi_to_its
+from synkit.Graph.ITS.its_decompose import get_rc
+from synkit.Graph.ITS.aam_utils import enumerate_tautomers, mapping_success_rate
 
 from syntemp.SynITS.its_extraction import ITSExtraction
-from syntemp.SynRule.rules_extraction import RuleExtraction
-from syntemp.SynUtils.chemutils import enumerate_tautomers, mapping_success_rate
-from itertools import combinations
 
 
 class AAMValidator:
     def __init__(self):
         """Initializes the AAMValidator class."""
         pass
-
-    @staticmethod
-    def graph_from_smiles(smiles: str) -> nx.Graph:
-        """
-        Constructs a graph representation from a SMILES string.
-
-        Parameters:
-        - smiles (str): A SMILES string representing a molecule or a set of molecules.
-
-        Returns:
-        - nx.Graph: A graph representation of the molecule(s).
-        """
-        mol = Chem.MolFromSmiles(smiles)
-        graph = MolToGraph().mol_to_graph(mol, drop_non_aam=True)
-        return graph
 
     @staticmethod
     def check_equivariant_graph(
@@ -96,15 +80,14 @@ class AAMValidator:
         rules_graphs = []
         try:
             for rsmi in [mapped_smile, ground_truth]:
-                reactants_side, products_side = rsmi.split(">>")
-                G = AAMValidator.graph_from_smiles(reactants_side)  # Reactants graph
-                H = AAMValidator.graph_from_smiles(products_side)  # Products graph
 
-                ITS = ITSConstruction.ITSGraph(G, H, ignore_aromaticity)
+                ITS = rsmi_to_its(
+                    rsmi, sanitize=True, drop_non_aam=True, light_weight=True
+                )
                 its_graphs.append(ITS)
 
-                rules = RuleExtraction.extract_reaction_rules(G, H, ITS, extend=False)
-                rules_graphs.append(rules[2])
+                rc = get_rc(ITS)
+                rules_graphs.append(rc)
 
             _, equivariant = AAMValidator.check_equivariant_graph(
                 rules_graphs if check_method == "RC" else its_graphs

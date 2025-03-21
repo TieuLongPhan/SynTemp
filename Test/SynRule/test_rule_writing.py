@@ -1,6 +1,6 @@
 import unittest
 import networkx as nx
-from synutility.SynIO.data_type import load_from_pickle
+from synkit.IO.data_io import load_from_pickle
 from syntemp.SynRule.rule_writing import RuleWriting
 
 

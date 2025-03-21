@@ -2,7 +2,7 @@ import unittest
 from syntemp.SynITS.its_extraction import ITSExtraction
 from syntemp.SynITS.its_construction import ITSConstruction
 
-from synutility.SynIO.Format.smi_to_graph import rsmi_to_graph
+from synkit.IO.chem_converter import rsmi_to_graph
 
 
 class TestITSExtraction(unittest.TestCase):
@@ -79,10 +79,10 @@ class TestITSExtraction(unittest.TestCase):
         its_false, _ = ITSExtraction.process_mapped_smiles(
             test_2, ["Map"], sanitize=False
         )
-        self.assertNotEqual(
+        self.assertEqual(
             len(its_true["ITSGraph"][2].nodes()), len(its_false["ITSGraph"][2].nodes())
-        )
-        self.assertEqual(len(its_true["ITSGraph"][2].nodes()), 2)
+        )  # sanitize and unsanitize now can have hydrogen
+        self.assertEqual(len(its_true["ITSGraph"][2].nodes()), 4)
         self.assertEqual(len(its_false["ITSGraph"][2].nodes()), 4)
 
 

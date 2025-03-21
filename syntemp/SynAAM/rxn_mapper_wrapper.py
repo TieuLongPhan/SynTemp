@@ -1,5 +1,5 @@
 from rxnmapper import RXNMapper
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 
 logger = setup_logging()
 

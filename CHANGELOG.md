@@ -1,6 +1,24 @@
 # Changelog
+All notable changes to this project will be documented in this file. 
 
-All notable changes to this project will be documented in this file.  
+## [1.0.0] - 2025-03-21
+
+### Maintenance
+- **Resolved Pytorch version conflict**: Kept version 2.2.0 for consistency across the codebase.
+- **Updated the mapper version**: Note that the reproducibility of the paper cannot be guaranteed with the latest version. For reproducibility, please refer to version 0.0.6 and below.
+- **Removed `MØD`** from this version for improved functionality.
+- **Replaced `synutility` with `synkit`**: This update ensures consistency and better integration across the modules.
+
+### Deprecated
+- **Deprecation Warning**: The following features will be removed in version 1.0.1:
+  - The `SynUtils`, `SynComp`, and `SynChemistry` modules have been moved to the `synutility` repository.
+  - `ITSConstruction` will be removed, as it has been moved to `synutility`.
+
+### Additional Notes
+- Users are encouraged to transition to the updated modules and take note of upcoming removals to ensure smooth upgrades in future versions.
+
+
+ 
 
 ## [0.0.6] - 2024-12-09
 

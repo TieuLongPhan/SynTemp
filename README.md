@@ -36,24 +36,26 @@ To install and set up the SynTemp framework, follow these steps. Please ensure y
 ### Prerequisites
 
 - Python 3.11
-- rdkit>=2023.9.5
+- rdkit>=2024.3.5
 - networkx>=3.3
-- fgutils==0.0.17
-- seaborn==0.13.2
-- joblib==1.3.2
+- synrbl>=1.0.0
+- synkit>=0.0.4
 
 If you want to run ensemble AAMs
 
 - dgl==2.1.0
 - dgllife==0.3.2
-- localmapper==0.1.3
-- rxn-chem-utils==1.5.0
-- rxn-utils==2.0.0
-- rxnmapper==0.3.0
-- chython==1.75
-- chytorch==1.60
-- chytorch-rxnmap==1.4
+- localmapper>=0.1.5
+- rxn-chem-utils>=1.6.0
+- rxn-utils>=2.0.0
+- rxnmapper>=0.4.1
+- chython==1.78
+- chytorch>=1.65
+- chytorch-rxnmap>=1.4
+- torch==2.2.0
 - torchdata==0.7.1
+
+
 
 
 ### Step-by-Step Installation Guide
@@ -160,18 +162,17 @@ If you want to run ensemble AAMs
     
 ## Publication
 
-[SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases](https://chemrxiv.org/engage/chemrxiv/article-details/66f677b751558a15ef4cf5f7)
+[SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases](https://pubs.acs.org/doi/full/10.1021/acs.jcim.4c01795)
 
 
 ### Citation
 ```
-@Article{Phan2024,
-  author={Phan T-L, Weinbauer K, Gonzalez Laffitte ME, Pan Y, Merkle D, Andersen JL, et al},
+@article{phan2025syntemp,
   title={SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases},
-  journal={ChemRxiv},
-  year={2024},
-  doi={10.26434/chemrxiv-2024-tkm36},
-  url={https://chemrxiv.org/engage/chemrxiv/article-details/66f677b751558a15ef4cf5f7}
+  author={Phan, Tieu-Long and Weinbauer, Klaus and Laffitte, Marcos E Gonz{\'a}lez and Pan, Yingjie and Merkle, Daniel and Andersen, Jakob L and Fagerberg, Rolf and Flamm, Christoph and Stadler, Peter F},
+  journal={Journal of Chemical Information and Modeling},
+  year={2025},
+  publisher={ACS Publications}
 }
 ```
 

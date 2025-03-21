@@ -3,7 +3,7 @@ import shutil
 from uuid import uuid4
 from contextlib import contextmanager
 from typing import List
-from synutility.SynIO.debug import setup_logging
+from synkit.IO.debug import setup_logging
 
 logger = setup_logging()
 

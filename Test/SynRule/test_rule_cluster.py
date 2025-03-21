@@ -1,6 +1,6 @@
 import unittest
 from syntemp.SynRule.rule_cluster import RuleCluster
-from synutility.SynIO.data_type import load_from_pickle
+from synkit.IO.data_io import load_from_pickle
 
 
 class TestRuleCluster(unittest.TestCase):

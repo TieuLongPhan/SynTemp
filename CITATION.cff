@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Phan"
+  given-names: "Tieu-Long"
+  orcid: "https://orcid.org/0000-0002-3532-2064"
+- family-names: "Weinbauer"
+  given-names: "Klaus"
+  orcid: "https://orcid.org/0000-0002-3349-9157"
+- family-names: "Merkle"
+  given-names: "Daniel"
+  orcid: "https://orcid.org/0000-0001-7792-375X"
+- family-names: "Andersen"
+  given-names: "Jakob L."
+  orcid: "https://orcid.org/0000-0002-4165-3732"
+- family-names: "Fagerberg"
+  given-names: "Rolf"
+- family-names: "Stadler"
+  given-names: "Peter F."
+  orcid: "https://orcid.org/0000-0002-5016-5191"
+title: "SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases"
+version: 1.0.0
+doi: 10.1021/acs.jcim.4c01795
+preferred-citation:
+  type: "article"
+  authors:
+  - family-names: "Phan"
+    given-names: "Tieu-Long"
+    orcid: "https://orcid.org/0000-0002-3532-2064"
+  - family-names: "Weinbauer"
+    given-names: "Klaus"
+    orcid: "https://orcid.org/0000-0002-3349-9157"
+  - family-names: "Merkle"
+    given-names: "Daniel"
+    orcid: "https://orcid.org/0000-0001-7792-375X"
+  - family-names: "Andersen"
+    given-names: "Jakob L."
+    orcid: "https://orcid.org/0000-0002-4165-3732"
+  - family-names: "Fagerberg"
+    given-names: "Rolf"
+  - family-names: "Stadler"
+    given-names: "Peter F."
+    orcid: "https://orcid.org/0000-0002-5016-5191"
+  title: "SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases"
+  journal: "Journal of Chemical Information and Modeling"
+  year: 2025
+  month: 2
+  volume: 
+  number: 
+  doi: "10.1021/acs.jcim.4c01795"
+  url: "https://doi.org/10.1021/acs.jcim.4c01795"

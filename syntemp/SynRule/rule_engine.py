@@ -1,5 +1,5 @@
 from typing import List
-from syntemp.SynUtils.graph_utils import load_gml_as_text
+from synkit.IO.data_io import load_gml_as_text
 from mod import *
 
 

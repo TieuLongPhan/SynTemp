@@ -1,7 +1,7 @@
 import unittest
 import networkx as nx
 from copy import deepcopy
-from synutility.SynIO.data_type import load_from_pickle
+from synkit.IO.data_io import load_from_pickle
 from syntemp.SynITS.its_hadjuster import ITSHAdjuster
 
 
