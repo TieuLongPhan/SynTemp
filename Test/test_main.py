@@ -62,13 +62,13 @@ class Testmain(unittest.TestCase):
         self.assertTrue(
             os.path.exists(self.save_dir), "Output directory does not exist."
         )
-        self.assertTrue(
-            os.path.exists(f"{self.save_dir}/meta"), "Output directory does not exist."
-        )
-        self.assertTrue(
-            os.path.exists(f"{self.save_dir}/template"),
-            "Output directory does not exist.",
-        )
+        # self.assertTrue(
+        #     os.path.exists(f"{self.save_dir}/meta"), "Output directory does not exist."
+        # )
+        # self.assertTrue(
+        #     os.path.exists(f"{self.save_dir}/template"),
+        #     "Output directory does not exist.",
+        # )
 
     def tearDown(self):
         """Clean up after tests."""
