@@ -7,6 +7,12 @@ authors:
 - family-names: "Weinbauer"
   given-names: "Klaus"
   orcid: "https://orcid.org/0000-0002-3349-9157"
+- family-names: "Laffitte"
+  given-names: "Marcos E. González"
+  orcid: "https://orcid.org/0009-0008-2307-595X"
+- family-names: "Pan"
+  given-names: "Yingjie"
+  orcid: "https://orcid.org/0009-0009-4370-6648"
 - family-names: "Merkle"
   given-names: "Daniel"
   orcid: "https://orcid.org/0000-0001-7792-375X"
@@ -15,6 +21,10 @@ authors:
   orcid: "https://orcid.org/0000-0002-4165-3732"
 - family-names: "Fagerberg"
   given-names: "Rolf"
+  orcid: "https://orcid.org/0000-0003-1004-3314"
+- family-names: "Flamm"
+  given-names: "Christoph"
+  orcid: "https://orcid.org/0000-0001-5500-2415"
 - family-names: "Stadler"
   given-names: "Peter F."
   orcid: "https://orcid.org/0000-0002-5016-5191"
@@ -30,6 +40,12 @@ preferred-citation:
   - family-names: "Weinbauer"
     given-names: "Klaus"
     orcid: "https://orcid.org/0000-0002-3349-9157"
+  - family-names: "Laffitte"
+    given-names: "Marcos E. González"
+    orcid: "https://orcid.org/0009-0008-2307-595X"
+  - family-names: "Pan"
+    given-names: "Yingjie"
+    orcid: "https://orcid.org/0009-0009-4370-6648"
   - family-names: "Merkle"
     given-names: "Daniel"
     orcid: "https://orcid.org/0000-0001-7792-375X"
@@ -38,6 +54,10 @@ preferred-citation:
     orcid: "https://orcid.org/0000-0002-4165-3732"
   - family-names: "Fagerberg"
     given-names: "Rolf"
+    orcid: "https://orcid.org/0000-0003-1004-3314"
+  - family-names: "Flamm"
+    given-names: "Christoph"
+    orcid: "https://orcid.org/0000-0001-5500-2415"
   - family-names: "Stadler"
     given-names: "Peter F."
     orcid: "https://orcid.org/0000-0002-5016-5191"
@@ -45,7 +65,7 @@ preferred-citation:
   journal: "Journal of Chemical Information and Modeling"
   year: 2025
   month: 2
-  volume: 
-  number: 
+  volume: 65
+  number: 6
   doi: "10.1021/acs.jcim.4c01795"
   url: "https://doi.org/10.1021/acs.jcim.4c01795"
