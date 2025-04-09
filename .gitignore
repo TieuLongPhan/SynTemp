@@ -16,3 +16,6 @@ Data/Temp/Benchmark/Hier/*
 Data/Temp/Benchmark/Raw/*
 *.ipynb
 *dev_scripts
+*.list.json
+*.csv
+*.json.gz

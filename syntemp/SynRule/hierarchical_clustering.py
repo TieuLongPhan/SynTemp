@@ -3,7 +3,7 @@ import pandas as pd
 import copy
 from syntemp.SynRule.rules_extraction import RuleExtraction
 from syntemp.SynRule.rule_cluster import RuleCluster
-from syntemp.SynUtils.graph_utils import (
+from syntemp.utils.graph_utils import (
     add_child_ids,
     get_descriptors,
 )
@@ -178,8 +178,8 @@ class HierarchicalClustering(RuleCluster):
             ]
             new_templates = [
                 {
-                    "Cluster_id": (
-                        template["Cluster_id"] + max_index_template
+                    "cls_id": (
+                        template["cls_id"] + max_index_template
                         if key is not None
                         else None
                     ),
@@ -254,7 +254,7 @@ class HierarchicalClustering(RuleCluster):
                     parent_cluster_indices = cluster_indices_k
 
             cluster_df = pd.DataFrame(
-                {f"Cluster_R{k}": idx for k, idx in zip(self.radius, cluster_indices)}
+                {f"R{k}": idx for k, idx in zip(self.radius, cluster_indices)}
             ).to_dict("records")
             for key, value in enumerate(reaction_dicts):
                 value.update(cluster_df[key])

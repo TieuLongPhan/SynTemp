@@ -15,7 +15,7 @@ class TestRuleCluster(unittest.TestCase):
     def test_fit(self):
         cluster_indices, templates = self.cluster.fit(self.data_rc)
         assert any(isinstance(x, int) for x in cluster_indices)
-        assert "Cluster_id" in templates[0].keys()
+        assert "cls_id" in templates[0].keys()
         assert "RC" in templates[0].keys()
         assert "Parent" in templates[0].keys()
         assert "Percentage" in templates[0].keys()

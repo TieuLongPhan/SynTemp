@@ -11,6 +11,7 @@ class TestAutoTemp(unittest.TestCase):
 
     def setUp(self) -> None:
         self.data = load_database(f"{root_dir}/Data/Testcase/demo.json.gz")[:20]
+        self.radii = 3
         self.auto = AutoTemp(
             rebalancing=True,
             mapper_types=["rxn_mapper", "graphormer", "local_mapper"],
@@ -23,20 +24,13 @@ class TestAutoTemp(unittest.TestCase):
             safe_mode=False,
             save_dir=f"{root_dir}/Data/Testcase/Test",
             fix_hydrogen=True,
+            max_radius=self.radii,
         )
 
     def test_temp_extract(self):
-        (rules, _, _, _, _, _) = self.auto.temp_extract(self.data, lib_path=None)
-        self.assertIn("ruleID", rules[0][0])
-        self.assertEqual(len(rules[0]), 9)
-
-    # def test_temp_extract_lib(self):
-    #     print(f"{root_dir}/Data/Testcase/Compose/SingleRule")
-    #     (rules, _, _, _, _, _) = self.auto.temp_extract(
-    #         self.data, lib_path=f"{root_dir}/Data/Testcase/Compose/SingleRule"
-    #     )  # 1 rules exist
-    #     self.assertIn("ruleID", rules[0][0])
-    #     self.assertEqual(len(rules[0]), 7)
+        (_, templates, _, _, _) = self.auto.temp_extract(self.data, lib_path=None)
+        self.assertIn("gml", templates[0][0])
+        self.assertEqual(len(templates), self.radii + 1)
 
 
 if __name__ == "__main__":

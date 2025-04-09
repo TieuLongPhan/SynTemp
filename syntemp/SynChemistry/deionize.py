@@ -5,7 +5,7 @@ from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit import Chem
 from itertools import permutations
 from joblib import Parallel, delayed
-from syntemp.SynUtils.chemutils import get_combined_molecular_formula
+from syntemp.utils.chemutils import get_combined_molecular_formula
 
 
 class Deionize:

@@ -1,6 +1,6 @@
 import os
 import glob
-from syntemp.SynUtils.graph_utils import load_gml_as_text
+from syntemp.utils.graph_utils import load_gml_as_text
 from mod import ruleGMLString, inputRules
 
 

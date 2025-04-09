@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 import pandas as pd
-from syntemp.SynUtils.utils import load_database
+from syntemp.utils._misc import load_database
 from syntemp.auto_template import AutoTemp
 
 

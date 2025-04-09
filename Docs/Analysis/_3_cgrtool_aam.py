@@ -207,7 +207,7 @@ if __name__ == "__main__":
 
     root_dir = Path(__file__).parents[2]
     sys.path.append(str(root_dir))
-    from syntemp.SynUtils.utils import load_database, save_database
+    from syntemp.utils._misc import load_database, save_database
     import pandas as pd
 
     df = pd.read_csv(f"{root_dir}/Data/AAM/cgrtool_benchmark/USPTO_3K.csv")

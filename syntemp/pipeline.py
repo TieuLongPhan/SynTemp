@@ -1,11 +1,17 @@
 import os
 import shutil
+import random
 import pandas as pd
+from joblib import Parallel, delayed
 from typing import List, Any, Dict, Optional, Union, Tuple
-from synkit.Chem.Reaction.neutralize import Neutralize
+
 from synkit.Chem.Reaction.deionize import Deionize
-from synkit.IO.data_io import save_to_pickle, collect_data
+from synkit.Chem.Reaction.neutralize import Neutralize
+from synkit.Chem.Reaction.standardize import Standardize
+from synkit.IO.nx_to_gml import NXToGML
 from synkit.IO.debug import setup_logging
+from synkit.IO.data_io import save_to_pickle, collect_data, save_list_to_file
+
 
 from syntemp.SynAAM.atom_map_consensus import AAMConsensus
 from syntemp.SynITS.its_extraction import ITSExtraction
@@ -17,6 +23,72 @@ from synrbl import Balancer
 
 
 logger = setup_logging()
+std = Standardize()
+
+
+def normalize_rsmi_dict(
+    data: Dict[str, Any], reaction_col: str = "reactions"
+) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """
+    Normalizes the reaction SMILES in a dictionary using a specified standardizer.
+
+    Parameters:
+    - data (Dict[str, Any]): The dictionary containing the reaction data.
+    - reaction_col (str): The key in the dictionary under which reaction data is stored.
+
+    Returns:
+    - (Dict[str, Any], Dict[str, Any]): A tuple of dictionaries where
+    the first item is the dictionary with the normalized reaction data,
+    and the second item is a dictionary of the original data if normalization failed.
+    """
+    original_data = data.copy()
+    try:
+        data[reaction_col] = std.fit(data[reaction_col])
+    except Exception as e:
+        logger.error(f"Error occurred during standardization: {e}")
+        # Return the original data as the issue when an error occurs
+        return {}, original_data
+
+    # Remove keys with None values, if any remain
+    data = {k: v for k, v in data.items() if v is not None}
+    return data, {}
+
+
+def normalize_rsmi_list(
+    data: Union[pd.DataFrame, List[Dict[str, Any]]],
+    reaction_col: str = "reactions",
+    n_jobs: int = 1,
+    verbose: int = 0,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Normalizes a list of dictionaries or a DataFrame containing reaction SMILES.
+
+    Parameters:
+    - data (Union[pd.DataFrame, List[Dict[str, Any]]]): The data to normalize,
+      can be a list of dictionaries or a DataFrame.
+    - reaction_col (str): The column or key where the reaction data is stored.
+    - n_jobs (int): The number of jobs to run in parallel (default 1).
+    - verbose (int): The verbosity level of the parallel processing (default 0).
+
+    Returns:
+    - (List[Dict[str, Any]], List[Dict[str, Any]]): A tuple of lists where the
+    first list contains dictionaries with normalized reaction data, and the second list
+    contains dictionaries of the original data where normalization failed.
+    """
+    if isinstance(data, pd.DataFrame):
+        data = data.to_dict(orient="records")
+
+    results = Parallel(n_jobs=n_jobs, verbose=verbose)(
+        delayed(normalize_rsmi_dict)(d, reaction_col) for d in data
+    )
+
+    normalized_data, issues = zip(*results)  # Unpack results into separate lists
+
+    # Filter out empty dictionaries from normalized_data
+    normalized_data = [d for d in normalized_data if d]
+    issues = [d for d in issues if d]
+
+    return list(normalized_data), list(issues)
 
 
 def rebalance(
@@ -50,6 +122,15 @@ def rebalance(
         data = data.to_dict("records")
         logger.info("Data converted to list of dictionaries.")
 
+    df = []
+    for value in data:
+        try:
+            value[reaction_col] = Standardize().fit(value[reaction_col])
+            df.append(value)
+        except Exception as e:
+            logger.error(f"Error occurred during standardization: {e}")
+            pass
+    data = df
     # Initialize the Balancer class with specified parameters
     synrbl = Balancer(
         reaction_col=reaction_col,
@@ -58,7 +139,7 @@ def rebalance(
         batch_size=batch_size,
     )
 
-    # Process rebalancing and receive output as a list
+    # Rebalance the reactions
     balanced_reactions = synrbl.rebalance(reactions=data, output_dict=False)
 
     # Update the original data with balanced reactions
@@ -265,19 +346,21 @@ def extract_its(
     )
     if save_dir:
         logger.info("Combining and saving data")
+        meta_folder = os.path.join(save_dir, "meta")
+        os.makedirs(meta_folder, exist_ok=True)
 
         save_to_pickle(
-            its_correct, os.path.join(save_dir, f"{data_name}_its_correct.pkl.gz")
+            its_correct, os.path.join(meta_folder, f"{data_name}_its_correct.pkl.gz")
         )
 
         save_to_pickle(
             its_incorrect,
-            os.path.join(save_dir, f"{data_name}_its_incorrect.pkl.gz"),
+            os.path.join(meta_folder, f"{data_name}_its_incorrect.pkl.gz"),
         )
 
         save_to_pickle(
             all_uncertain_hydrogen,
-            os.path.join(save_dir, f"{data_name}_uncertain_hydrogen.pkl.gz"),
+            os.path.join(meta_folder, f"{data_name}_uncertain_hydrogen.pkl.gz"),
         )
     # Clean up temporary files
     shutil.rmtree(temp_dir)
@@ -316,13 +399,24 @@ def rule_extract(
         logger.info("Hierarchical clustering initialized successfully.")
         reaction_dicts, templates, hier_templates = hier_cluster.fit(data)
         logger.info("Clustering completed and data extracted.")
+        for key, value in enumerate(templates):
+            templates[key] = temp_list(value, "RC", "cls_id", "gml")
+
+        reaction_dicts = temp_list(reaction_dicts, "ITSGraph", None, "its_gml")
+        reaction_dicts = temp_list(reaction_dicts, "GraphRules", None, "rc_gml")
 
         if save_path:
+            temp_folder = os.path.join(save_path, "template")
+            os.makedirs(temp_folder, exist_ok=True)
             for obj, name in zip(
                 [reaction_dicts, templates, hier_templates],
-                ["data_cluster.pkl.gz", "templates.pkl.gz", "hier_templates.pkl.gz"],
+                [
+                    "data_cluster.list.json",
+                    "templates.list.json",
+                    "hier_templates.list.json",
+                ],
             ):
-                save_to_pickle(obj, f"{save_path}/{name}")
+                save_list_to_file(obj, f"{temp_folder}/{name}")
                 logger.info(f"{name} successfully saved.")
 
         return reaction_dicts, templates, hier_templates
@@ -334,7 +428,7 @@ def rule_extract(
 def write_gml(
     template_data: List[Any],
     save_path: Optional[str] = None,
-    id_column: str = "Cluster_id",
+    id_column: str = "cls_id",
     rule_column: str = "RC",
     reindex: bool = True,
 ) -> List:
@@ -376,3 +470,65 @@ def write_gml(
             logger.error(f"Error extracting rules for radius {radius}: {e}")
 
     return rules
+
+
+def temp_dict(
+    data: Dict[str, Any], rc_key: str, id_key: str = None, rule_key: str = "gml"
+) -> Dict[str, Any]:
+    """
+    Transforms a dictionary entry representing a reaction by converting
+    networkx graph representations into GML format and removing
+    the original reaction key.
+
+    Parameters:
+    - data (Dict[str, Any]): Dictionary containing reaction components.
+    - rc_key (str): The key in the dictionary that holds the reaction component to transform.
+    - id_key (str): The key in the dictionary that holds the identifier used in the transformation.
+    - rule_key (str): The key under which the transformed data will be stored (default 'gml').
+
+    Returns:
+    - Dict[str, Any]: Updated dictionary with the transformed data and
+    the original reaction key removed.
+    """
+    if id_key is None:
+        rule_name = random.randint(-1000, 1000)
+    else:
+        rule_name = data[id_key]
+    try:
+        transformer = NXToGML()
+        data[rule_key] = transformer.transform(data[rc_key], rule_name, reindex=True)
+        data.pop(rc_key, None)  # Remove the original reaction component key
+    except Exception as e:
+        logger.error(f"Failed to transform data for key {rc_key} with ID {id_key}: {e}")
+        data.pop(rc_key, None)  # Ensure the original key is removed even on failure
+        data[rule_key] = None  # Set the rule key to None to indicate failure
+    return data
+
+
+def temp_list(
+    data: List[Dict[str, Any]],
+    rc_key: str = "RC",
+    id_key: str = "R-id",
+    rule_key: str = "gml",
+    n_jobs: int = 1,
+    verbose: int = 0,
+) -> List[Dict[str, Any]]:
+    """
+    Processes a list of dictionaries by transforming each dictionary's specified reaction component
+    into the GML format using parallel processing.
+
+    Parameters:
+    - data (List[Dict[str, Any]]): List of dictionaries to process.
+    - rc_key (str): The key in the dictionaries for the reaction component to transform.
+    - id_key (str): The identifier key used in the transformation process.
+    - rule_key (str): The key under which the transformed data will be stored (default 'gml').
+    - n_jobs (int): Number of parallel jobs to run (default 1).
+    - verbose (int): Level of verbosity for parallel processing (default 0).
+
+    Returns:
+        List[Dict[str, Any]]: A list of dictionaries with updated transformation data.
+    """
+    result = Parallel(n_jobs=n_jobs, verbose=verbose)(
+        delayed(temp_dict)(d, rc_key, id_key, rule_key) for d in data
+    )
+    return result

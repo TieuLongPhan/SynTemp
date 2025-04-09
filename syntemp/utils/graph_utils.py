@@ -214,28 +214,30 @@ def load_gml_as_text(gml_file_path):
         return None
 
 
-def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
+def add_child_ids(
+    df: List[List[Dict[str, Any]]], cls_id: str = "cls_id"
+) -> List[List[Dict[str, Any]]]:
     """
     Processes hierarchical data to assign child IDs based on parent-cluster relationships.
 
-    Each node in the hierarchy should have a Cluster_id and optionally a Parent.
-    This function will add a Child field to each node, which is a list of Cluster_ids
+    Each node in the hierarchy should have a cls_id and optionally a Parent.
+    This function will add a Child field to each node, which is a list of cls_id
     from the child nodes in the subsequent layer.
 
     Parameters:
     - data (List[List[Dict[str, Any]]]): A list of layers, where each layer is a list of
-    dictionaries containing at least the keys 'Cluster_id' and 'Parent'.
+    dictionaries containing at least the keys 'cls_id' and 'Parent'.
 
     Returns:
     - List[List[Dict[str, Any]]]: The modified data with each node dictionary containing
-    'Cluster_id', 'Percentage', 'Parent', and 'Child' keys.
+    'cls_id', 'Percentage', 'Parent', and 'Child' keys.
     """
     data = copy.deepcopy(df)
     node_dict = {}
 
     for layer_index, layer in enumerate(data):
         for node in layer:
-            unique_id = f"{layer_index}-{node['Cluster_id']}"
+            unique_id = f"{layer_index}-{node[cls_id]}"
             node["Child"] = []  # Initialize the Child list
             node_dict[unique_id] = node
 
@@ -253,11 +255,11 @@ def add_child_ids(df: List[List[Dict[str, Any]]]) -> List[List[Dict[str, Any]]]:
             for parent_cluster_id in parents:
                 parent_unique_id = f"{layer_index - 1}-{parent_cluster_id}"
                 if parent_unique_id in node_dict:
-                    node_dict[parent_unique_id]["Child"].append(node["Cluster_id"])
+                    node_dict[parent_unique_id]["Child"].append(node[cls_id])
 
     for layer in data:
         for node in layer:
-            keys_to_keep = {"Cluster_id", "Parent", "Child", "Percentage"}
+            keys_to_keep = {cls_id, "Parent", "Child", "Percentage"}
             for key in list(node.keys()):
                 if key not in keys_to_keep:
                     del node[key]

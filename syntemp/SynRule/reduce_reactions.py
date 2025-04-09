@@ -1,6 +1,6 @@
 import copy
 from typing import List, Dict, Tuple
-from syntemp.SynUtils.chemutils import get_combined_molecular_formula
+from syntemp.utils.chemutils import get_combined_molecular_formula
 
 
 class ReduceReactions:

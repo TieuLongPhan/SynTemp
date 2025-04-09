@@ -9,6 +9,39 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
+def merge_dictionaries(list_a, list_b, key_a, key_b, id_key):
+    """
+    Merges two lists of dictionaries based on the matching
+    'reaction' in list_a and 'input reaction' in list_b.
+    Adds the specified 'id_key' from list_b into dictionaries
+    in list_a when matches are found.
+
+    Parameters:
+    - list_a (list): List of dictionaries containing 'reaction' among other keys.
+    - list_b (list): List of dictionaries containing 'input reaction'
+    and the specified 'id_key'.
+    - id_key (str): The key name for the ID in dictionaries of list_b
+    that should be merged into list_a.
+
+    Returns:
+        list: The updated list_a with merged 'id_key' from list_b when matches are found.
+    """
+    # Ensure list_a should be smaller than list_b
+    if len(list_a) > len(list_b):
+        raise ValueError("List A is not smaller than list B.")
+
+    # Merge process
+    for a in list_a:
+        for b in list_b:
+            compare = a[key_a] == b[key_b]
+            if compare:
+                a[id_key] = b[
+                    id_key
+                ]  # Merge 'id_key' from B into A if 'reaction' matches 'input reaction'
+
+    return list_a
+
+
 def setup_logging(log_level: str = "INFO", log_filename: str = None) -> logging.Logger:
     """
     Configures the logging for an application. It sets up logging to either the console

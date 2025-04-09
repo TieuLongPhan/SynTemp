@@ -3,7 +3,7 @@ from typing import List, Tuple
 import argparse
 from mod import ruleGMLString
 from syntemp.SynComp.rule_compose import RuleCompose
-from syntemp.SynUtils.graph_utils import load_gml_as_text
+from synkit.IO.data_io import load_gml_as_text
 
 
 def load_compose_rules(compose_rule_path: str) -> List[Tuple[str, object]]:

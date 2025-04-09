@@ -2,7 +2,7 @@ import networkx as nx
 from typing import List, Set, Dict, Any, Callable, Optional, Tuple
 from networkx.algorithms.isomorphism import generic_node_match, generic_edge_match
 from operator import eq
-from syntemp.SynUtils.utils import create_unique_value_dict
+from syntemp.utils._misc import create_unique_value_dict
 
 
 class RuleCluster:
@@ -160,7 +160,7 @@ class RuleCluster:
                 if nx.is_isomorphic(
                     graph, rc, node_match=nodeMatch, edge_match=edgeMatch
                 ):
-                    results.append(template["Cluster_id"])
+                    results.append(template["cls_id"])
                     found_match = True
                     break
 
@@ -194,7 +194,7 @@ class RuleCluster:
 
         Returns:
         - List[Dict[str, Any]]: A list of dictionaries each representing a template with a
-        'Cluster_id', the associated graph ('RC'), and a 'percentage'.
+        'cls_id', the associated graph ('RC'), and a 'percentage'.
         """
         # Adjust cluster IDs based on the maximum template index
         temp_graph_to_cluster = {
@@ -211,7 +211,7 @@ class RuleCluster:
 
         template = [
             {
-                "Cluster_id": key,
+                "cls_id": key,
                 "RC": updated_graphs[value],
                 "Parent": [],
                 "Percentage": sorted_templates.get(

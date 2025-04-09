@@ -1,7 +1,7 @@
 import importlib.resources
 from typing import List, Tuple
-from synutility.SynIO.debug import setup_logging
-from synutility.SynIO.data_type import load_database
+from synkit.IO.debug import setup_logging
+from synkit.IO.data_io import load_database
 
 from mod import BondType
 
