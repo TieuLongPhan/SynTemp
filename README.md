@@ -101,7 +101,7 @@ If you want to run ensemble AAMs
 
 ### Use in script
   ```python
-  from SynTemp.auto_template import AutoTemp
+  from syntemp.auto_template import AutoTemp
 
   smiles = (
       "COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>"
