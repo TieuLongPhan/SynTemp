@@ -15,10 +15,10 @@ class TestRuleCluster(unittest.TestCase):
         reaction_dicts, templates, hier_templates = self.cluster.fit(self.data)
 
         # assert data
-        assert "Cluster_R0" in reaction_dicts[0].keys()
-        assert "Cluster_R1" in reaction_dicts[0].keys()
-        assert "Cluster_R2" in reaction_dicts[0].keys()
-        assert "Cluster_R3" in reaction_dicts[0].keys()
+        assert "R0" in reaction_dicts[0].keys()
+        assert "R1" in reaction_dicts[0].keys()
+        assert "R2" in reaction_dicts[0].keys()
+        assert "R3" in reaction_dicts[0].keys()
         self.assertEqual(reaction_dicts[0]["Reaction Type"], "Elementary")
         self.assertEqual(reaction_dicts[0]["Topo Type"], "Single Cyclic")
         self.assertEqual(reaction_dicts[0]["Rings"][0], 4)  # 0 1 2 3
@@ -31,7 +31,7 @@ class TestRuleCluster(unittest.TestCase):
         assert "Percentage" in templates[0][0].keys()
 
         # assert hier templates
-        assert isinstance(hier_templates[0][0]["Cluster_id"], int)
+        assert isinstance(hier_templates[0][0]["cls_id"], int)
         assert isinstance(hier_templates[0][0]["Percentage"], float)
         assert "Parent" in hier_templates[0][0].keys()
         assert "Child" in hier_templates[0][0].keys()

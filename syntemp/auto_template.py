@@ -1,19 +1,22 @@
 import os
-import glob
+
+# import glob
 import pandas as pd
 from typing import List, Any, Dict, Optional, Tuple
 from syntemp.pipeline import (
+    normalize_rsmi_list,
     rebalance,
     clean,
     run_aam,
     extract_its,
     rule_extract,
-    write_gml,
+    # write_gml,
 )
-from syntemp.SynUtils.utils import (
-    prune_branches,
-    reindex_data,
-)
+
+# from syntemp.utils._misc import (
+#     prune_branches,
+#     reindex_data,
+# )
 from synkit.IO.data_io import save_database
 from synkit.IO.debug import setup_logging
 
@@ -100,11 +103,7 @@ class AutoTemp:
         self.clean_data = clean_data
         self.get_random_hydrogen = get_random_hydrogen
         self.fast_process = fast_process
-
-        # log_level = getattr(logging, log_level.upper(), None)
-        # if not isinstance(log_level, int):
-        #     raise ValueError(f"Invalid log level: {log_level}")
-        self.logger = setup_logging("INFO", log_file)
+        self.logger = setup_logging(log_level, log_file)
 
     def temp_extract(
         self, data: List[Dict[str, Any]], lib_path: str = None
@@ -127,6 +126,7 @@ class AutoTemp:
             data = data.to_dict("records")
             self.logger.info("Data converted to list of dictionaries.")
 
+        data, issue = normalize_rsmi_list(data, self.rsmi, self.n_jobs, self.verbose)
         # Step 1: rebalance and clean the data
         if self.rerun_aam:
             if self.rebalancing:
@@ -148,7 +148,10 @@ class AutoTemp:
             aam_data = data
 
         if self.save_dir:
-            save_database(aam_data, f"{self.save_dir}/aam.json.gz")
+            meta_folder = os.path.join(self.save_dir, "meta")
+            os.makedirs(meta_folder, exist_ok=True)
+            save_database(aam_data, f"{meta_folder}/aam.json.gz")
+            save_database(issue, f"{meta_folder}/issue_rsmi.json.gz")
 
         # Step 3: Extract ITS graphs and categorize them
         self.logger.info("Extract ITS graphs and categorize them.")
@@ -172,66 +175,73 @@ class AutoTemp:
             self.max_radius,
             self.save_dir,
         )
-        if lib_path is None:
-            self.logger.info("Write Rules.")
-            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
-            return (
-                gml_rules,
-                reaction_dicts,
-                templates,
-                hier_templates,
-                its_incorrect,
-                uncertain_hydrogen,
-            )
-        else:
-            from syntemp.lib_isomorphism import LibIsomorphism
+        return (
+            reaction_dicts,
+            templates,
+            hier_templates,
+            its_incorrect,
+            uncertain_hydrogen,
+        )
+        # if lib_path is None:
+        #     self.logger.info("Write Rules.")
+        #     gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
+        #     return (
+        #         gml_rules,
+        #         reaction_dicts,
+        #         templates,
+        #         hier_templates,
+        #         its_incorrect,
+        #         uncertain_hydrogen,
+        #     )
+        # else:
+        #     from syntemp.lib_isomorphism import LibIsomorphism
 
-            # Generate GML rules without saving to a path
-            gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)
+        #     # Generate GML rules without saving to a path
+        #     gml_rules = write_gml(templates, None, "Cluster_id", "RC", True)
 
-            # Check rules for isomorphism and collect IDs that do not pass the check
-            radius_0_lib_path = os.path.join(lib_path, "R0")
-            radius_0_id = [
-                templates[0][i]["Cluster_id"]
-                for i, rule in enumerate(gml_rules[0])
-                if not LibIsomorphism.lib_isomorphism(
-                    rule=rule, lib_path=radius_0_lib_path
-                )
-            ]
+        #     # Check rules for isomorphism and collect IDs that do not pass the check
+        #     radius_0_lib_path = os.path.join(lib_path, "R0")
+        #     radius_0_id = [
+        #         templates[0][i]["Cluster_id"]
+        #         for i, rule in enumerate(gml_rules[0])
+        #         if not LibIsomorphism.lib_isomorphism(
+        #             rule=rule, lib_path=radius_0_lib_path
+        #         )
+        #     ]
 
-            new_templates = [
-                (
-                    [t for t in layer if t["Cluster_id"] in radius_0_id]
-                    if idx == 0
-                    else layer
-                )
-                for idx, layer in enumerate(templates)
-            ]
-            new_hier_templates = [
-                (
-                    [t for t in layer if t["Cluster_id"] in radius_0_id]
-                    if idx == 0
-                    else layer
-                )
-                for idx, layer in enumerate(hier_templates)
-            ]
-            starting_indices = []
-            for radius in range(self.max_radius + 1):
-                rule_path = os.path.join(lib_path, f"R{radius}")
-                num_rules = len(glob.glob(os.path.join(rule_path, "*.gml")))
-                starting_indices.append(num_rules + 1)
-            # Prune branches from templates and hierarchical templates
-            templates = prune_branches(new_templates)
-            templates = reindex_data(templates, starting_indices)
-            hier_templates = prune_branches(new_hier_templates)
-            hier_templates = reindex_data(hier_templates, starting_indices)
-            gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
-            # Return all relevant data
-            return (
-                gml_rules,
-                reaction_dicts,
-                templates,
-                hier_templates,
-                its_correct,
-                uncertain_hydrogen,
-            )
+        #     new_templates = [
+        #         (
+        #             [t for t in layer if t["Cluster_id"] in radius_0_id]
+        #             if idx == 0
+        #             else layer
+        #         )
+        #         for idx, layer in enumerate(templates)
+        #     ]
+        #     new_hier_templates = [
+        #         (
+        #             [t for t in layer if t["Cluster_id"] in radius_0_id]
+        #             if idx == 0
+        #             else layer
+        #         )
+        #         for idx, layer in enumerate(hier_templates)
+        #     ]
+        #     starting_indices = []
+        #     for radius in range(self.max_radius + 1):
+        #         rule_path = os.path.join(lib_path, f"R{radius}")
+        #         num_rules = len(glob.glob(os.path.join(rule_path, "*.gml")))
+        #         starting_indices.append(num_rules + 1)
+        #     # Prune branches from templates and hierarchical templates
+        #     templates = prune_branches(new_templates)
+        #     templates = reindex_data(templates, starting_indices)
+        #     hier_templates = prune_branches(new_hier_templates)
+        #     hier_templates = reindex_data(hier_templates, starting_indices)
+        #     # gml_rules = write_gml(templates, self.save_dir, "Cluster_id", "RC", True)
+        #     # Return all relevant data
+        #     return (
+        #         gml_rules,
+        #         reaction_dicts,
+        #         templates,
+        #         hier_templates,
+        #         its_correct,
+        #         uncertain_hydrogen,
+        #     )

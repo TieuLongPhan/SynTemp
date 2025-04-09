@@ -1,7 +1,7 @@
 import unittest
 from rdkit import Chem
 from pathlib import Path
-from syntemp.SynUtils.chemutils import (
+from syntemp.utils.chemutils import (
     remove_hydrogens_and_sanitize,
 )
 

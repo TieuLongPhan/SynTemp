@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 import pandas as pd
-from syntemp.SynUtils.utils import load_database
+from syntemp.utils._misc import load_database
 from syntemp.auto_template import AutoTemp
 
 
@@ -79,7 +79,7 @@ def read_data(filepath):
 def main():
     args = parse_arguments()
 
-    data = read_data(args.data_path)
+    data = read_data(args.data_path)[20000:30000]
 
     try:
         auto = AutoTemp(

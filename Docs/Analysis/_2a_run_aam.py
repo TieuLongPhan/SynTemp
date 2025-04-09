@@ -17,7 +17,7 @@ logger = logging.getLogger("AAMProcessing")
 
 sys.path.append(str(root_dir))
 from syntemp.SynAAM.atom_map_consensus import AAMConsensus
-from syntemp.SynUtils.utils import load_database, save_database
+from syntemp.utils._misc import load_database, save_database
 
 list_data = {
     "ecoli": 273,

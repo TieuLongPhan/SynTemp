@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 
 
-class TestCMD(unittest.TestCase):
+class Testmain(unittest.TestCase):
 
     def setUp(self):
         """Set up a temporary directory and create a test CSV file."""
@@ -63,7 +63,11 @@ class TestCMD(unittest.TestCase):
             os.path.exists(self.save_dir), "Output directory does not exist."
         )
         self.assertTrue(
-            os.path.exists(f"{self.save_dir}/R0"), "Output directory does not exist."
+            os.path.exists(f"{self.save_dir}/meta"), "Output directory does not exist."
+        )
+        self.assertTrue(
+            os.path.exists(f"{self.save_dir}/template"),
+            "Output directory does not exist.",
         )
 
     def tearDown(self):

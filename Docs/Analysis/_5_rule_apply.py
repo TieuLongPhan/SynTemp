@@ -34,11 +34,11 @@ root_dir = pathlib.Path(__file__).parents[2]
 sys.path.append(str(root_dir))
 
 
-from syntemp.SynUtils.chemutils import (
+from syntemp.utils.chemutils import (
     categorize_reactions,
     standardize_rsmi,
 )
-from syntemp.SynUtils.utils import load_from_pickle, load_database, save_database
+from syntemp.utils._misc import load_from_pickle, load_database, save_database
 from syntemp.SynRule.reduce_reactions import ReduceReactions
 from syntemp.SynRule.rule_engine import RuleEngine
 import logging

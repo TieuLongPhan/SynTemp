@@ -13,7 +13,7 @@ logging.basicConfig(
 )
 
 # Importing necessary functions and classes
-from syntemp.SynUtils.utils import load_from_pickle
+from syntemp.utils._misc import load_from_pickle
 
 from syntemp.SynRule.hierarchical_clustering import HierarchicalClustering
 from syntemp.SynRule.rules_extraction import RuleExtraction
