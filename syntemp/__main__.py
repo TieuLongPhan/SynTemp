@@ -79,7 +79,7 @@ def read_data(filepath):
 def main():
     args = parse_arguments()
 
-    data = read_data(args.data_path)[20000:30000]
+    data = read_data(args.data_path)
 
     try:
         auto = AutoTemp(
