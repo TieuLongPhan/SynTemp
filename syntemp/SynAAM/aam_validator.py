@@ -8,7 +8,7 @@ from networkx.algorithms.isomorphism import generic_node_match, generic_edge_mat
 
 from synkit.IO.chem_converter import rsmi_to_its
 from synkit.Graph.ITS.its_decompose import get_rc
-from synkit.Graph.ITS.aam_utils import enumerate_tautomers, mapping_success_rate
+from synkit.Chem.Reaction.aam_utils import enumerate_tautomers, mapping_success_rate
 
 from syntemp.SynITS.its_extraction import ITSExtraction
 
@@ -81,9 +81,7 @@ class AAMValidator:
         try:
             for rsmi in [mapped_smile, ground_truth]:
 
-                ITS = rsmi_to_its(
-                    rsmi, sanitize=True, drop_non_aam=True, light_weight=True
-                )
+                ITS = rsmi_to_its(rsmi, sanitize=True, drop_non_aam=True)
                 its_graphs.append(ITS)
 
                 rc = get_rc(ITS)

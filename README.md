@@ -84,7 +84,7 @@ If you want to run ensemble AAMs
   ```
   pip install syntemp
   ```
-  Optional if you want to install full version
+  Optional if you want to install full version including three types of atom map
   ```
   pip install syntemp[all]
   ```
@@ -103,12 +103,16 @@ If you want to run ensemble AAMs
   ```python
   from syntemp.auto_template import AutoTemp
 
-  smiles = (
-      "COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>"
-      + "COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O"
-  )
-
-  data = [{'R-id': '1', 'reactions': smiles}]
+  data = [{'R-id': 0,
+    'reactions': 'COC(=O)C(CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O.O>>COC(=O)C(CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O.O=C(O)OCc1ccccc1'},
+  {'R-id': 1,
+    'reactions': 'Nc1cccc2cnccc12.O=C(O)c1cc([N+](=O)[O-])c(Sc2c(Cl)cncc2Cl)s1>>O.O=C(Nc1cccc2cnccc12)c1cc([N+](=O)[O-])c(Sc2c(Cl)cncc2Cl)s1'},
+  {'R-id': 4,
+    'reactions': 'CCOc1ccc(Oc2ncnc3c2cnn3C2CCNCC2)c(F)c1.O=C(Cl)OC1CCCC1>>CCOc1ccc(Oc2ncnc3c2cnn3C2CCN(C(=O)OC3CCCC3)CC2)c(F)c1.Cl'},
+  {'R-id': 5,
+    'reactions': 'Cn1cnc(-c2cc(C#N)ccn2)c1Br.OB(O)c1ccc(-n2cccn2)cc1>>Cn1cnc(-c2cc(C#N)ccn2)c1-c1ccc(-n2cccn2)cc1.OB(O)Br'},
+  {'R-id': 6,
+    'reactions': 'CC1(C)OB(c2ccc(OCc3ccc4ccccc4n3)cc2)OC1(C)C.N#Cc1ccc(OC2CCCCO2)c(Br)c1>>CC1(C)OB(Br)OC1(C)C.N#Cc1ccc(OC2CCCCO2)c(-c2ccc(OCc3ccc4ccccc4n3)cc2)c1'}]
 
   auto = AutoTemp(
       rebalancing=True,
@@ -124,27 +128,19 @@ If you want to run ensemble AAMs
       fix_hydrogen=True,
   )
 
-  (gml_rules, reaction_dicts, templates, hier_templates,
+  (reaction_dicts, templates, hier_templates,
   its_correct, uncertain_hydrogen,) = auto.temp_extract(data, lib_path=None)
 
-  print(gml_rules[0][0])
-  >> '''rule [
-   ruleID "0"
-   left [
-      edge [ source 1 target 2 label "-" ]
-      edge [ source 3 target 4 label "-" ]
-   ]
-   context [
-      node [ id 1 label "N" ]
-      node [ id 2 label "C" ]
-      node [ id 3 label "O" ]
-      node [ id 4 label "H" ]
-   ]
-   right [
-      edge [ source 1 target 4 label "-" ]
-      edge [ source 2 target 3 label "-" ]
-   ]
-]'''
+  core_temp = templates[0]
+
+
+
+  # In order to perform forward prediction, you can use the following code:
+  from synkit.IO import gml_to_its
+  from synkit.Synthesis.Reactor.syn_reactor import SynReactor
+  reactor = SynReactor(substrate='COC(=O)C(CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O.O', template=gml_to_its(core_temp[0]['gml']))
+
+  print(reactor.smarts)
   ```
   
 
@@ -171,6 +167,9 @@ If you want to run ensemble AAMs
   title={SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases},
   author={Phan, Tieu-Long and Weinbauer, Klaus and Laffitte, Marcos E Gonz{\'a}lez and Pan, Yingjie and Merkle, Daniel and Andersen, Jakob L and Fagerberg, Rolf and Flamm, Christoph and Stadler, Peter F},
   journal={Journal of Chemical Information and Modeling},
+  volume={65},
+  number={6},
+  pages={2882--2896},
   year={2025},
   publisher={ACS Publications}
 }
