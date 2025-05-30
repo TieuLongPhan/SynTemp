@@ -84,7 +84,7 @@ If you want to run ensemble AAMs
   ```
   pip install syntemp
   ```
-  Optional if you want to install full version
+  Optional if you want to install full version including three types of atom map
   ```
   pip install syntemp[all]
   ```
@@ -171,6 +171,9 @@ If you want to run ensemble AAMs
   title={SynTemp: Efficient Extraction of Graph-Based Reaction Rules from Large-Scale Reaction Databases},
   author={Phan, Tieu-Long and Weinbauer, Klaus and Laffitte, Marcos E Gonz{\'a}lez and Pan, Yingjie and Merkle, Daniel and Andersen, Jakob L and Fagerberg, Rolf and Flamm, Christoph and Stadler, Peter F},
   journal={Journal of Chemical Information and Modeling},
+  volume={65},
+  number={6},
+  pages={2882--2896},
   year={2025},
   publisher={ACS Publications}
 }

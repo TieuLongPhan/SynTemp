@@ -379,6 +379,7 @@ class ITSHAdjuster:
             max_index + 1 + len(hydrogen_nodes_form) - react_explicit_h,
         )
         combined_indices = list(range_implicit_h) + hydrogen_nodes
+
         permutations = list(itertools.permutations(combined_indices))
         permutations_seed = permutations[0]
 
@@ -392,7 +393,7 @@ class ITSHAdjuster:
             node_id_pairs = zip(hydrogen_nodes_break, new_hydrogen_node_ids)
             # Call the method with the formed pairs and specify atom_map_update as False
             current_react_graph = ITSHAdjuster.add_hydrogen_nodes_multiple_utils(
-                current_react_graph, node_id_pairs, atom_map_update=False
+                current_react_graph, node_id_pairs, atom_map_update=True
             )
             # Varied hydrogen nodes in the product graph based on permutation
             current_prod_graph = ITSHAdjuster.add_hydrogen_nodes_multiple_utils(
@@ -467,4 +468,5 @@ class ITSHAdjuster:
                 # conjugated=False,
                 # in_ring=False,
             )
+            new_graph.nodes[node_id]["hcount"] -= 1
         return new_graph

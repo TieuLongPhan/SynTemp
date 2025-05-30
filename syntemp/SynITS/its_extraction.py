@@ -126,7 +126,6 @@ class ITSExtraction:
                 G, H = rsmi_to_graph(
                     mapped_smiles[mapper],
                     drop_non_aam=True,
-                    light_weight=True,
                     sanitize=sanitize,
                 )
 

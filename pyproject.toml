@@ -20,8 +20,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "synrbl>=1.0.0",
-    "synkit>=0.0.4"
+    "synrbl>=1.0.1",
+    "synkit>=0.0.9"
 ]
 
 [project.optional-dependencies]
@@ -36,7 +36,8 @@ all = [
     "chytorch>=1.65",
     "chytorch-rxnmap>=1.4",
     "torch==2.2.0",
-    "torchdata==0.7.1"
+    "torchdata==0.7.1",
+    "transformers==4.51.1"
 ]
 
 [project.urls]

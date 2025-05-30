@@ -105,7 +105,6 @@ class ITSArbitrary:
                 G, H = rsmi_to_graph(
                     data[mapper],
                     drop_non_aam=True,
-                    light_weight=True,
                     sanitize=sanitize,
                 )
                 # Process equivalent maps

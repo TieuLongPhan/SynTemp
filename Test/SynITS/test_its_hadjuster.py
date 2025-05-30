@@ -58,6 +58,8 @@ class TestITSHAdjuster(unittest.TestCase):
         result = ITSHAdjuster().process_graph_data_parallel(
             self.data, "ITSGraph", n_jobs=1, verbose=0, get_priority_graph=True
         )
+        issue = [value for value in result if not value["ITSGraph"]]
+        print(issue)
         result = [value for value in result if value["ITSGraph"]]
         # Check if the result matches the input data structure
         self.assertEqual(len(result), 48)
