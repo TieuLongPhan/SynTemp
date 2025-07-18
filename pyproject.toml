@@ -44,3 +44,4 @@ all = [
 homepage = "https://github.com/TieuLongPhan/SynTemp"
 source = "https://github.com/TieuLongPhan/SynTemp"
 issues = "https://github.com/TieuLongPhan/SynTemp/issues"
+documentation = "https://syntemp.readthedocs.io/en/latest/"
