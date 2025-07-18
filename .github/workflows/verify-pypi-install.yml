@@ -29,28 +29,22 @@ jobs:
         with:
           python-version: '3.x'
 
-      # 3. Extract version from the tag (refs/tags/vX.Y.Z)
-      - name: Extract version
+      # 3. Install syntemp from PyPI
+      - name: Install syntemp
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          pip install syntemp[all]
 
-      # 4. Install syntemp from PyPI
-      - name: Install syntemp==$VERSION
-        run: |
-          pip install syntemp=="$VERSION"
-
-      # 5. Prevent local import of the checkout
+      # 4. Prevent local import of the checkout
       - name: Remove local source directory
         run: rm -rf syntemp
 
-      # 6. Write your test CSV
+      # 5. Write your test CSV
       - name: Create test.csv
         run: |
           echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" \
             > test.csv
 
-      # 7. Run your CLI smoke test
+      # 6. Run your CLI smoke test
       - name: Run syntemp CLI test
         run: |
           python -m syntemp \
@@ -63,6 +57,6 @@ jobs:
             --log_file ./log.txt \
             --save_dir ./
 
-      # 8. (Optional) Inspect the log
+      # 7. (Optional) Inspect the log
       - name: Show log.txt
         run: cat log.txt
