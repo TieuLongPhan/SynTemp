@@ -188,3 +188,14 @@ Tips and Troubleshooting
 For more details, browse the **SynTemp** repository on GitHub: https://github.com/TieuLongPhan/SynTemp/  
 Enjoy exploring and extracting reaction templates with **SynTemp**!  
 
+See Also
+--------
+
+- `SynKit <https://synkit.readthedocs.io/en/latest/>`_  
+  A comprehensive reaction-modeling toolkit providing data structures, I/O utilities, and reactor frameworks for simulating and analyzing chemical transformations.
+
+- `SynCat <https://github.com/phuocchung123/SynCat>`_  
+  A reaction-classification library that assigns standardized categories to chemical reactions, enabling downstream analysis of reaction datasets.
+
+- `SynTemp Repository <https://github.com/TieuLongPhan/SynTemp>`_  
+  The source code, issue tracker, and contribution guidelines for the SynTemp template-extraction framework.
