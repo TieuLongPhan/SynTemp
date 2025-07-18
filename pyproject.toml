@@ -40,6 +40,11 @@ all = [
     "transformers==4.51.1",
     "scikit-learn==1.6.1"
 ]
+docs = [
+  "sphinx>=6.0",
+  "sphinx-rtd-theme",
+  "sphinxcontrib-bibtex",
+]
 
 [project.urls]
 homepage = "https://github.com/TieuLongPhan/SynTemp"
