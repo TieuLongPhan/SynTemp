@@ -2,13 +2,18 @@
 name: Verify PyPI install
 
 on:
+  # A: continue to run right after a successful PyPI publish
   workflow_run:
-    workflows: ["PyPI publish"]   
+    workflows: ["PyPI publish"]
     types: [completed]
+
+  # B: ALSO run every Monday at 03:00 UTC
+  schedule:
+    - cron: '0 3 * * 1'
 
 jobs:
   verify:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     steps:
       # 1. Checkout at the tagged release
