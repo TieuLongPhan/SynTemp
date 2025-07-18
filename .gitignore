@@ -19,3 +19,4 @@ Data/Temp/Benchmark/Raw/*
 *.list.json
 *.csv
 *.json.gz
+docs/*

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "syntemp"
-version = "1.0.2"
+version = "1.0.3"
 authors = [
     {name="Tieu Long Phan", email="tieu@bioinf.uni-leipzig.de"}
 ]
@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
     "synrbl>=1.0.1",
-    "synkit>=0.0.9"
+    "synkit>=0.0.10"
 ]
 
 [project.optional-dependencies]
@@ -37,10 +37,12 @@ all = [
     "chytorch-rxnmap>=1.4",
     "torch==2.2.0",
     "torchdata==0.7.1",
-    "transformers==4.51.1"
+    "transformers==4.51.1",
+    "scikit-learn==1.6.1"
 ]
 
 [project.urls]
 homepage = "https://github.com/TieuLongPhan/SynTemp"
 source = "https://github.com/TieuLongPhan/SynTemp"
 issues = "https://github.com/TieuLongPhan/SynTemp/issues"
+documentation = "https://syntemp.readthedocs.io/en/latest/"
