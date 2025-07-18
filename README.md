@@ -10,7 +10,7 @@ This repository is dedicated to the systematic extraction of reaction rules from
 3. **Reaction Center Detection and Extension**: Focuses on identifying and extending the core active sites of reactions.
 4. **Hierarchical Clustering**: Groups extended reaction centers or partial ITS to analyze reaction patterns.
 
-The general framework and its components are depicted in Figures A, B, and C below.
+The general framework and its components are depicted in Figures A, B, and C below. Please visit [full user guide & API reference](https://syntemp.readthedocs.io/en/latest/) for detailed examples, configuration options, and best practices.  
 
 ![screenshot](https://github.com/TieuLongPhan/SynTemp/raw/main/Docs/Image/TOC.png)
 
@@ -31,7 +31,7 @@ The general framework and its components are depicted in Figures A, B, and C bel
 
 ## Installation
 
-To install and set up the SynTemp framework, follow these steps. Please ensure you have Python 3.9 or later installed on your system.
+To install and set up the SynTemp framework, follow these steps. 
 
 ### Prerequisites
 
@@ -54,8 +54,6 @@ If you want to run ensemble AAMs
 - chytorch-rxnmap>=1.4
 - torch==2.2.0
 - torchdata==0.7.1
-
-
 
 
 ### Step-by-Step Installation Guide
@@ -178,7 +176,6 @@ If you want to run ensemble AAMs
 
 ## Contributing
 - [Tieu-Long Phan](https://tieulongphan.github.io/)
-
 
 ## License
 

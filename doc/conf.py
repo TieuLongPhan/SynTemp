@@ -1,6 +1,5 @@
 import os
 import sys
-from importlib.metadata import version as _get_version, PackageNotFoundError
 import importlib.metadata as m
 
 # -- Path setup --------------------------------------------------------------
