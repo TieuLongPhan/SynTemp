@@ -1,0 +1,63 @@
+# .github/workflows/verify-pypi-install.yml
+name: Verify PyPI install
+
+on:
+  workflow_run:
+    workflows: ["PyPI publish"]   
+    types: [completed]
+
+jobs:
+  verify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout at the tagged release
+      - name: Checkout repo at tag
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      # 2. Set up Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # 3. Extract version from the tag (refs/tags/vX.Y.Z)
+      - name: Extract version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      # 4. Install syntemp from PyPI
+      - name: Install syntemp==$VERSION
+        run: |
+          pip install syntemp=="$VERSION"
+
+      # 5. Prevent local import of the checkout
+      - name: Remove local source directory
+        run: rm -rf syntemp
+
+      # 6. Write your test CSV
+      - name: Create test.csv
+        run: |
+          echo -e "R-id,reaction\n0,COC(=O)[C@H](CCCCNC(=O)OCc1ccccc1)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O>>COC(=O)[C@H](CCCCN)NC(=O)Nc1cc(OC)cc(C(C)(C)C)c1O" \
+            > test.csv
+
+      # 7. Run your CLI smoke test
+      - name: Run syntemp CLI test
+        run: |
+          python -m syntemp \
+            --data_path test.csv \
+            --rebalancing \
+            --id 'R-id' \
+            --rsmi 'reaction' \
+            --rerun_aam \
+            --fix_hydrogen \
+            --log_file ./log.txt \
+            --save_dir ./
+
+      # 8. (Optional) Inspect the log
+      - name: Show log.txt
+        run: cat log.txt
