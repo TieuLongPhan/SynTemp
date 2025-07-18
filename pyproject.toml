@@ -37,7 +37,7 @@ all = [
     "chytorch-rxnmap>=1.4",
     "torch==2.2.0",
     "torchdata==0.7.1",
-    "transformers==4.51.1"
+    "transformers==4.51.1",
     "scikit-learn==1.6.1"
 ]
 
